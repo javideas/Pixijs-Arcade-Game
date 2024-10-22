@@ -1,5 +1,4 @@
 import { Application } from 'pixi.js';
-// import { Mouse } from './core/mouse.js'; // Import the Mouse class
 import { TabContainer } from './core/tab/tabContainer.js'; // Import the Viewport class
 
 // Define the reference dimensions for scaling
@@ -28,8 +27,6 @@ function resize() {
     if (tabContainer) {
         tabContainer.resizeByWindow();
     }
-    // Scale the stage to maintain aspect ratio
-    // app.stage.scale.set(newScaleFactor, newScaleFactor);
 }
 
 // Add the resize event listener
@@ -46,10 +43,6 @@ async function init() {
     // Create and add the viewport to the PixiJS application stage
     const tabContainer = new TabContainer();
     app.stage.addChild(tabContainer);
-
-    // Create and add the mouse graphic to the PixiJS application stage
-    const mouse = new Mouse();
-    app.stage.addChild(mouse); // Add mouse after viewport
 
     // Listen for Alt+F11 key press in the web context
     window.addEventListener('keydown', (event) => {
