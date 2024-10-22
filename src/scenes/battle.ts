@@ -12,9 +12,11 @@ export default class Battle {
 
     /** Spawn the initial elements on the stage */
     spawn() {
-        // Create and add the Screen to the PixiJS application stage
+        // Create and add the Screen to the stage
         this.screen = new Screen("black");
         this.app.stage.addChild(this.screen);
+        
+        // Create and add the Decks to the stage
         this.deckR = new Deck("blue", this.screen.frameR / 2, this.screen.frameR / 3);
         this.app.stage.addChild(this.deckR);
         this.deckL = new Deck("red", -this.screen.frameR + (this.screen.frameR / 3) / 2, this.screen.frameR / 3);
