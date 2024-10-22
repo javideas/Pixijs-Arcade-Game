@@ -1,5 +1,6 @@
 import { Application } from 'pixi.js';
-import { TabContainer } from './core/tab/tabContainer.js'; // Import the Viewport class
+import { TabContainer } from './core/tab/tabContainer.js';
+import { Level } from './core/level.js';
 
 // Define the reference dimensions for scaling
 const referenceWidth = window.innerWidth;
@@ -23,10 +24,15 @@ function resize() {
     // Resize the renderer to match the new window dimensions
     // app.renderer.resize(window.innerWidth, window.innerHeight);
 
-    const tabContainer = app.stage.children.find(child => child instanceof TabContainer) as TabContainer;
-    if (tabContainer) {
-        tabContainer.resizeByWindow();
+    const level = app.stage.children.find(child => child instanceof Level) as Level;
+    if (level) {
+        level.resizeByWindow();
     }
+
+    // const tabContainer = app.stage.children.find(child => child instanceof TabContainer) as TabContainer;
+    // if (tabContainer) {
+    //     tabContainer.resizeByWindow();
+    // }
 }
 
 // Add the resize event listener
@@ -40,9 +46,13 @@ async function init() {
     // Add pixi canvas element (app.view) to the document's body
     document.body.appendChild(app.view as HTMLCanvasElement);
 
-    // Create and add the viewport to the PixiJS application stage
-    const tabContainer = new TabContainer();
-    app.stage.addChild(tabContainer);
+    // // Create and add the viewport to the PixiJS application stage
+    // const tabContainer = new TabContainer();
+    // app.stage.addChild(tabContainer);
+
+    // Create and add the level to the PixiJS application stage
+    const level = new Level();
+    app.stage.addChild(level);
 
     // Listen for Alt+F11 key press in the web context
     window.addEventListener('keydown', (event) => {
