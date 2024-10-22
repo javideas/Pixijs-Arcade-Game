@@ -47,6 +47,7 @@ A classic arcade-style vertical scrolling game built with PixiJS and TypeScript 
 - **TypeScript**: For writing clean, maintainable code.
 - **HTML5 & CSS3**: For structuring the game’s interface.
 - **Vite**: For fast bundling and local development.
+- **Electron**: For building the game into a desktop application.
 
 ## How to Install
 
