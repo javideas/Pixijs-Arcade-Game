@@ -10,6 +10,19 @@ export default class Battle {
         this.app = app;
     }
 
+    deckDimensions() {
+        const offsetRXstart = 1;
+        const offsetRXend = 1.5;
+        const offsetLXstart = 1;
+        const offsetLXend = 1;
+        return {
+            deckRXstart: (this.screen.frameR / 2) * offsetRXstart,
+            deckRXend: this.screen.frameR / offsetRXend,
+            deckLXstart: (-this.screen.frameR + (this.screen.frameR / 3) / 2) * offsetLXstart,
+            deckLXend: (this.screen.frameR / 3) * offsetLXend,
+        }
+    }
+
     /** Spawn the initial elements on the stage */
     spawn() {
         // Create and add the Screen to the stage
@@ -17,16 +30,20 @@ export default class Battle {
         this.app.stage.addChild(this.screen);
         
         // Create and add the Decks to the stage
-        this.deckR = new Deck("blue", this.screen.frameR / 2, this.screen.frameR / 3);
+        this.deckR = new Deck();
         this.app.stage.addChild(this.deckR);
-        this.deckL = new Deck("red", -this.screen.frameR + (this.screen.frameR / 3) / 2, this.screen.frameR / 3);
+        
+        this.deckL = new Deck();
         this.app.stage.addChild(this.deckL);
+
+        this.resize();
     }
 
     /** Resize the elements on the stage */
     resize() {
         this.screen.draw("black");
-        this.deckR.draw("blue", this.screen.frameR /2, this.screen.frameR / 3);
-        this.deckL.draw("red", -this.screen.frameR + (this.screen.frameR / 3) / 2, this.screen.frameR / 3);
+        this.deckR.draw("blue", this.deckDimensions().deckRXstart, this.deckDimensions().deckRXend);
+
+        this.deckL.draw("red", this.deckDimensions().deckLXstart, this.deckDimensions().deckLXend);
     }
 }

@@ -1,4 +1,5 @@
 import { Container, Graphics } from 'pixi.js';
+const defaultColor = "yellow";
 
 function getDefaultDimensions() {
     return {
@@ -13,7 +14,7 @@ function getDefaultDimensions() {
 
 export class Tab extends Container {
     constructor(
-        bgShapeColor: string = "black",
+        bgShapeColor: string = defaultColor,
         frameL: number = getDefaultDimensions().frameL,
         frameR: number = getDefaultDimensions().frameR,
         frameT: number = getDefaultDimensions().frameT,
@@ -29,8 +30,8 @@ export class Tab extends Container {
         this.draw(bgShapeColor, frameL, frameR, frameT, frameB, posX, posY);
     }
     
-    private draw(
-        bgShapeColor: string = "black",
+    public draw(
+        bgShapeColor: string = defaultColor,
         frameL: number = getDefaultDimensions().frameL,
         frameR: number = getDefaultDimensions().frameR,
         frameT: number = getDefaultDimensions().frameT,
