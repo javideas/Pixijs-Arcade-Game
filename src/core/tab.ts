@@ -3,38 +3,35 @@ const defaultColor = "black";
 
 export class Tab extends Container {
     private bgShape: Graphics;
+    public ratioX: number;
+    public ratioWidth: number;
 
     constructor(
         bgShapeColor: string = defaultColor,
         pivotMode: number = 0,
-        posX: number = 0,
-        posY: number = 0,
-        width: number = 0,
-        length: number = 0
+        trackRefPosX: number = 0,
+        trackRefWidth: number = 0
     ) {
         super();
-
+        this.ratioX = 0;
+        this.ratioWidth = 0;
         this.bgShape = new Graphics();
         this.bgShape.color = bgShapeColor;
         this.addChild(this.bgShape);
         
-        this.draw(bgShapeColor, pivotMode, posX, posY, width, length);
+        this.draw(bgShapeColor, pivotMode, trackRefPosX, trackRefWidth);
     }
     
     public draw(
         bgShapeColor: string = defaultColor,
         pivotMode: number = 0,
-        posX: number = 0,
-        posY: number = 0,
-        width: number = 0,
-        length: number = 0,
         trackRefPosX: number = 0,
         trackRefWidth: number = 0
     ) {
         this.x = window.innerWidth / 2;
         this.y = window.innerHeight / 2;
 
-        this.calcDimensions(pivotMode, posX, posY, width, length, trackRefPosX, trackRefWidth);
+        this.calcDimensions(pivotMode, trackRefPosX, trackRefWidth);
 
         this.bgShape.clear();
         this.bgShape.beginFill(bgShapeColor);
@@ -44,10 +41,6 @@ export class Tab extends Container {
 
     private calcDimensions(
         pivotMode: number = 0,
-        posX: number = 0,
-        posY: number = 0,
-        width: number = 0,
-        length: number = 0,
         trackRefPosX: number = 0,
         trackRefWidth: number = 0
     ) {
@@ -58,14 +51,14 @@ export class Tab extends Container {
     
         if (pivotMode === 0) {
             // Growing from left to right
-            ratioPos = trackRefPosX + (trackRefPosX * posX);
-            ratioWidth = -trackRefWidth * width;
+            ratioPos = trackRefPosX + (trackRefPosX * this.ratioX);
+            ratioWidth = -trackRefWidth * this.ratioWidth;
             frameL = ratioL + ratioPos;
             frameR = ratioR + ratioWidth;
         } else {
             // Growing from right to left
-            ratioPos = -trackRefPosX * 2 - (trackRefPosX * (posX * 2));
-            ratioWidth = -trackRefWidth * width;
+            ratioPos = -trackRefPosX * 2 - (trackRefPosX * (this.ratioX * 2));
+            ratioWidth = -trackRefWidth * this.ratioWidth;
             frameL = ratioL - ratioPos - ratioWidth;
             frameR = ratioR + ratioWidth;
         }
@@ -77,7 +70,7 @@ export class Tab extends Container {
         this.frameR = frameR;
         this.frameT = frameT;
         this.frameB = frameB;
-        this.posX = width / 2;
+        this.posX = this.ratioWidth / 2;
         this.posY = height / 2;
     }
 }

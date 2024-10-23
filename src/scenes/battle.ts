@@ -35,6 +35,13 @@ export default class Battle {
         
         this.deckL = new Deck();
         this.app.stage.addChild(this.deckL);
+
+        let ratioX = 0.01;
+        let ratioWidth = 0.8;
+        this.deckR.ratioX = ratioX;
+        this.deckR.ratioWidth = ratioWidth;
+        this.deckL.ratioX = ratioX;
+        this.deckL.ratioWidth = ratioWidth;
         
         this.resize();
     }
@@ -42,34 +49,19 @@ export default class Battle {
     /** Resize the elements on the stage */
     resize() {
         this.screen.draw("black");
-        this.screen.alpha = 0.5;
-
-        const deckOffsetX = 0.01;
-        const deckWidth = 0.15;
 
         this.deckR.draw(
             "blue",
             0,
-            deckOffsetX,
-            0,
-            deckWidth,
-            0,
             this.screen.frameR,
             this.screen.frameR
         );
-        this.deckR.alpha = 0.5;
         
         this.deckL.draw(
             "red",
             1,
-            deckOffsetX,
-            0,
-            deckWidth,
-            0,
             this.screen.frameL,
             this.screen.frameR
         );
-        
-        this.deckL.alpha = 0.5;
     }
 }
