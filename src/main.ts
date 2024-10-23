@@ -58,7 +58,7 @@ function handleOrientationChange(event: MediaQueryListEvent) {
 /** Check if the screen is in responsive mode */
 function checkResponsiveMode() {
     if (window.innerWidth <= 768) { // Example breakpoint for mobile
-        console.log('Responsive on. Width: ', window.innerWidth, 'Height: ', window.innerHeight);
+        // console.log('Responsive on. Width: ', window.innerWidth, 'Height: ', window.innerHeight);
     }
 }
 

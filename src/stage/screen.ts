@@ -1,6 +1,6 @@
-import { Tab2 } from "../core/tab2";
+import { Tab } from "../core/tab";
 
-export class Screen extends Tab2 {
+export class Screen extends Tab {
     constructor(
         bgShapeColor: string,
         pivotMode: number,
