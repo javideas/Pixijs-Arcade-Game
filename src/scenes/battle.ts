@@ -35,9 +35,8 @@ export default class Battle {
         
         this.deckL = new Deck();
         this.app.stage.addChild(this.deckL);
-
+        
         this.resize();
-        this.deckR.setTracker(this.screen, "frameR");
     }
 
     /** Resize the elements on the stage */
