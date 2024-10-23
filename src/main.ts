@@ -13,13 +13,27 @@ export const app = new Application({
     antialias: true,
 });
 
+/** Initialize the application */
 init();
 
-const battle = new Battle(app); // Create an instance of Battle
+/** Create an instance of Battle */
+const battle = new Battle(app);
 battle.spawn();
 
-/** Initialize the application */
+/** Add event listeners */
+addEventListeners();
+
+/** Resize the app */
+resize();
+
+/** Functions List */
 async function init() {
+    // Add pixi canvas element (app.view) to the document's body
+    document.body.appendChild(app.view as HTMLCanvasElement);
+
+}
+
+function addEventListeners() {
     // Handle orientation change and add event listener
     const mediaQuery = window.matchMedia('(orientation: landscape)');
     mediaQuery.addEventListener('change', handleOrientationChange);
@@ -42,32 +56,40 @@ async function init() {
         });
     }
 
-    // Add pixi canvas element (app.view) to the document's body
-    document.body.appendChild(app.view as HTMLCanvasElement);
+    // Force initial check
+    handleOrientationChange(mediaQuery as MediaQueryListEvent);
 }
 
-/** Handle orientation change */
+function checkRatioSize( responsiveMode: string  = 'landscape') {
+    if (window.innerWidth > 1200) {
+        battle.responsive(responsiveMode);
+        return;
+    }
+    if (window.innerWidth <= 1200) { // Example breakpoint for mobile
+        battle.responsive(responsiveMode);
+        return;
+    }
+}
+
+var origentationDetected = false;
 function handleOrientationChange(event: MediaQueryListEvent) {
+    origentationDetected = true;
     if (event.matches) {
         console.log('Landscape mode');
+        checkRatioSize();
     } else {
-        console.log('Portrait mode');
+        // console.log('Portrait mode');
+        checkRatioSize('portrait');
     }
 }
 
-/** Check if the screen is in responsive mode */
-function checkResponsiveMode() {
-    if (window.innerWidth <= 768) { // Example breakpoint for mobile
-        // console.log('Responsive on. Width: ', window.innerWidth, 'Height: ', window.innerHeight);
-    }
-}
-
-/** Set up a resize function for the app */
 function resize() {
     // Resize the renderer to match the new window dimensions
     app.renderer.resize(window.innerWidth, window.innerHeight);
 
     battle.resize();
-
-    checkResponsiveMode();
+    if (!origentationDetected) {
+        console.log('resize');
+        checkRatioSize();
+    }
 }

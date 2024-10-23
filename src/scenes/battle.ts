@@ -36,32 +36,69 @@ export default class Battle {
         this.deckL = new Deck();
         this.app.stage.addChild(this.deckL);
 
-        let ratioX = 0.01;
+        this.ratioX = 0.01;
         let ratioWidth = 0.8;
-        this.deckR.ratioX = ratioX;
+        this.deckR.ratioX = this.ratioX;
         this.deckR.ratioWidth = ratioWidth;
-        this.deckL.ratioX = ratioX;
+        this.deckL.ratioX = this.ratioX;
         this.deckL.ratioWidth = ratioWidth;
         
         this.resize();
     }
 
+    responsive(mode: string) {
+        if (mode === 'landscape') {
+            this.deckR.ratioWidth = 0.3;
+            this.deckL.ratioWidth = 0.3;
+            this.resize();
+        } else if (mode === 'portrait') {
+            console.log('portrait');
+            this.deckR.ratioWidth = 0.5;
+            this.deckL.ratioWidth = 0.5;
+
+            this.resize(
+                window.innerHeight,
+                -window.innerHeight * 0.72,
+                window.innerWidth / 2,
+                window.innerWidth / 2,
+                window.innerHeight * 0.3
+            );
+        }
+    }
+
     /** Resize the elements on the stage */
-    resize() {
-        this.screen.draw("black");
+    resize(
+        offsetScreenY: number = 0,
+        lengthScreenY: number = -window.innerHeight / 2,
+        offsetDeskX: number = 0,
+        offsetDeskY: number = -window.innerHeight / 2,
+        lengthDeskY: number = window.innerHeight
+    ) {
+        this.screen.draw(
+            "rgb(24, 5, 31)",
+            0,
+            0,
+            offsetScreenY,
+            lengthScreenY
+        );
 
         this.deckR.draw(
             "blue",
             0,
+            this.screen.frameR - offsetDeskX,
             this.screen.frameR,
-            this.screen.frameR
+            offsetDeskY,
+            lengthDeskY
         );
-        
+        this.deckR.alpha = 1;
         this.deckL.draw(
             "red",
             1,
-            this.screen.frameL,
-            this.screen.frameR
+            this.screen.frameL + offsetDeskX / 2,
+            this.screen.frameR,
+            offsetDeskY,
+            lengthDeskY
         );
+        this.deckL.alpha = 0.5;
     }
 }

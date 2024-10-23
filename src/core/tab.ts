@@ -26,12 +26,14 @@ export class Tab extends Container {
         bgShapeColor: string = defaultColor,
         pivotMode: number = 0,
         trackRefPosX: number = 0,
-        trackRefWidth: number = 0
+        trackRefWidth: number = 0,
+        frameT: number = -window.innerHeight / 2,
+        frameB: number = window.innerHeight
     ) {
         this.x = window.innerWidth / 2;
         this.y = window.innerHeight / 2;
 
-        this.calcDimensions(pivotMode, trackRefPosX, trackRefWidth);
+        this.calcDimensions(pivotMode, trackRefPosX, trackRefWidth, frameT, frameB);
 
         this.bgShape.clear();
         this.bgShape.beginFill(bgShapeColor);
@@ -42,7 +44,9 @@ export class Tab extends Container {
     private calcDimensions(
         pivotMode: number = 0,
         trackRefPosX: number = 0,
-        trackRefWidth: number = 0
+        trackRefWidth: number = 0,
+        frameT: number = -window.innerHeight / 2,
+        frameB: number = window.innerHeight
     ) {
         const height = window.innerHeight;
         let frameL, frameR, ratioPos, ratioWidth;
@@ -62,9 +66,6 @@ export class Tab extends Container {
             frameL = ratioL - ratioPos - ratioWidth;
             frameR = ratioR + ratioWidth;
         }
-        
-        const frameT = -height / 2 + length;
-        const frameB = height + length;
         
         this.frameL = frameL;
         this.frameR = frameR;
