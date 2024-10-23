@@ -16,7 +16,6 @@ function getDefaultDimensions(
         frameL = -height * 9 / 32 + posX;
         frameR = height * 9 / 16 + width;
     } else {
-        // Grow leftwards from the right side, keeping frameL constant at posX
         frameL = -height * 9 / 32 - posX - width;
         frameR = height * 9 / 16 + width;
     }

@@ -47,19 +47,18 @@ export default class Battle {
         this.deckR.draw(
             "blue",
             0,
-            this.screen.frameR + (this.screen.frameR * 0.08),
+            this.screen.frameR + (this.screen.frameR * 0.04),
             0,
-            -this.screen.frameR * 0.3
+            -this.screen.frameR * 0.8
         );
         this.deckR.alpha = 0.5;
 
-        const widthConstant = 0.6;
         this.deckL.draw(
             "red",
             1,
-            this.screen.frameR + (this.screen.frameR * 0.08),
+            -this.screen.frameL * 2 - (this.screen.frameL * (0.04 * 2)),
             0,
-            -this.screen.frameR * 0.3
+            -this.screen.frameR * 0.8
         );
         
         this.deckL.alpha = 0.5;
