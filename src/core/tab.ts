@@ -40,7 +40,7 @@ export class Tab extends Container {
         this.bgShape.endFill();
     }
 
-    calcDimensions(
+    private calcDimensions(
         pivotMode: number = 0,
         posX: number = 0,
         posY: number = 0,
