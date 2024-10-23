@@ -53,7 +53,10 @@ export default class Battle {
         );
         this.deckR.alpha = 0.5;
         // this.deckL.draw("red",0, this.deckDimensions().deckLXstart, this.deckDimensions().deckLXend);
-        this.deckL.draw("red");
-        this.deckL.alpha = 0.1;
+        this.deckL.draw(
+            "red",
+            1
+        );
+        this.deckL.alpha = 0.6;
     }
 }

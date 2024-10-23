@@ -9,9 +9,8 @@ function getDefaultDimensions(
     length: number = 0
 ) {
     const height = window.innerHeight;
-    const defaultWidth = height * 9 / 16;
-    const frameL = pivotMode === 0 ? -window.innerHeight * 9 / 32 + posX : -height * 9 / 32 + posX;
-    const frameR = pivotMode === 0 ? window.innerHeight * 9 / 16 + width : height * 9 / 16;
+    const frameL = pivotMode === 0 ? -height * 9 / 32 + posX : -height * 9 / 32 + posX;
+    const frameR = pivotMode === 0 ? height * 9 / 16 + width : height * 9 / 16;
     const frameT = -height / 2 + length;
     const frameB = height + length;
     
@@ -55,9 +54,9 @@ export class Tab2 extends Container {
         this.x = window.innerWidth / 2;
         this.y = window.innerHeight / 2;
 
-        // Calculate frameL and frameR based on pivotMode and width
-        this.frameL = getDefaultDimensions(pivotMode, posX, posY, width).frameL;
-        this.frameR = getDefaultDimensions(pivotMode, posX, posY, width).frameR;
+        // Calculate frames based on pivotMode and width
+        this.frameL = getDefaultDimensions(pivotMode, posX, posY, width, length).frameL;
+        this.frameR = getDefaultDimensions(pivotMode, posX, posY, width, length).frameR;
         this.frameT = getDefaultDimensions(pivotMode, posX, posY, width, length).frameT;
         this.frameB = getDefaultDimensions(pivotMode, posX, posY, width, length).frameB;
 
