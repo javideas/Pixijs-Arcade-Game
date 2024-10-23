@@ -44,21 +44,30 @@ export default class Battle {
         this.screen.draw("black");
         this.screen.alpha = 0.5;
 
+        const deckOffsetX = 0.01;
+        const deckWidth = 0.15;
+
         this.deckR.draw(
             "blue",
             0,
-            this.screen.frameR + (this.screen.frameR * 0.04),
+            deckOffsetX,
             0,
-            -this.screen.frameR * 0.8
+            deckWidth,
+            0,
+            this.screen.frameR,
+            this.screen.frameR
         );
         this.deckR.alpha = 0.5;
-
+        
         this.deckL.draw(
             "red",
             1,
-            -this.screen.frameL * 2 - (this.screen.frameL * (0.04 * 2)),
+            deckOffsetX,
             0,
-            -this.screen.frameR * 0.8
+            deckWidth,
+            0,
+            this.screen.frameL,
+            this.screen.frameR
         );
         
         this.deckL.alpha = 0.5;
