@@ -26,7 +26,7 @@ export default class Battle {
     /** Spawn the initial elements on the stage */
     spawn() {
         // Create and add the Screen to the stage
-        this.screen = new Screen("black");
+        this.screen = new Screen();
         this.app.stage.addChild(this.screen);
         
         // Create and add the Decks to the stage
@@ -41,9 +41,19 @@ export default class Battle {
 
     /** Resize the elements on the stage */
     resize() {
-        this.screen.draw("black");
-        this.deckR.draw("blue", this.deckDimensions().deckRXstart, this.deckDimensions().deckRXend);
-
-        this.deckL.draw("red", this.deckDimensions().deckLXstart, this.deckDimensions().deckLXend);
+        this.screen.draw("yellow");
+        this.screen.alpha = 0.5;
+        // this.deckR.draw("blue",0, this.deckDimensions().deckRXstart, this.deckDimensions().deckRXend);
+        this.deckR.draw(
+            "blue",
+            0,
+            this.screen.frameR + (this.screen.frameR * 0.05),
+            0,
+            -this.screen.frameR * 0.5
+        );
+        this.deckR.alpha = 0.5;
+        // this.deckL.draw("red",0, this.deckDimensions().deckLXstart, this.deckDimensions().deckLXend);
+        this.deckL.draw("red");
+        this.deckL.alpha = 0.1;
     }
 }

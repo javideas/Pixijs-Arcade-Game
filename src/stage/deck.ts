@@ -1,13 +1,21 @@
-import { Tab } from "../core/tab";
+import { Tab2 } from "../core/tab2";
 
-export class Deck extends Tab {
+export class Deck extends Tab2 {
     constructor(
         bgShapeColor: string,
-        frameL: number,
-        frameR: number, 
-        frameT: number,
-        frameB: number
+        pivotMode: number,
+        width: number,
+        length: number,
+        posX: number,
+        posY: number
     ) {
-        super(bgShapeColor, frameL, frameR, frameT, frameB);
+        super(
+            bgShapeColor,
+            pivotMode,
+            width,
+            length,
+            posX,
+            posY
+        );
     }
 }
