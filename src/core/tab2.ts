@@ -1,5 +1,5 @@
 import { Container, Graphics } from 'pixi.js';
-const defaultColor = "yellow";
+const defaultColor = "black";
 
 function getDefaultDimensions(
     pivotMode: number = 0,
@@ -9,8 +9,18 @@ function getDefaultDimensions(
     length: number = 0
 ) {
     const height = window.innerHeight;
-    const frameL = pivotMode === 0 ? -height * 9 / 32 + posX : -height * 9 / 32 + posX;
-    const frameR = pivotMode === 0 ? height * 9 / 16 + width : height * 9 / 16;
+    let frameL, frameR;
+
+    if (pivotMode === 0) {
+        // Growing from left to right (yellow shape)
+        frameL = -height * 9 / 32 + posX;
+        frameR = height * 9 / 16 + width;
+    } else {
+        // Grow leftwards from the right side, keeping frameL constant at posX
+        frameL = -height * 9 / 32 - posX - width;
+        frameR = height * 9 / 16 + width;
+    }
+    
     const frameT = -height / 2 + length;
     const frameB = height + length;
     
@@ -55,10 +65,11 @@ export class Tab2 extends Container {
         this.y = window.innerHeight / 2;
 
         // Calculate frames based on pivotMode and width
-        this.frameL = getDefaultDimensions(pivotMode, posX, posY, width, length).frameL;
-        this.frameR = getDefaultDimensions(pivotMode, posX, posY, width, length).frameR;
-        this.frameT = getDefaultDimensions(pivotMode, posX, posY, width, length).frameT;
-        this.frameB = getDefaultDimensions(pivotMode, posX, posY, width, length).frameB;
+        const dimensions = getDefaultDimensions(pivotMode, posX, posY, width, length);
+        this.frameL = dimensions.frameL;
+        this.frameR = dimensions.frameR;
+        this.frameT = dimensions.frameT;
+        this.frameB = dimensions.frameB;
 
         this.bgShape.clear();
         this.bgShape.beginFill(bgShapeColor);

@@ -41,22 +41,27 @@ export default class Battle {
 
     /** Resize the elements on the stage */
     resize() {
-        this.screen.draw("yellow");
+        this.screen.draw("black");
         this.screen.alpha = 0.5;
-        // this.deckR.draw("blue",0, this.deckDimensions().deckRXstart, this.deckDimensions().deckRXend);
+
         this.deckR.draw(
             "blue",
             0,
-            this.screen.frameR + (this.screen.frameR * 0.05),
+            this.screen.frameR + (this.screen.frameR * 0.08),
             0,
-            -this.screen.frameR * 0.5
+            -this.screen.frameR * 0.3
         );
         this.deckR.alpha = 0.5;
-        // this.deckL.draw("red",0, this.deckDimensions().deckLXstart, this.deckDimensions().deckLXend);
+
+        const widthConstant = 0.6;
         this.deckL.draw(
             "red",
-            1
+            1,
+            this.screen.frameR + (this.screen.frameR * 0.08),
+            0,
+            -this.screen.frameR * 0.3
         );
-        this.deckL.alpha = 0.6;
+        
+        this.deckL.alpha = 0.5;
     }
 }
