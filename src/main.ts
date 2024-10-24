@@ -61,21 +61,14 @@ function addEventListeners() {
 }
 
 function checkRatioSize( responsiveMode: string  = 'landscape') {
-    if (window.innerWidth > 1200) {
-        battle.responsive(responsiveMode);
-        return;
-    }
-    if (window.innerWidth <= 1200) { // Example breakpoint for mobile
-        battle.responsive(responsiveMode);
-        return;
-    }
+    battle.responsive(responsiveMode);
 }
 
 var origentationDetected = false;
 function handleOrientationChange(event: MediaQueryListEvent) {
     origentationDetected = true;
     if (event.matches) {
-        console.log('Landscape mode');
+        // console.log('Landscape mode');
         checkRatioSize();
     } else {
         // console.log('Portrait mode');
@@ -89,7 +82,7 @@ function resize() {
 
     battle.resize();
     if (!origentationDetected) {
-        console.log('resize');
+        // console.log('resize');
         checkRatioSize();
     }
 }

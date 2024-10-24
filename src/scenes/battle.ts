@@ -23,54 +23,88 @@ export default class Battle {
         }
     }
 
+    /** Initialize the screen and decks, ensuring all elements are ready before layout */
+    initChildren(): Promise<void> {
+        return new Promise((resolve) => {
+            // Create and add the Screen to the stage
+            this.screen = new Screen();
+            this.app.stage.addChild(this.screen);
+            
+            // Create and add the Decks to the stage
+            this.deckR = new Deck();
+            this.app.stage.addChild(this.deckR);
+            
+            this.deckL = new Deck();
+            this.app.stage.addChild(this.deckL);
+    
+            // Set initial properties for decks
+            this.defaulRatioX = 0.01;
+            this.defaultRatioWidth = 0.8;
+            this.deckR.ratioX = this.defaulRatioX;
+            this.deckR.ratioWidth = this.defaultRatioWidth;
+            this.deckL.ratioX = this.defaulRatioX;
+            this.deckL.ratioWidth = this.defaultRatioWidth;
+
+            // Resolve the promise after initialization is complete
+            resolve();
+        });
+    }
+
     /** Spawn the initial elements on the stage */
     spawn() {
-        // Create and add the Screen to the stage
-        this.screen = new Screen();
-        this.app.stage.addChild(this.screen);
-        
-        // Create and add the Decks to the stage
-        this.deckR = new Deck();
-        this.app.stage.addChild(this.deckR);
-        
-        this.deckL = new Deck();
-        this.app.stage.addChild(this.deckL);
-
-        this.ratioX = 0.01;
-        let ratioWidth = 0.8;
-        this.deckR.ratioX = this.ratioX;
-        this.deckR.ratioWidth = ratioWidth;
-        this.deckL.ratioX = this.ratioX;
-        this.deckL.ratioWidth = ratioWidth;
-        
-        this.resize();
+        this.initChildren().then(() => {
+            // Call responsive only after initialization
+            window.innerWidth > window.innerHeight ? this.responsive('landscape') : this.responsive('portrait');
+        });
     }
 
     responsive(mode: string) {
+        let offsetScreenY, lengthScreenY, deskRposX, deskRwidth, deskLposX, deskLwidth, offsetDeskY, lengthDeskY;
+            
         if (mode === 'landscape') {
             this.deckR.ratioWidth = 0.3;
             this.deckL.ratioWidth = 0.3;
-            this.resize();
+            offsetScreenY = 0;
+            lengthScreenY = -window.innerHeight / 2;
+            deskRposX = this.screen.frameR;
+            deskRwidth = this.screen.frameR;
+            deskLposX = this.screen.frameL;
+            deskLwidth = this.screen.frameR;
+            offsetDeskY = -window.innerHeight / 2;
+            lengthDeskY = window.innerHeight;
+
         } else if (mode === 'portrait') {
-            console.log('portrait');
             this.deckR.ratioWidth = 0.5;
             this.deckL.ratioWidth = 0.5;
-
-            this.resize(
-                window.innerHeight,
-                -window.innerHeight * 0.72,
-                window.innerWidth / 2,
-                window.innerWidth / 2,
-                window.innerHeight * 0.3
-            );
+            offsetScreenY = window.innerHeight;
+            lengthScreenY = -window.innerHeight * 0.72;
+            deskRposX = this.screen.frameR - (window.innerWidth / 2);
+            deskRwidth = this.screen.frameR;
+            deskLposX = this.screen.frameL + (window.innerWidth / 2) / 2;
+            deskLwidth = this.screen.frameR;
+            offsetDeskY = window.innerWidth / 2;
+            lengthDeskY = window.innerHeight * 0.3;
         }
+        this.resize(
+            offsetScreenY,
+            lengthScreenY,
+            deskRposX,
+            deskRwidth,
+            deskLposX,
+            deskLwidth,
+            offsetDeskY,
+            lengthDeskY
+        );
     }
 
     /** Resize the elements on the stage */
     resize(
         offsetScreenY: number = 0,
         lengthScreenY: number = -window.innerHeight / 2,
-        offsetDeskX: number = 0,
+        deskRposX: number = 0,
+        deskRwidth: number = 0,
+        deskLposX: number = 0,
+        deskLwidth: number = 0,
         offsetDeskY: number = -window.innerHeight / 2,
         lengthDeskY: number = window.innerHeight
     ) {
@@ -85,8 +119,8 @@ export default class Battle {
         this.deckR.draw(
             "blue",
             0,
-            this.screen.frameR - offsetDeskX,
-            this.screen.frameR,
+            deskRposX,
+            deskRwidth,
             offsetDeskY,
             lengthDeskY
         );
@@ -94,8 +128,8 @@ export default class Battle {
         this.deckL.draw(
             "red",
             1,
-            this.screen.frameL + offsetDeskX / 2,
-            this.screen.frameR,
+            deskLposX,
+            deskLwidth,
             offsetDeskY,
             lengthDeskY
         );
