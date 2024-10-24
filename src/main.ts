@@ -75,15 +75,6 @@ function handleOrientationChange(event: MediaQueryListEvent) {
 }
 
 function resize() {
-    // // Define minimum width and height
-    // const minWidth = 800; // Set your desired minimum width
-    // const minHeight = 600; // Set your desired minimum height
-
-    // // Ensure the window size does not go below the minimum
-    // if (window.innerWidth < minWidth || window.innerHeight < minHeight) {
-    //     window.resizeTo(Math.max(window.innerWidth, minWidth), Math.max(window.innerHeight, minHeight));
-    //     console.log('min')
-    // }
     // Resize the renderer to match the new window dimensions
     app.renderer.resize(window.innerWidth, window.innerHeight);
 

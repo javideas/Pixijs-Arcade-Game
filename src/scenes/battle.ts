@@ -1,5 +1,7 @@
+import { Container } from 'pixi.js';
 import { Screen } from '../stage/screen.js';
 import { Deck } from '../stage/deck.js';
+import { Actor } from '../actors/actor.js';
 
 export default class Battle {
     private app: Application;
@@ -10,19 +12,41 @@ export default class Battle {
         this.app = app;
     }
 
+    loadUI() {
+        // Create and add the Screen to the stage
+        this.screen = new Screen();
+        this.app.stage.addChild(this.screen);
+        
+        // Create and add the Decks to the stage
+        this.deckR = new Deck();
+        this.app.stage.addChild(this.deckR);
+        
+        this.deckL = new Deck();
+        this.app.stage.addChild(this.deckL);
+    }
+
+    loadActors() {
+        this.actorsContainer = new Container();
+        this.app.stage.addChild(this.actorsContainer);
+        this.actor = new Actor();
+
+        this.actorsContainer.addChild(this.actor);
+    }
+
+    /** Spawn the initial elements on the stage */
+    spawn() {
+        this.initChildren().then(() => {
+            // Call responsive only after initialization
+            window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
+        });
+    }
+
     /** Initialize the screen and decks */
     initChildren(): Promise<void> {
         return new Promise((resolve) => {
-            // Create and add the Screen to the stage
-            this.screen = new Screen();
-            this.app.stage.addChild(this.screen);
-            
-            // Create and add the Decks to the stage
-            this.deckR = new Deck();
-            this.app.stage.addChild(this.deckR);
-            
-            this.deckL = new Deck();
-            this.app.stage.addChild(this.deckL);
+
+            this.loadUI();
+            this.loadActors();
 
             this.screen.bgShapeColor = 'black';
             this.deckR.bgShapeColor = 'blue';
@@ -38,14 +62,6 @@ export default class Battle {
 
             // Resolve the promise after initialization is complete
             resolve();
-        });
-    }
-
-    /** Spawn the initial elements on the stage */
-    spawn() {
-        this.initChildren().then(() => {
-            // Call responsive only after initialization
-            window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
         });
     }
 
@@ -77,6 +93,13 @@ export default class Battle {
         } else if (mode === 'portrait') {
             this.respAbsolute();
         }
+        
+        // Drawing actors on resize
+        this.actorsContainer.children.forEach((child) => {
+            if(typeof child.draw === 'function') {
+                child.draw();
+            }
+        });
     }
 
     /** if Deck, based to the Screen sides. if Screen, based on 16/9 ratio */
