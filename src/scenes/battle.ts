@@ -10,19 +10,6 @@ export default class Battle {
         this.app = app;
     }
 
-    deckDimensions() {
-        const offsetRXstart = 1;
-        const offsetRXend = 1.5;
-        const offsetLXstart = 1;
-        const offsetLXend = 1;
-        return {
-            deckRXstart: (this.screen.frameR / 2) * offsetRXstart,
-            deckRXend: this.screen.frameR / offsetRXend,
-            deckLXstart: (-this.screen.frameR + (this.screen.frameR / 3) / 2) * offsetLXstart,
-            deckLXend: (this.screen.frameR / 3) * offsetLXend,
-        }
-    }
-
     /** Initialize the screen and decks, ensuring all elements are ready before layout */
     initChildren(): Promise<void> {
         return new Promise((resolve) => {
@@ -73,10 +60,19 @@ export default class Battle {
             deskLwidth = this.screen.frameR;
             offsetDeskY = -window.innerHeight / 2;
             lengthDeskY = window.innerHeight;
-
+            this.resize(
+                offsetScreenY,
+                lengthScreenY,
+                deskRposX,
+                deskRwidth,
+                deskLposX,
+                deskLwidth,
+                offsetDeskY,
+                lengthDeskY
+            );
         } else if (mode === 'portrait') {
             this.deckR.ratioWidth = 0.6;
-            this.deckL.ratioWidth = 0.55;
+            this.deckL.ratioWidth = 0.6;
             offsetScreenY = window.innerHeight;
             lengthScreenY = -window.innerHeight * 0.72;
             deskRposX = this.screen.frameR / 2;
@@ -85,16 +81,26 @@ export default class Battle {
             deskLwidth = this.screen.frameR;
             offsetDeskY = window.innerHeight / 3.5;
             lengthDeskY = window.innerHeight * 0.2;
+            this.responsAbsolute();
         }
-        this.resize(
-            offsetScreenY,
-            lengthScreenY,
-            deskRposX,
-            deskRwidth,
-            deskLposX,
-            deskLwidth,
-            offsetDeskY,
-            lengthDeskY
+    }
+
+    responsAbsolute() {
+        this.screen.drawOnPortrait(window.innerHeight * 0.8);
+
+        this.deckR.drawOnPortrait(
+            window.innerHeight - this.screen.frameB,
+            this.screen.frameB,
+            0,
+            this.screen.frameR / 2,
+            'blue'
+        );
+        this.deckL.drawOnPortrait(
+            window.innerHeight - this.screen.frameB,
+            this.screen.frameB,
+            1,
+            this.screen.frameR / 2,
+            'red'
         );
     }
 
@@ -110,7 +116,6 @@ export default class Battle {
         lengthDeskY: number = window.innerHeight
     ) {
         this.screen.draw(
-            "rgb(24, 5, 31)",
             0,
             0,
             offsetScreenY,
@@ -118,22 +123,22 @@ export default class Battle {
         );
 
         this.deckR.draw(
-            "blue",
             0,
             deskRposX,
             deskRwidth,
             offsetDeskY,
-            lengthDeskY
+            lengthDeskY,
+            "blue"
         );
         this.deckR.alpha = 1;
         this.deckL.draw(
-            "red",
             1,
             deskLposX,
             deskLwidth,
             offsetDeskY,
-            lengthDeskY
+            lengthDeskY,
+            "red"
         );
-        this.deckL.alpha = 0.5;
+        this.deckL.alpha = 1;
     }
 }

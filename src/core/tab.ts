@@ -19,16 +19,64 @@ export class Tab extends Container {
         this.bgShape.color = bgShapeColor;
         this.addChild(this.bgShape);
         
-        this.draw(bgShapeColor, pivotMode, trackRefPosX, trackRefWidth);
+        this.draw(pivotMode, trackRefPosX, trackRefWidth);
+    }
+
+    public drawOnPortrait(
+        heightValue: number,
+        offsetPosY: number = 0,
+        pivotX: number = 0.5,
+        customWidth: number = (heightValue * 9) / 16,
+        defaultColor: string = 'black'
+    ) {
+        this.x = window.innerWidth / 2;
+        this.y = window.innerHeight / 2;
+        let posX, width;
+        // this.frameL = frameL;
+        // this.frameT = frameT;
+        // this.frameR = frameR ;
+        // this.frameB = frameB;
+        // this.bgShape.clear();
+        // this.bgShape.beginFill(defaultColor);
+        // this.bgShape.drawRect(this.frameL, this.frameT, this.frameR, this.frameB);
+        // this.bgShape.endFill();
+        
+        // Calculate the width based on a 9:16 aspect ratio
+        if(customWidth !== (heightValue * 9) / 16) {
+            this.frameR = customWidth;
+        } else {
+            this.frameR = (heightValue * 9) / 16;
+        }
+
+        // Since the pivot is centered, we need to offset x and y appropriately
+        if (pivotX == 0) {
+            this.frameL = pivotX;
+        } else if (pivotX == 0.5){
+            this.frameL = -this.frameR / 2;
+        } else if (pivotX == 1) {
+            this.frameL = -this.frameR;
+        }
+
+        this.frameT = (-window.innerHeight / 2) + offsetPosY;
+        this.frameB = heightValue;
+
+        // Clear previous drawings
+        this.bgShape.clear();
+        // Set fill color (assuming defaultColor is predefined)
+        this.bgShape.beginFill(defaultColor);
+        // Draw the rectangle with calculated values (x, y, width, heightValue)
+        this.bgShape.drawRect(this.frameL, this.frameT, this.frameR, this.frameB);
+        // End fill to finalize the drawing
+        this.bgShape.endFill();
     }
     
     public draw(
-        bgShapeColor: string = defaultColor,
         pivotMode: number = 0,
         trackRefPosX: number = 0,
         trackRefWidth: number = 0,
         frameT: number = -window.innerHeight / 2,
-        frameB: number = window.innerHeight
+        frameB: number = window.innerHeight,
+        bgShapeColor: string = defaultColor
     ) {
         this.x = window.innerWidth / 2;
         this.y = window.innerHeight / 2;
