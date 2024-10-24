@@ -1,54 +1,53 @@
 import { Container, Graphics } from 'pixi.js';
-const defaultColor = "black";
 
 export class Tab extends Container {
+    public bgShapeColor: string= 'none';
     private bgShape: Graphics;
-    public ratioX: number;
-    public ratioWidth: number;
+    public ratioX: number = 0;
+    public ratioWidth: number = 0;
 
     constructor(
-        bgShapeColor: string = defaultColor,
         pivotMode: number = 0,
         trackRefPosX: number = 0,
         trackRefWidth: number = 0
     ) {
         super();
-        this.ratioX = 0;
-        this.ratioWidth = 0;
+
         this.bgShape = new Graphics();
-        this.bgShape.color = bgShapeColor;
         this.addChild(this.bgShape);
         
-        this.draw(pivotMode, trackRefPosX, trackRefWidth);
+        this.respRelative(pivotMode, trackRefPosX, trackRefWidth);
     }
 
-    public drawOnPortrait(
+    private debugArea(alpha: number = 0.5){
+        if(this.bgShapeColor !== 'none'){
+            this.bgShape.alpha = alpha;
+            this.bgShape.clear();
+            this.bgShape.beginFill(this.bgShapeColor);
+            this.bgShape.drawRect(this.frameL, this.frameT, this.frameR, this.frameB);
+            this.bgShape.endFill();
+        }
+    }
+
+    /** Responsiveness Absolute to the window */
+    public respAbsolute(
         heightValue: number,
         offsetPosY: number = 0,
         pivotX: number = 0.5,
         customWidth: number = (heightValue * 9) / 16,
-        defaultColor: string = 'black'
+        bgShapeColor: string
     ) {
         this.x = window.innerWidth / 2;
         this.y = window.innerHeight / 2;
-        let posX, width;
-        // this.frameL = frameL;
-        // this.frameT = frameT;
-        // this.frameR = frameR ;
-        // this.frameB = frameB;
-        // this.bgShape.clear();
-        // this.bgShape.beginFill(defaultColor);
-        // this.bgShape.drawRect(this.frameL, this.frameT, this.frameR, this.frameB);
-        // this.bgShape.endFill();
-        
-        // Calculate the width based on a 9:16 aspect ratio
+      
+        // frameR based on customWidth or default
         if(customWidth !== (heightValue * 9) / 16) {
             this.frameR = customWidth;
         } else {
             this.frameR = (heightValue * 9) / 16;
         }
 
-        // Since the pivot is centered, we need to offset x and y appropriately
+        // frameL based on Pivot
         if (pivotX == 0) {
             this.frameL = pivotX;
         } else if (pivotX == 0.5){
@@ -60,33 +59,24 @@ export class Tab extends Container {
         this.frameT = (-window.innerHeight / 2) + offsetPosY;
         this.frameB = heightValue;
 
-        // Clear previous drawings
-        this.bgShape.clear();
-        // Set fill color (assuming defaultColor is predefined)
-        this.bgShape.beginFill(defaultColor);
-        // Draw the rectangle with calculated values (x, y, width, heightValue)
-        this.bgShape.drawRect(this.frameL, this.frameT, this.frameR, this.frameB);
-        // End fill to finalize the drawing
-        this.bgShape.endFill();
+        this.debugArea();
     }
-    
-    public draw(
+
+    /** if Deck, Responsiveness Relative to the Screen sides. if Screen, based on 16/9 ratio */
+    public respRelative(
         pivotMode: number = 0,
         trackRefPosX: number = 0,
         trackRefWidth: number = 0,
         frameT: number = -window.innerHeight / 2,
         frameB: number = window.innerHeight,
-        bgShapeColor: string = defaultColor
+        bgShapeColor: string
     ) {
         this.x = window.innerWidth / 2;
         this.y = window.innerHeight / 2;
 
         this.calcDimensions(pivotMode, trackRefPosX, trackRefWidth, frameT, frameB);
 
-        this.bgShape.clear();
-        this.bgShape.beginFill(bgShapeColor);
-        this.bgShape.drawRect(this.frameL, this.frameT, this.frameR, this.frameB);
-        this.bgShape.endFill();
+        this.debugArea();
     }
 
     private calcDimensions(

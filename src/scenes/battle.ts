@@ -10,7 +10,7 @@ export default class Battle {
         this.app = app;
     }
 
-    /** Initialize the screen and decks, ensuring all elements are ready before layout */
+    /** Initialize the screen and decks */
     initChildren(): Promise<void> {
         return new Promise((resolve) => {
             // Create and add the Screen to the stage
@@ -23,6 +23,10 @@ export default class Battle {
             
             this.deckL = new Deck();
             this.app.stage.addChild(this.deckL);
+
+            this.screen.bgShapeColor = 'black';
+            this.deckR.bgShapeColor = 'blue';
+            this.deckL.bgShapeColor = 'red';
     
             // Set initial properties for decks
             this.defaulRatioX = 0.01;
@@ -41,26 +45,26 @@ export default class Battle {
     spawn() {
         this.initChildren().then(() => {
             // Call responsive only after initialization
-            window.innerWidth > window.innerHeight ? this.responsive('landscape') : this.responsive('portrait');
+            window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
         });
     }
 
-    responsive(mode: string = 'landscape') {
-        console.log(mode);
-        let offsetScreenY, lengthScreenY, deskRposX, deskRwidth, deskLposX, deskLwidth, offsetDeskY, lengthDeskY;
-            
+    /** Resize based on Device's rotation */
+    resize(mode: string = 'landscape') {
         if (mode === 'landscape') {
             this.deckR.ratioWidth = 0.3;
             this.deckL.ratioWidth = 0.3;
-            offsetScreenY = 0;
-            lengthScreenY = -window.innerHeight / 2;
-            deskRposX = this.screen.frameR;
-            deskRwidth = this.screen.frameR;
-            deskLposX = this.screen.frameL;
-            deskLwidth = this.screen.frameR;
-            offsetDeskY = -window.innerHeight / 2;
-            lengthDeskY = window.innerHeight;
-            this.resize(
+
+            const offsetScreenY = 0;
+            const lengthScreenY = -window.innerHeight / 2;
+            const deskRposX = this.screen.frameR;
+            const deskRwidth = this.screen.frameR;
+            const deskLposX = this.screen.frameL;
+            const deskLwidth = this.screen.frameR;
+            const offsetDeskY = -window.innerHeight / 2;
+            const lengthDeskY = window.innerHeight;
+            // "Extra step" function for custom sizes cases
+            this.respRelative(
                 offsetScreenY,
                 lengthScreenY,
                 deskRposX,
@@ -71,41 +75,12 @@ export default class Battle {
                 lengthDeskY
             );
         } else if (mode === 'portrait') {
-            this.deckR.ratioWidth = 0.6;
-            this.deckL.ratioWidth = 0.6;
-            offsetScreenY = window.innerHeight;
-            lengthScreenY = -window.innerHeight * 0.72;
-            deskRposX = this.screen.frameR / 2;
-            deskRwidth = this.screen.frameR;
-            deskLposX = this.screen.frameL / 2;
-            deskLwidth = this.screen.frameR;
-            offsetDeskY = window.innerHeight / 3.5;
-            lengthDeskY = window.innerHeight * 0.2;
-            this.responsAbsolute();
+            this.respAbsolute();
         }
     }
 
-    responsAbsolute() {
-        this.screen.drawOnPortrait(window.innerHeight * 0.8);
-
-        this.deckR.drawOnPortrait(
-            window.innerHeight - this.screen.frameB,
-            this.screen.frameB,
-            0,
-            this.screen.frameR / 2,
-            'blue'
-        );
-        this.deckL.drawOnPortrait(
-            window.innerHeight - this.screen.frameB,
-            this.screen.frameB,
-            1,
-            this.screen.frameR / 2,
-            'red'
-        );
-    }
-
-    /** Resize the elements on the stage */
-    resize(
+    /** if Deck, based to the Screen sides. if Screen, based on 16/9 ratio */
+    respRelative(
         offsetScreenY: number = 0,
         lengthScreenY: number = -window.innerHeight / 2,
         deskRposX: number = 0,
@@ -115,30 +90,47 @@ export default class Battle {
         offsetDeskY: number = -window.innerHeight / 2,
         lengthDeskY: number = window.innerHeight
     ) {
-        this.screen.draw(
+        this.screen.respRelative(
             0,
             0,
             offsetScreenY,
             lengthScreenY
         );
 
-        this.deckR.draw(
+        this.deckR.respRelative(
             0,
             deskRposX,
             deskRwidth,
             offsetDeskY,
-            lengthDeskY,
-            "blue"
+            lengthDeskY
         );
-        this.deckR.alpha = 1;
-        this.deckL.draw(
+
+        this.deckL.respRelative(
             1,
             deskLposX,
             deskLwidth,
             offsetDeskY,
-            lengthDeskY,
-            "red"
+            lengthDeskY
         );
-        this.deckL.alpha = 1;
+    }
+
+    /** Responsiveness Absolute to the window */
+    respAbsolute() {
+        this.screen.respAbsolute(window.innerHeight * 0.8);
+
+        this.deckR.respAbsolute(
+            window.innerHeight - this.screen.frameB,
+            this.screen.frameB,
+            0,
+            this.screen.frameR / 2,
+            'blue'
+        );
+        this.deckL.respAbsolute(
+            window.innerHeight - this.screen.frameB,
+            this.screen.frameB,
+            1,
+            this.screen.frameR / 2,
+            'red'
+        );
     }
 }

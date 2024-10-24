@@ -61,7 +61,7 @@ function addEventListeners() {
 }
 
 function checkRatioSize( responsiveMode: string  = 'landscape') {
-    battle.responsive(responsiveMode);
+    battle.resize(responsiveMode);
 }
 
 var origentationDetected = false;
