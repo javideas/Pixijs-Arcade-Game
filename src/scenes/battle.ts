@@ -28,7 +28,7 @@ export default class Battle {
     loadActors() {
         this.actorsContainer = new Container();
         this.app.stage.addChild(this.actorsContainer);
-        this.actor = new Actor();
+        this.actor = new Actor(this.screen);
 
         this.actorsContainer.addChild(this.actor);
     }
@@ -93,7 +93,7 @@ export default class Battle {
         } else if (mode === 'portrait') {
             this.respAbsolute();
         }
-        
+
         // Drawing actors on resize
         this.actorsContainer.children.forEach((child) => {
             if(typeof child.draw === 'function') {
