@@ -74,16 +74,16 @@ export default class Battle {
             lengthDeskY = window.innerHeight;
 
         } else if (mode === 'portrait') {
-            this.deckR.ratioWidth = 0.5;
-            this.deckL.ratioWidth = 0.5;
+            this.deckR.ratioWidth = 0.6;
+            this.deckL.ratioWidth = 0.55;
             offsetScreenY = window.innerHeight;
             lengthScreenY = -window.innerHeight * 0.72;
-            deskRposX = this.screen.frameR - (window.innerWidth / 2);
+            deskRposX = this.screen.frameR / 2;
             deskRwidth = this.screen.frameR;
-            deskLposX = this.screen.frameL + (window.innerWidth / 2) / 2;
+            deskLposX = this.screen.frameL / 2;
             deskLwidth = this.screen.frameR;
-            offsetDeskY = window.innerWidth / 2;
-            lengthDeskY = window.innerHeight * 0.3;
+            offsetDeskY = window.innerHeight / 3.5;
+            lengthDeskY = window.innerHeight * 0.2;
         }
         this.resize(
             offsetScreenY,
