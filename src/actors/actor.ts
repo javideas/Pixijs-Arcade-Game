@@ -1,9 +1,24 @@
 import { Container, Graphics } from 'pixi.js';
 
 export class Actor extends Container {
-    constructor(
-        screenRef: Container
-    ){
+    private screenRef: Container;
+    private bgShape: Graphics;
+    private colWidth: number;
+    private colHeight: number;
+    private colPosX: number;
+    private colPosY: number;
+    private centerX: number;
+    private centerY: number;
+    private globalLimitR: number;
+    private globalLimitL: number;
+    private globalLimitT: number;
+    private globalLimitB: number;
+    private localLimitR: number;
+    private localLimitL: number;
+    private localLimitT: number;
+    private localLimitB: number;
+
+    constructor(screenRef: Container) {
         super();
         this.screenRef = screenRef;
         this.bgShape = new Graphics();
@@ -11,10 +26,8 @@ export class Actor extends Container {
 
         this.setScale();
         this.draw();
-        this.posX = 0;
-        this.posY = 0;
         this.calcRespCenter();
-        this.move(0, 280);
+        this.move();
     }
 
     private setScale(ratio: number = 1) {
@@ -24,24 +37,25 @@ export class Actor extends Container {
         this.colHeight = this.colWidth;
     }
 
-    /** Responsiveness of Screen Center */
     private calcRespCenter() {
         this.centerX = this.globalLimitR / 2 + this.globalLimitL / 2;
         this.centerY = this.globalLimitB;
     }
 
-    public move(posX: number, posY: number) {
-        this.calcRespCenter();
+    public move() {
+        // Calculate proportional movement based on screen dimensions
+        const moveX = this.screenRef.frameR * 0.01; // 10% of screen width
+        const moveY = this.screenRef.frameB * 0.01; // 10% of screen height
 
-        if(posX <= this.localLimitR) {
-            this.x = this.centerX + posX;
+        if(moveX <= this.localLimitR) {
+            this.x = this.centerX + moveX;
         }
-        if(posY <= this.localLimitB){
-            this.y = this.centerY - posY;
+        if(moveY <= this.localLimitB) {
+            this.y = this.centerY - moveY;
         }
     }
 
-    public draw(){
+    public draw() {
         this.setScale(this.screenRef.frameB);
 
         const limitRefR = this.screenRef.frameR / 2 - this.colWidth / 2;
@@ -58,6 +72,13 @@ export class Actor extends Container {
         this.localLimitB = this.globalLimitB;
 
         this.calcRespCenter();
+
+        // this.move();
+
+        // Loop for testing porpouses
+        for(let i = 0; i < 40; i++) {
+            this.move();
+        }
         this.debugShape();
     }
 
