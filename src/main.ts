@@ -68,10 +68,8 @@ var origentationDetected = false;
 function handleOrientationChange(event: MediaQueryListEvent) {
     origentationDetected = true;
     if (event.matches) {
-        // console.log('Landscape mode');
         checkRatioSize();
     } else {
-        // console.log('Portrait mode');
         checkRatioSize('portrait');
     }
 }
@@ -80,9 +78,8 @@ function resize() {
     // Resize the renderer to match the new window dimensions
     app.renderer.resize(window.innerWidth, window.innerHeight);
 
-    battle.resize();
+    window.innerWidth > window.innerHeight ? checkRatioSize() : checkRatioSize('portrait');
     if (!origentationDetected) {
-        // console.log('resize');
         checkRatioSize();
     }
 }

@@ -58,7 +58,8 @@ export default class Battle {
         });
     }
 
-    responsive(mode: string) {
+    responsive(mode: string = 'landscape') {
+        console.log(mode);
         let offsetScreenY, lengthScreenY, deskRposX, deskRwidth, deskLposX, deskLwidth, offsetDeskY, lengthDeskY;
             
         if (mode === 'landscape') {
