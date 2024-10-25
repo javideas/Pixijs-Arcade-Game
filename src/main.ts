@@ -1,6 +1,4 @@
 import { Application } from 'pixi.js';
-// import GameMode 
-// import Battle from './scenes/battle.js';
 import GameMode from './managers/gameMode.js';
 
 const bgColor = "#142332";
@@ -31,7 +29,6 @@ resize();
 async function init() {
     // Add pixi canvas element (app.view) to the document's body
     document.body.appendChild(app.view as HTMLCanvasElement);
-
 }
 
 function addEventListeners(gameMode: GameMode) {

@@ -41,21 +41,22 @@ export class Actor extends Container {
         this.setResponsive();
         this.trackPos();
         this.draw();
+        console.log(`Class Name: ${this.constructor.name}`);
     }
 
     public draw() {
         // this.setResponsive();
-    
-        this.actionDelta();
         
         this.debugShape();
     }
 
-    private actionDelta() {
+    public update() {
         if(this.hasAi) {
             this.moveY(-1);
             this.moveX(0.5);
             console.log('ey');
+            // console.log('actor parent: ', this.parent);
+            // console.log(`Class Name: ${this.constructor.name}`);
         }
     }
     
@@ -92,13 +93,13 @@ export class Actor extends Container {
     }
 
     private onLimit() {
-        console.log('on limit');
+        // console.log(this.parent);
         // Remove from parent container
         if (this.parent) {
             this.parent.removeChild(this); // Remove this instance from its parent
         }
         // Call the destroy method to clean up Pixi.js resources
-        this.destroy();
+        this.destroy(true);
     }
 
     public trackPos() {

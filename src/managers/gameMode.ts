@@ -27,14 +27,16 @@ export default class GameMode {
 
     private update(deltaTime: number) {
         // this.debugPlayerMove(deltaTime);
+        // Update the shooter
         this.battle.actorsContainer.children.forEach((child) => {
             if (typeof child.draw == 'function') {
-                child.draw();
+                child.update(deltaTime);
             }
-        })
+        });
+
         this.battle.projectilesContainer.children.forEach((child) => {
             if (typeof child.draw == 'function') {
-                child.draw();
+                child.update(deltaTime);
             }
         })
     }
