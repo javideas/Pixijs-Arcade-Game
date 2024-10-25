@@ -38,21 +38,23 @@ export class Actor extends Container {
 
         this.bgShape = new Graphics();
         this.addChild(this.bgShape);
+        this.setResponsive();
+        this.trackPos();
         this.draw();
     }
 
     public draw() {
-        this.calcTotalResponsive();
-        
-        this.trackPos();
+        // this.setResponsive();
+    
+        this.actionDelta();
         
         this.debugShape();
-
-        this.actionDelta();
     }
 
     private actionDelta() {
         if(this.hasAi) {
+            this.moveY(-1);
+            this.moveX(0.5);
             console.log('ey');
         }
     }
@@ -61,6 +63,7 @@ export class Actor extends Container {
         const newPosAccX = this.calcMove( 'x', this.posAccX, inputX, this.globalLimitL, this.globalLimitR);
         if (newPosAccX !== null) {
             this.posAccX = newPosAccX; // Update posAccX only if within limits
+            this.trackPos();
         }
     }
     
@@ -68,6 +71,7 @@ export class Actor extends Container {
         const newPosAccY = this.calcMove( 'y', this.posAccY, inputY, this.globalLimitT, this.globalLimitB);
         if (newPosAccY !== null) {
             this.posAccY = newPosAccY; // Update posAccY only if within limits
+            this.trackPos();
         }
     }
     
@@ -83,8 +87,24 @@ export class Actor extends Container {
         if (resultingPosition >= limitL && resultingPosition <= limitR) {
             return newPosAcc; // Return the new position accumulator if within limits
         }
-    
+        if(this.hasAi) this.onLimit();
         return null; // Return null if out of limits
+    }
+
+    private onLimit() {
+        console.log('on limit');
+        // Remove from parent container
+        if (this.parent) {
+            this.parent.removeChild(this); // Remove this instance from its parent
+        }
+        // Call the destroy method to clean up Pixi.js resources
+        this.destroy();
+    }
+
+    public trackPos() {
+        // Map positions X and Y (-1 to 1) to [globalLimitL, globalLimitR]
+        this.x = (this.posAccX + 1) / 2 * (this.globalLimitR - this.globalLimitL) + this.globalLimitL;
+        this.y = (this.posAccY + 1) / 2 * (this.globalLimitB - this.globalLimitT) + this.globalLimitT;
     }
 
     private calcRespScale(ratio: number = 1) {
@@ -104,15 +124,9 @@ export class Actor extends Container {
         this.globalLimitB = this.screenRef.frameB - this.colHeight / 2;
     }
 
-    private calcTotalResponsive() {
+    public setResponsive() {
         this.calcRespScale(this.screenRef.frameB);
         this.calcRespLimits();
-    }
-
-    public trackPos() {
-        // Map accX [-1, 1] to [globalLimitL, globalLimitR]
-        this.x = (this.posAccX + 1) / 2 * (this.globalLimitR - this.globalLimitL) + this.globalLimitL;
-        this.y = (this.posAccY + 1) / 2 * (this.globalLimitB - this.globalLimitT) + this.globalLimitT;
     }
 
     private debugShape() {

@@ -21,9 +21,4 @@ export class Projectile extends Actor {
         this.x = posX;
         this.y = posY;
     }
-
-    // public draw(){
-    //     super.draw();
-    //     console.log('projectile draw');
-    // }
 }

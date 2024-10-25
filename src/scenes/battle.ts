@@ -7,8 +7,6 @@ import { Projectile } from '../actors/projectile';
 export default class Battle {
     private app: Application;
 
-    private ticker: Ticker;
-
     private screen: Screen;
     private deckR: Deck;
     private deckL: Deck;
@@ -25,10 +23,7 @@ export default class Battle {
 
 
     constructor(app: Application) {
-        this.app = app;
-        // Initialize and start the ticker
-        this.ticker = Ticker.shared;
-        
+        this.app = app;      
     }
 
     /** Spawn the initial elements on the stage */
@@ -113,6 +108,8 @@ export default class Battle {
         // Drawing actors on resize
         this.actorsContainer.children.forEach((child) => {
             if(typeof child.draw === 'function') {
+                child.setResponsive();
+                child.trackPos();
                 child.draw();
             }
         });

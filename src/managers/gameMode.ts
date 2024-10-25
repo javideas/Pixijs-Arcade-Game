@@ -32,6 +32,11 @@ export default class GameMode {
                 child.draw();
             }
         })
+        this.battle.projectilesContainer.children.forEach((child) => {
+            if (typeof child.draw == 'function') {
+                child.draw();
+            }
+        })
     }
     
     private startTicker() {

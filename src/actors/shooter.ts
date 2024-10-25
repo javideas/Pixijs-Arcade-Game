@@ -16,6 +16,8 @@ export class Shooter extends Actor {
             projectilesContainer
         );
         this.projectilesContainer = projectilesContainer;
+        this.fireRate = 0.5;
+        this.cooldown = 0;
     }
 
     public shoot() {
