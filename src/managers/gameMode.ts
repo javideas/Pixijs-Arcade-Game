@@ -3,11 +3,9 @@ import { Application, Ticker } from 'pixi.js';
 
 export default class GameMode {
     private app: Application;
-
     private ticker: Ticker;
-
     private battle: Battle;
-
+    // Debug auto-move variables:
     private elapsedTime: number = 0;
     private direction: number = 1;
     private moveCount: number = 0;
@@ -25,6 +23,15 @@ export default class GameMode {
     private async init() {
         await this.loadScene();
         this.startTicker();
+    }
+
+    private update(deltaTime: number) {
+        // this.debugPlayerMove(deltaTime);
+        this.battle.actorsContainer.children.forEach((child) => {
+            if (typeof child.draw == 'function') {
+                child.draw();
+            }
+        })
     }
 
     public playerInput(action: string = 'none') {
@@ -74,15 +81,6 @@ export default class GameMode {
             default:
                 break;
         }
-    }
-
-    private update(deltaTime: number) {
-        // this.debugPlayerMove(deltaTime);
-        this.battle.actorsContainer.children.forEach((child) => {
-            if (typeof child.draw == 'function') {
-                child.draw();
-            }
-        })
     }
 
     private async loadScene(scene: string = 'battle') {
