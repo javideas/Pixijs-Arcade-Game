@@ -24,6 +24,7 @@ export class Actor extends Container {
         this.bgShape = new Graphics();
         this.addChild(this.bgShape);
         this.posAccX = 0;
+        this.posAccY = 0.8;
         this.draw();
     }
 
@@ -61,36 +62,46 @@ export class Actor extends Container {
         this.calcRespCenter();
     }
 
-    public moveX(inputX: number = 1) {
-        // Calculate the new position based on the current posAccX and inputX
-        const newPosAccX = this.posAccX + (inputX * 0.1);
-
-        // Calculate the resulting position using trackPos logic
-        const resultingPosition = (newPosAccX + 1) / 2 * (this.globalLimitR - this.globalLimitL) + this.globalLimitL;
-
+    private calcMove(currentPosAcc: number, input: number, limitL: number, limitR: number): number | null {
+        const newPosAcc = currentPosAcc + (input * 0.1);
+    
+        // Calculate the resulting position
+        const resultingPosition = (newPosAcc + 1) / 2 * (limitR - limitL) + limitL;
+    
         // Check if the resulting position is within the limits
-        if (resultingPosition >= this.globalLimitL && resultingPosition <= this.globalLimitR) {
+        if (resultingPosition >= limitL && resultingPosition <= limitR) {
+            return newPosAcc; // Return the new position accumulator if within limits
+        }
+    
+        return null; // Return null if out of limits
+    }
+    
+    public moveX(inputX: number = 1) {
+        const newPosAccX = this.calcMove(this.posAccX, inputX, this.globalLimitL, this.globalLimitR);
+        if (newPosAccX !== null) {
             this.posAccX = newPosAccX; // Update posAccX only if within limits
+        }
+    }
+    
+    public moveY(inputY: number = 1) {
+        const newPosAccY = this.calcMove(this.posAccY, inputY, this.globalLimitT, this.globalLimitB);
+        if (newPosAccY !== null) {
+            this.posAccY = newPosAccY; // Update posAccY only if within limits
         }
     }
 
     public trackPos() {
         // Map accX [-1, 1] to [globalLimitL, globalLimitR]
         this.x = (this.posAccX + 1) / 2 * (this.globalLimitR - this.globalLimitL) + this.globalLimitL;
+        this.y = (this.posAccY + 1) / 2 * (this.globalLimitB - this.globalLimitT) + this.globalLimitT;
     }
 
     public draw() {
-        console.log('draw');
-        // // Loop for testing porpouses
-        // for(let i = 0; i < 10; i++) {
-        //     this.moveX(0.02);
-        // }
         this.calcTotalResponsive();
         
         this.trackPos();
         
         this.debugShape();
-        // this.moveX();
     }
 
     private debugShape() {
