@@ -78,15 +78,9 @@ export class Actor extends Container {
         this.globalLimitB = this.screenRef.frameB - this.colHeight / 2;
     }
 
-    private calcRespCenter() {
-        this.centerX = this.globalLimitR / 2 + this.globalLimitL / 2;
-        this.centerY = this.globalLimitB;
-    }
-
     private calcTotalResponsive() {
         this.calcRespScale(this.screenRef.frameB);
         this.calcRespLimits();
-        this.calcRespCenter();
     }
 
     public trackPos() {
