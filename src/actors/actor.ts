@@ -23,18 +23,31 @@ export class Actor extends Container {
         this.screenRef = screenRef;
         this.bgShape = new Graphics();
         this.addChild(this.bgShape);
-
-        this.setScale();
+        this.posAccX = 0;
         this.draw();
-        this.calcRespCenter();
-        this.move();
     }
 
-    private setScale(ratio: number = 1) {
+    private calcRespScale(ratio: number = 1) {
         this.colWidth = 0.07 * ratio;
         this.colPosX = -this.colWidth / 2;
         this.colPosY = -this.colWidth / 2;
         this.colHeight = this.colWidth;
+    }
+
+    private calcRespLimits() {
+        const limitRefR = this.screenRef.frameR / 2 - this.colWidth / 2;
+        const limitRefL = this.screenRef.frameL + this.colWidth / 2;
+    
+        this.globalLimitR = window.innerWidth / 2 + limitRefR;
+        this.globalLimitL = window.innerWidth / 2 + limitRefL;
+        this.globalLimitT = this.colHeight / 2;
+        this.globalLimitB = this.screenRef.frameB - this.colHeight / 2;
+    
+        this.localLimitR = limitRefR;
+        this.localLimitL = this.globalLimitR / 2 + this.globalLimitL / 2 + limitRefL;
+        this.localLimitT = this.globalLimitT;
+        this.localLimitB = this.globalLimitB;
+
     }
 
     private calcRespCenter() {
@@ -42,44 +55,34 @@ export class Actor extends Container {
         this.centerY = this.globalLimitB;
     }
 
-    public move() {
-        // Calculate proportional movement based on screen dimensions
-        const moveX = this.screenRef.frameR * 0.01; // 10% of screen width
-        const moveY = this.screenRef.frameB * 0.01; // 10% of screen height
+    private calcTotalResponsive() {
+        this.calcRespScale(this.screenRef.frameB);
+        this.calcRespLimits();
+        this.calcRespCenter();
+    }
 
-        if(moveX <= this.localLimitR) {
-            this.x = this.centerX + moveX;
-        }
-        if(moveY <= this.localLimitB) {
-            this.y = this.centerY - moveY;
-        }
+    public moveX(inputX: number = 0.07) {
+        const ratioPos = this.globalLimitR / 800;
+        this.posAccX += (inputX);
+        console.log(this.posAccX);
+    }
+
+    public trackPos() {
+        // Map accX [-1, 1] to [globalLimitL, globalLimitR]
+        this.x = (this.posAccX + 1) / 2 * (this.globalLimitR - this.globalLimitL) + this.globalLimitL;
     }
 
     public draw() {
-        this.setScale(this.screenRef.frameB);
-
-        const limitRefR = this.screenRef.frameR / 2 - this.colWidth / 2;
-        const limitRefL = this.screenRef.frameL + this.colWidth / 2;
-
-        this.globalLimitR = window.innerWidth / 2 + limitRefR;
-        this.globalLimitL = window.innerWidth / 2 + limitRefL;
-        this.globalLimitT = this.colHeight / 2;
-        this.globalLimitB = this.screenRef.frameB - this.colHeight / 2;
-
-        this.localLimitR = limitRefR;
-        this.localLimitL = this.globalLimitR / 2 + this.globalLimitL / 2 + limitRefL;
-        this.localLimitT = this.globalLimitT;
-        this.localLimitB = this.globalLimitB;
-
-        this.calcRespCenter();
-
-        // this.move();
-
-        // Loop for testing porpouses
-        for(let i = 0; i < 40; i++) {
-            this.move();
-        }
+        // // Loop for testing porpouses
+        // for(let i = 0; i < 10; i++) {
+        //     this.moveX(0.02);
+        // }
+        this.calcTotalResponsive();
+        
+        this.trackPos();
+        
         this.debugShape();
+        // this.moveX();
     }
 
     private debugShape() {

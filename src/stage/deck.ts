@@ -1,4 +1,4 @@
-import { Tab } from "../core/tab";
+import { Tab } from "../ui/tab";
 
 export class Deck extends Tab {
     constructor(

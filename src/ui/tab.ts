@@ -1,18 +1,18 @@
 import { Container, Graphics } from 'pixi.js';
 
 export class Tab extends Container {
-    public bgShapeColor: string= 'none';
     private bgShape: Graphics;
     public ratioX: number = 0;
     public ratioWidth: number = 0;
 
     constructor(
+        bgShapeColor: string= 'none',
         pivotMode: number = 0,
         trackRefPosX: number = 0,
         trackRefWidth: number = 0
     ) {
         super();
-
+        this.bgShapeColor = bgShapeColor;
         this.bgShape = new Graphics();
         this.addChild(this.bgShape);
         

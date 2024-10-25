@@ -1,4 +1,5 @@
 import { Application } from 'pixi.js';
+// import GameMode 
 import Battle from './scenes/battle.js';
 
 const bgColor = "#142332";

@@ -1,7 +1,7 @@
 import { Container } from 'pixi.js';
 import { Screen } from '../stage/screen.js';
 import { Deck } from '../stage/deck.js';
-import { Actor } from '../actors/actor.js';
+import { Player } from '../actors/player.js';
 
 export default class Battle {
     private app: Application;
@@ -14,23 +14,31 @@ export default class Battle {
 
     loadUI() {
         // Create and add the Screen to the stage
-        this.screen = new Screen();
+        this.screen = new Screen('black');
         this.app.stage.addChild(this.screen);
         
         // Create and add the Decks to the stage
-        this.deckR = new Deck();
+        this.deckR = new Deck('blue');
         this.app.stage.addChild(this.deckR);
         
-        this.deckL = new Deck();
+        this.deckL = new Deck('red');
         this.app.stage.addChild(this.deckL);
+
+        // Set initial properties for decks
+        const defaulRatioX = 0.01;
+        const defaultRatioWidth = 0.8;
+        this.deckR.ratioX = defaulRatioX;
+        this.deckR.ratioWidth = defaultRatioWidth;
+        this.deckL.ratioX = defaulRatioX;
+        this.deckL.ratioWidth = defaultRatioWidth;
     }
 
     loadActors() {
         this.actorsContainer = new Container();
         this.app.stage.addChild(this.actorsContainer);
-        this.actor = new Actor(this.screen);
+        this.player = new Player(this.screen);
 
-        this.actorsContainer.addChild(this.actor);
+        this.actorsContainer.addChild(this.player);
     }
 
     /** Spawn the initial elements on the stage */
@@ -47,18 +55,8 @@ export default class Battle {
 
             this.loadUI();
             this.loadActors();
-
-            this.screen.bgShapeColor = 'black';
-            this.deckR.bgShapeColor = 'blue';
-            this.deckL.bgShapeColor = 'red';
     
-            // Set initial properties for decks
-            this.defaulRatioX = 0.01;
-            this.defaultRatioWidth = 0.8;
-            this.deckR.ratioX = this.defaulRatioX;
-            this.deckR.ratioWidth = this.defaultRatioWidth;
-            this.deckL.ratioX = this.defaulRatioX;
-            this.deckL.ratioWidth = this.defaultRatioWidth;
+
 
             // Resolve the promise after initialization is complete
             resolve();
