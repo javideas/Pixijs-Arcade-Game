@@ -49,6 +49,22 @@ export default class GameMode {
             case 'down':
                 this.battle.player.moveY(1); // Move player down
                 break;
+            case 'up-left':
+                this.battle.player.moveX(-1); // Move player left
+                this.battle.player.moveY(-1); // Move player up
+                break;
+            case 'up-right':
+                this.battle.player.moveX(1); // Move player right
+                this.battle.player.moveY(-1); // Move player up
+                break;
+            case 'down-left':
+                this.battle.player.moveX(-1); // Move player left
+                this.battle.player.moveY(1); // Move player down
+                break;
+            case 'down-right':
+                this.battle.player.moveX(1); // Move player right
+                this.battle.player.moveY(1); // Move player down
+                break;
             case 'confirm':
                 this.battle.player.shoot(); // Shoot
                 break;

@@ -42,29 +42,48 @@ function addEventListeners(gameMode: GameMode) {
     // Add the resize event listener
     window.addEventListener('resize', resize);
 
-    // Listen for inputs
+    const activeActions: Set<string> = new Set(); // Track active actions
+
     window.addEventListener('keydown', (event) => {
+        // Add action to the set
+        if (['ArrowLeft', 'a', 'ArrowRight', 'd', 'ArrowUp', 'w', 'ArrowDown', 's', ' ', 'Enter', 'Backspace'].includes(event.key)) {
+            event.preventDefault(); // Prevent default action for these keys
+            activeActions.add(event.key);
+        }
+
+        // Process actions immediately
+        processActions();
+    });
+
+    window.addEventListener('keyup', (event) => {
+        // Remove action from the set
+        activeActions.delete(event.key);
+    });
+
+    function processActions() {
         let action: string | null = null;
 
         // Detect arrow keys and WASD keys
-        if (['ArrowLeft', 'a'].includes(event.key)) {
+        if (activeActions.has('ArrowLeft') || activeActions.has('a')) {
             action = 'left';
-        } else if (['ArrowRight', 'd'].includes(event.key)) {
+        } else if (activeActions.has('ArrowRight') || activeActions.has('d')) {
             action = 'right';
-        } else if (['ArrowUp', 'w'].includes(event.key)) {
-            action = 'up';
-        } else if (['ArrowDown', 's'].includes(event.key)) {
-            action = 'down';
-        } else if ([' ', 'Enter'].includes(event.key)) {
+        }
+        if (activeActions.has('ArrowUp') || activeActions.has('w')) {
+            action = action === 'left' ? 'up-left' : action === 'right' ? 'up-right' : 'up';
+        } else if (activeActions.has('ArrowDown') || activeActions.has('s')) {
+            action = action === 'left' ? 'down-left' : action === 'right' ? 'down-right' : 'down';
+        }
+        if (activeActions.has(' ') || activeActions.has('Enter')) {
             action = 'confirm';
-        } else if (event.key === 'Backspace') {
+        } else if (activeActions.has('Backspace')) {
             action = 'back';
         }
 
         if (action) {
             gameMode.playerInput(action);
         }
-    });
+    }
     
     // Listen for Alt+F11 keys press in the Electron context
     // if (window.electron) {
