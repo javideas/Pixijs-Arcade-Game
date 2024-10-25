@@ -1,16 +1,56 @@
-import { Container } from 'pixi.js';
+import { Container, Ticker } from 'pixi.js';
 import { Screen } from '../stage/screen.js';
 import { Deck } from '../stage/deck.js';
 import { Player } from '../actors/player.js';
 
 export default class Battle {
     private app: Application;
+    private ticker: Ticker;
     private screen: Screen;
     private deckR: Deck;
 
+    private elapsedTime: number = 0; // Track elapsed time
+    private direction: number = 1; // 1 for right, -1 for left
+    private moveCount: number = 0; // Track how many times moveX has been called
+    private rightMoves: number = 3; // Number of moves to the right
+    private leftMoves: number = 6; // Number of moves to the left
+    private currentState: 'right' | 'left' = 'right'; // Track current state
+
+
     constructor(app: Application) {
         this.app = app;
+        // Initialize and start the ticker
+        this.ticker = Ticker.shared;
     }
+
+private update(deltaTime: number) {
+    this.elapsedTime += deltaTime; // Increment elapsed time by the time since the last frame
+
+    // Check if 30 seconds have passed
+    if (this.elapsedTime >= 30) {
+        this.player.moveX(this.direction); // Call moveX with the current direction
+        this.moveCount++; // Increment the move count
+        this.elapsedTime = 0; // Reset elapsed time
+        
+        // Check if we've reached the move count for the current state
+        if ((this.currentState === 'right' && this.moveCount >= this.rightMoves) ||
+            (this.currentState === 'left' && this.moveCount >= this.leftMoves)) {
+            // Toggle direction
+            this.direction *= -1; // Change direction
+            this.moveCount = 0; // Reset move count
+            
+            // Update the current state
+            this.currentState = this.currentState === 'right' ? 'left' : 'right';
+            // Adjust the number of moves for the next state
+            if (this.currentState === 'left') {
+                this.leftMoves = 6; // Set to 6 moves left
+            } else {
+                this.rightMoves = 6; // Set to 6 moves right
+            }
+        }
+    }
+    this.player.draw();
+}
 
     loadUI() {
         // Create and add the Screen to the stage
@@ -55,8 +95,8 @@ export default class Battle {
 
             this.loadUI();
             this.loadActors();
-    
-
+            this.ticker.add(this.update.bind(this)); // Bind 'this' to maintain context
+            this.ticker.start();
 
             // Resolve the promise after initialization is complete
             resolve();

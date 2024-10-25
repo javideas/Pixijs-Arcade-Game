@@ -61,10 +61,17 @@ export class Actor extends Container {
         this.calcRespCenter();
     }
 
-    public moveX(inputX: number = 0.07) {
-        const ratioPos = this.globalLimitR / 800;
-        this.posAccX += (inputX);
-        console.log(this.posAccX);
+    public moveX(inputX: number = 1) {
+        // Calculate the new position based on the current posAccX and inputX
+        const newPosAccX = this.posAccX + (inputX * 0.1);
+
+        // Calculate the resulting position using trackPos logic
+        const resultingPosition = (newPosAccX + 1) / 2 * (this.globalLimitR - this.globalLimitL) + this.globalLimitL;
+
+        // Check if the resulting position is within the limits
+        if (resultingPosition >= this.globalLimitL && resultingPosition <= this.globalLimitR) {
+            this.posAccX = newPosAccX; // Update posAccX only if within limits
+        }
     }
 
     public trackPos() {
@@ -73,6 +80,7 @@ export class Actor extends Container {
     }
 
     public draw() {
+        console.log('draw');
         // // Loop for testing porpouses
         // for(let i = 0; i < 10; i++) {
         //     this.moveX(0.02);
