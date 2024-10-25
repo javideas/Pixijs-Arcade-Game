@@ -33,6 +33,11 @@ export default class GameMode {
             }
         })
     }
+    
+    private startTicker() {
+        this.ticker.add(this.update.bind(this));
+        this.ticker.start();
+    }
 
     public playerInput(action: string = 'none') {
         switch(this.gameMode) {
@@ -91,11 +96,6 @@ export default class GameMode {
                 await this.battle.init();
                 return;
         }
-    }
-
-    private startTicker() {
-        this.ticker.add(this.update.bind(this));
-        this.ticker.start();
     }
 
     public resize(responsiveMode: string  = 'landscape') {

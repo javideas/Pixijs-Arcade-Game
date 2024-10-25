@@ -6,11 +6,18 @@ export class Projectile extends Actor {
         posX: number,
         posY: number,
         screenRef: Container,
+        hasAi: bool = false,
         projectilesContainer: Container,
         scaleRatio: number,
         debugBgColor: string = 'red',
     ) {
-        super(screenRef, projectilesContainer, scaleRatio, debugBgColor);;
+        super(
+            screenRef,
+            hasAi,
+            scaleRatio,
+            projectilesContainer,
+            debugBgColor
+        );
         this.x = posX;
         this.y = posY;
     }

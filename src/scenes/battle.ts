@@ -73,11 +73,11 @@ export default class Battle {
     loadActors() {
         this.projectilesContainer = new Container();
         this.app.stage.addChild(this.projectilesContainer);
-        
+
         this.actorsContainer = new Container();
         this.app.stage.addChild(this.actorsContainer);
         
-        this.player = new Player(this.screen, this.projectilesContainer);
+        this.player = new Player(this.screen, false, 1, this.projectilesContainer);
         this.actorsContainer.addChild(this.player);
     }
 

@@ -3,6 +3,7 @@ import { Container, Graphics } from 'pixi.js';
 export class Actor extends Container {
     private screenRef: Container;
     protected projectilesContainer: Container;
+    protected hasAi: bool;
     public debugBgColor: string;
     private bgShape: Graphics;
     private colWidth: number;
@@ -18,19 +19,22 @@ export class Actor extends Container {
 
     constructor(
         screenRef: Container,
-        projectilesContainer: Container,
+        hasAi: bool = false,
         scaleRatio: number = 1,
-        debugBgColor: string = 'yellow') {
+        projectilesContainer: Container,
+        debugBgColor: string = 'yellow'
+    ) {
         super();
         
         this.screenRef = screenRef;
         this.projectilesContainer = projectilesContainer;
+        this.hasAi = hasAi;
         this.debugBgColor = debugBgColor;
         this.posAccX = 0;
         this.posAccY = 0.8;
         this.scaleRatio = scaleRatio;
         this.speedRatio = 1;
-        this.lookAt = [0, 1]; // looking straight-up
+        this.lookAt = [0, 1]; // looking Straight-up
 
         this.bgShape = new Graphics();
         this.addChild(this.bgShape);
@@ -43,6 +47,14 @@ export class Actor extends Container {
         this.trackPos();
         
         this.debugShape();
+
+        this.actionDelta();
+    }
+
+    private actionDelta() {
+        if(this.hasAi) {
+            console.log('ey');
+        }
     }
     
     public moveX(inputX: number = 1) {
