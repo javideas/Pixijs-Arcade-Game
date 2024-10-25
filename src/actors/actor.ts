@@ -2,6 +2,8 @@ import { Container, Graphics } from 'pixi.js';
 
 export class Actor extends Container {
     private screenRef: Container;
+    protected projectilesContainer: Container;
+    public debugBgColor: string;
     private bgShape: Graphics;
     private colWidth: number;
     private colHeight: number;
@@ -14,13 +16,24 @@ export class Actor extends Container {
     private globalLimitT: number;
     private globalLimitB: number;
 
-    constructor(screenRef: Container) {
+    constructor(
+        screenRef: Container,
+        projectilesContainer: Container,
+        scaleRatio: number = 1,
+        debugBgColor: string = 'yellow') {
         super();
+        
         this.screenRef = screenRef;
-        this.bgShape = new Graphics();
-        this.addChild(this.bgShape);
+        this.projectilesContainer = projectilesContainer;
+        this.debugBgColor = debugBgColor;
         this.posAccX = 0;
         this.posAccY = 0.8;
+        this.scaleRatio = scaleRatio;
+        this.speedRatio = 1;
+        this.lookAt = [0, 1]; // looking straight-up
+
+        this.bgShape = new Graphics();
+        this.addChild(this.bgShape);
         this.draw();
     }
 
@@ -47,7 +60,8 @@ export class Actor extends Container {
     }
     
     private calcMove(axis: string, currentPosAcc: number, input: number, limitL: number, limitR: number): number | null {
-        const movementScale = axis === 'x' ? 0.004 : 0.0025; // Adjusted scale per axis
+        // Adjusted scale per axis and multiplied by Speed ratio.
+        const movementScale = axis === 'x' ? (0.004 * this.speedRatio) : (0.0025 * this.speedRatio);
         const newPosAcc = currentPosAcc + (input * movementScale);
     
         // Calculate the resulting position
@@ -62,7 +76,7 @@ export class Actor extends Container {
     }
 
     private calcRespScale(ratio: number = 1) {
-        this.colWidth = 0.07 * ratio;
+        this.colWidth = (0.07 * this.scaleRatio) * ratio;
         this.colPosX = -this.colWidth / 2;
         this.colPosY = -this.colWidth / 2;
         this.colHeight = this.colWidth;
@@ -91,7 +105,7 @@ export class Actor extends Container {
 
     private debugShape() {
         this.bgShape.clear();
-        this.bgShape.beginFill('yellow');
+        this.bgShape.beginFill(this.debugBgColor);
         this.bgShape.drawRect(this.colPosX, this.colPosY, this.colWidth, this.colHeight);
         this.bgShape.endFill();
     }

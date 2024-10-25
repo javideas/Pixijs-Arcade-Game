@@ -2,6 +2,7 @@ import { Application, Container, Ticker } from 'pixi.js';
 import { Screen } from '../stage/screen.js';
 import { Deck } from '../stage/deck.js';
 import { Player } from '../actors/player.js';
+import { Projectile } from '../actors/projectile';
 
 export default class Battle {
     private app: Application;
@@ -12,6 +13,7 @@ export default class Battle {
     private deckR: Deck;
     private deckL: Deck;
     private actorsContainer: Container;
+    private projectilesContainer: Container;
     private player: Player;
 
     private elapsedTime: number = 0; // Track elapsed time
@@ -26,6 +28,7 @@ export default class Battle {
         this.app = app;
         // Initialize and start the ticker
         this.ticker = Ticker.shared;
+        
     }
 
     /** Spawn the initial elements on the stage */
@@ -68,13 +71,15 @@ export default class Battle {
     }
 
     loadActors() {
+        this.projectilesContainer = new Container();
+        this.app.stage.addChild(this.projectilesContainer);
+        
         this.actorsContainer = new Container();
         this.app.stage.addChild(this.actorsContainer);
-        this.player = new Player(this.screen);
-
+        
+        this.player = new Player(this.screen, this.projectilesContainer);
         this.actorsContainer.addChild(this.player);
     }
-
 
     /** Resize based on Device's rotation */
     resize(mode: string = 'landscape') {

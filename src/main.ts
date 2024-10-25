@@ -58,7 +58,7 @@ function addEventListeners(gameMode: GameMode) {
     });
 
     // Update the player's position based on active actions
-    function updatePlayerMovement() {
+    function updateInput() {
         if (activeActions.has('ArrowLeft') || activeActions.has('a')) {
             gameMode.playerInput('left');
         }
@@ -71,10 +71,15 @@ function addEventListeners(gameMode: GameMode) {
         if (activeActions.has('ArrowDown') || activeActions.has('s')) {
             gameMode.playerInput('down');
         }
+
+        // Check for shooting action
+        if (activeActions.has(' ') || activeActions.has('Enter')) {
+            gameMode.playerInput('confirm'); // Call the shoot action
+        }
     }
 
     function gameLoop() {
-        updatePlayerMovement();
+        updateInput();
         requestAnimationFrame(gameLoop);
     }
 

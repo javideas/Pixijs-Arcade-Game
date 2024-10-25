@@ -1,10 +1,11 @@
 import { Container } from 'pixi.js';
-import { Actor } from "./actor";
+import { Shooter } from "./shooter";
 
-export class Player extends Actor {
+export class Player extends Shooter {
     constructor(
-        screenRef: Container
+        screenRef: Container,
+        projectilesContainer: Container
     ) {
-        super(screenRef);
+        super(screenRef, projectilesContainer);
     }
 }
