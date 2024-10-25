@@ -18,13 +18,11 @@ export const app = new Application({
 /** Initialize the application */
 init();
 
-/** Create an instance of Battle */
-// const battle = new Battle(app);
-// battle.init();
+/** Create an instance of GameMode */
 const gameMode = new GameMode(app);
 
 /** Add event listeners */
-addEventListeners();
+addEventListeners(gameMode);
 
 /** Resize the app */
 resize();
@@ -36,7 +34,7 @@ async function init() {
 
 }
 
-function addEventListeners() {
+function addEventListeners(gameMode: GameMode) {
     // Handle orientation change and add event listener
     const mediaQuery = window.matchMedia('(orientation: landscape)');
     mediaQuery.addEventListener('change', handleOrientationChange);
@@ -44,20 +42,36 @@ function addEventListeners() {
     // Add the resize event listener
     window.addEventListener('resize', resize);
 
-    // Listen for Alt+F11 keys press in the web context
+    // Listen for inputs
     window.addEventListener('keydown', (event) => {
-        if (event.altKey && event.key === 'F11') {
-            event.preventDefault();
-            console.log('Alt+F11 key combination pressed - custom action in web');
+        let action: string | null = null;
+
+        // Detect arrow keys and WASD keys
+        if (['ArrowLeft', 'a'].includes(event.key)) {
+            action = 'left';
+        } else if (['ArrowRight', 'd'].includes(event.key)) {
+            action = 'right';
+        } else if (['ArrowUp', 'w'].includes(event.key)) {
+            action = 'up';
+        } else if (['ArrowDown', 's'].includes(event.key)) {
+            action = 'down';
+        } else if ([' ', 'Enter'].includes(event.key)) {
+            action = 'confirm';
+        } else if (event.key === 'Backspace') {
+            action = 'back';
+        }
+
+        if (action) {
+            gameMode.playerInput(action);
         }
     });
     
     // Listen for Alt+F11 keys press in the Electron context
-    if (window.electron) {
-        window.electron.onAltF11Pressed(() => {
-            console.log('Alt+F11 key pressed - custom action in Electron');
-        });
-    }
+    // if (window.electron) {
+    //     window.electron.onAltF11Pressed(() => {
+    //         console.log('Alt+F11 key pressed - custom action in Electron');
+    //     });
+    // }
 
     // Force initial check
     handleOrientationChange(mediaQuery as MediaQueryListEvent);

@@ -18,6 +18,7 @@ export default class GameMode {
     constructor(app: Application){
         this.app = app;
         this.ticker = Ticker.shared;
+        this.gameMode = 'none';
         this.init();
     }
 
@@ -26,9 +27,41 @@ export default class GameMode {
         this.startTicker();
     }
 
-    private update(deltaTime: number) {
-        this.debugPlayerMove(deltaTime);
+    public playerInput(action: string = 'none') {
+        switch(this.gameMode) {
+            case 'battle':
+                this.inputSystBattle(action);
+            return;
+        }
+    }
 
+    private inputSystBattle(action: string = 'none') {
+        switch(action) {
+            case 'left':
+                this.battle.player.moveX(-1); // Move player left
+                break;
+            case 'right':
+                this.battle.player.moveX(1); // Move player right
+                break;
+            case 'up':
+                this.battle.player.moveY(-1); // Move player up
+                break;
+            case 'down':
+                this.battle.player.moveY(1); // Move player down
+                break;
+            case 'confirm':
+                this.battle.player.shoot(); // Shoot
+                break;
+            // case 'back':
+            //     this.battle.pause(); // Cancel/pause
+            //     break;
+            default:
+                break;
+        }
+    }
+
+    private update(deltaTime: number) {
+        // this.debugPlayerMove(deltaTime);
         this.battle.actorsContainer.children.forEach((child) => {
             if (typeof child.draw == 'function') {
                 child.draw();
@@ -37,6 +70,7 @@ export default class GameMode {
     }
 
     private async loadScene(scene: string = 'battle') {
+        this.gameMode = scene;
         switch(scene){
             case 'battle':
                 this.battle = new Battle(this.app);
