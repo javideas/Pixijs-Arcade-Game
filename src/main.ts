@@ -1,6 +1,7 @@
 import { Application } from 'pixi.js';
 // import GameMode 
-import Battle from './scenes/battle.js';
+// import Battle from './scenes/battle.js';
+import GameMode from './managers/gameMode.js';
 
 const bgColor = "#142332";
 document.body.style.backgroundColor = bgColor;
@@ -18,8 +19,9 @@ export const app = new Application({
 init();
 
 /** Create an instance of Battle */
-const battle = new Battle(app);
-battle.spawn();
+// const battle = new Battle(app);
+// battle.init();
+const gameMode = new GameMode(app);
 
 /** Add event listeners */
 addEventListeners();
@@ -62,7 +64,7 @@ function addEventListeners() {
 }
 
 function checkRatioSize( responsiveMode: string  = 'landscape') {
-    battle.resize(responsiveMode);
+    gameMode.resize(responsiveMode);
 }
 
 var origentationDetected = false;

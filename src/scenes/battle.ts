@@ -1,13 +1,18 @@
-import { Container, Ticker } from 'pixi.js';
+import { Application, Container, Ticker } from 'pixi.js';
 import { Screen } from '../stage/screen.js';
 import { Deck } from '../stage/deck.js';
 import { Player } from '../actors/player.js';
 
 export default class Battle {
     private app: Application;
+
     private ticker: Ticker;
+
     private screen: Screen;
     private deckR: Deck;
+    private deckL: Deck;
+    private actorsContainer: Container;
+    private player: Player;
 
     private elapsedTime: number = 0; // Track elapsed time
     private direction: number = 1; // 1 for right, -1 for left
@@ -23,41 +28,24 @@ export default class Battle {
         this.ticker = Ticker.shared;
     }
 
-    private debugPlayerMove(deltaTime: number) {
-        this.elapsedTime += deltaTime; // Increment elapsed time by the time since the last frame
-
-        // Check if 30 seconds have passed
-        if (this.elapsedTime >= 30) {
-            this.player.moveX(this.direction);
-            this.player.moveY(this.direction);
-            this.moveCount++; // Increment the move count
-            this.elapsedTime = 0; // Reset elapsed time
-            
-            // Check if we've reached the move count for the current state
-            if ((this.currentState === 'right' && this.moveCount >= this.rightMoves) ||
-                (this.currentState === 'left' && this.moveCount >= this.leftMoves)) {
-                // Toggle direction
-                this.direction *= -1; // Change direction
-                this.moveCount = 0; // Reset move count
-                
-                // Update the current state
-                this.currentState = this.currentState === 'right' ? 'left' : 'right';
-                // Adjust the number of moves for the next state
-                if (this.currentState === 'left') {
-                    this.leftMoves = 6; // Set to 6 moves left
-                } else {
-                    this.rightMoves = 6; // Set to 6 moves right
-                }
-            }
-        }
+    /** Spawn the initial elements on the stage */
+    init() {
+        this.spawnChildren().then(() => {
+            // Call responsive only after initialization
+            window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
+        });
     }
 
-    private update(deltaTime: number) {
-        this.debugPlayerMove(deltaTime);
-
-        this.player.draw();
+    /** Initialize the screen and decks */
+    spawnChildren(): Promise<void> {
+        return new Promise((resolve) => {
+            this.loadUI();
+            this.loadActors();
+            // Resolve the promise after initialization is complete
+            resolve();
+        });
     }
-
+    
     loadUI() {
         // Create and add the Screen to the stage
         this.screen = new Screen('black');
@@ -87,27 +75,6 @@ export default class Battle {
         this.actorsContainer.addChild(this.player);
     }
 
-    /** Spawn the initial elements on the stage */
-    spawn() {
-        this.initChildren().then(() => {
-            // Call responsive only after initialization
-            window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
-        });
-    }
-
-    /** Initialize the screen and decks */
-    initChildren(): Promise<void> {
-        return new Promise((resolve) => {
-
-            this.loadUI();
-            this.loadActors();
-            this.ticker.add(this.update.bind(this)); // Bind 'this' to maintain context
-            this.ticker.start();
-
-            // Resolve the promise after initialization is complete
-            resolve();
-        });
-    }
 
     /** Resize based on Device's rotation */
     resize(mode: string = 'landscape') {
