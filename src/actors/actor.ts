@@ -13,10 +13,6 @@ export class Actor extends Container {
     private globalLimitL: number;
     private globalLimitT: number;
     private globalLimitB: number;
-    private localLimitR: number;
-    private localLimitL: number;
-    private localLimitT: number;
-    private localLimitB: number;
 
     constructor(screenRef: Container) {
         super();
@@ -26,6 +22,43 @@ export class Actor extends Container {
         this.posAccX = 0;
         this.posAccY = 0.8;
         this.draw();
+    }
+
+    public draw() {
+        this.calcTotalResponsive();
+        
+        this.trackPos();
+        
+        this.debugShape();
+    }
+    
+    public moveX(inputX: number = 1) {
+        const newPosAccX = this.calcMove( 'x', this.posAccX, inputX, this.globalLimitL, this.globalLimitR);
+        if (newPosAccX !== null) {
+            this.posAccX = newPosAccX; // Update posAccX only if within limits
+        }
+    }
+    
+    public moveY(inputY: number = 1) {
+        const newPosAccY = this.calcMove( 'y', this.posAccY, inputY, this.globalLimitT, this.globalLimitB);
+        if (newPosAccY !== null) {
+            this.posAccY = newPosAccY; // Update posAccY only if within limits
+        }
+    }
+    
+    private calcMove(axis: string, currentPosAcc: number, input: number, limitL: number, limitR: number): number | null {
+        const movementScale = axis === 'x' ? 0.004 : 0.0025; // Adjusted scale per axis
+        const newPosAcc = currentPosAcc + (input * movementScale);
+    
+        // Calculate the resulting position
+        const resultingPosition = (newPosAcc + 1) / 2 * (limitR - limitL) + limitL;
+    
+        // Check if the resulting position is within the limits
+        if (resultingPosition >= limitL && resultingPosition <= limitR) {
+            return newPosAcc; // Return the new position accumulator if within limits
+        }
+    
+        return null; // Return null if out of limits
     }
 
     private calcRespScale(ratio: number = 1) {
@@ -43,12 +76,6 @@ export class Actor extends Container {
         this.globalLimitL = window.innerWidth / 2 + limitRefL;
         this.globalLimitT = this.colHeight / 2;
         this.globalLimitB = this.screenRef.frameB - this.colHeight / 2;
-    
-        this.localLimitR = limitRefR;
-        this.localLimitL = this.globalLimitR / 2 + this.globalLimitL / 2 + limitRefL;
-        this.localLimitT = this.globalLimitT;
-        this.localLimitB = this.globalLimitB;
-
     }
 
     private calcRespCenter() {
@@ -62,46 +89,10 @@ export class Actor extends Container {
         this.calcRespCenter();
     }
 
-    private calcMove(currentPosAcc: number, input: number, limitL: number, limitR: number): number | null {
-        const newPosAcc = currentPosAcc + (input * 0.1);
-    
-        // Calculate the resulting position
-        const resultingPosition = (newPosAcc + 1) / 2 * (limitR - limitL) + limitL;
-    
-        // Check if the resulting position is within the limits
-        if (resultingPosition >= limitL && resultingPosition <= limitR) {
-            return newPosAcc; // Return the new position accumulator if within limits
-        }
-    
-        return null; // Return null if out of limits
-    }
-    
-    public moveX(inputX: number = 1) {
-        const newPosAccX = this.calcMove(this.posAccX, inputX, this.globalLimitL, this.globalLimitR);
-        if (newPosAccX !== null) {
-            this.posAccX = newPosAccX; // Update posAccX only if within limits
-        }
-    }
-    
-    public moveY(inputY: number = 1) {
-        const newPosAccY = this.calcMove(this.posAccY, inputY, this.globalLimitT, this.globalLimitB);
-        if (newPosAccY !== null) {
-            this.posAccY = newPosAccY; // Update posAccY only if within limits
-        }
-    }
-
     public trackPos() {
         // Map accX [-1, 1] to [globalLimitL, globalLimitR]
         this.x = (this.posAccX + 1) / 2 * (this.globalLimitR - this.globalLimitL) + this.globalLimitL;
         this.y = (this.posAccY + 1) / 2 * (this.globalLimitB - this.globalLimitT) + this.globalLimitT;
-    }
-
-    public draw() {
-        this.calcTotalResponsive();
-        
-        this.trackPos();
-        
-        this.debugShape();
     }
 
     private debugShape() {

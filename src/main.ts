@@ -50,9 +50,6 @@ function addEventListeners(gameMode: GameMode) {
             event.preventDefault(); // Prevent default action for these keys
             activeActions.add(event.key);
         }
-
-        // Process actions immediately
-        processActions();
     });
 
     window.addEventListener('keyup', (event) => {
@@ -60,31 +57,30 @@ function addEventListeners(gameMode: GameMode) {
         activeActions.delete(event.key);
     });
 
-    function processActions() {
-        let action: string | null = null;
-
-        // Detect arrow keys and WASD keys
+    // Update the player's position based on active actions
+    function updatePlayerMovement() {
         if (activeActions.has('ArrowLeft') || activeActions.has('a')) {
-            action = 'left';
-        } else if (activeActions.has('ArrowRight') || activeActions.has('d')) {
-            action = 'right';
+            gameMode.playerInput('left');
+        }
+        if (activeActions.has('ArrowRight') || activeActions.has('d')) {
+            gameMode.playerInput('right');
         }
         if (activeActions.has('ArrowUp') || activeActions.has('w')) {
-            action = action === 'left' ? 'up-left' : action === 'right' ? 'up-right' : 'up';
-        } else if (activeActions.has('ArrowDown') || activeActions.has('s')) {
-            action = action === 'left' ? 'down-left' : action === 'right' ? 'down-right' : 'down';
+            gameMode.playerInput('up');
         }
-        if (activeActions.has(' ') || activeActions.has('Enter')) {
-            action = 'confirm';
-        } else if (activeActions.has('Backspace')) {
-            action = 'back';
-        }
-
-        if (action) {
-            gameMode.playerInput(action);
+        if (activeActions.has('ArrowDown') || activeActions.has('s')) {
+            gameMode.playerInput('down');
         }
     }
-    
+
+    function gameLoop() {
+        updatePlayerMovement();
+        requestAnimationFrame(gameLoop);
+    }
+
+    // Start the game loop
+    gameLoop();
+
     // Listen for Alt+F11 keys press in the Electron context
     // if (window.electron) {
     //     window.electron.onAltF11Pressed(() => {
