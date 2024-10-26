@@ -107,11 +107,18 @@ export default class Battle {
 
         // Drawing actors on resize
         this.actorsContainer.children.forEach((child) => {
-            if(typeof child.draw === 'function') {
+            if(typeof child.setResponsive === 'function' && typeof child.draw === 'function') {
                 child.setResponsive();
                 child.draw();
             }
         });
+
+        this.projectilesContainer.children.forEach((child) => {
+            if(typeof child.setResponsive === 'function' && typeof child.draw === 'function') {
+                child.setResponsive();
+                child.draw();
+            }
+        })
     }
 
     /** if Deck, based to the Screen sides. if Screen, based on 16/9 ratio */
