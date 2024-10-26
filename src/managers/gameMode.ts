@@ -5,18 +5,13 @@ export default class GameMode {
     private app: Application;
     private ticker: Ticker;
     private battle: Battle;
-    // Debug auto-move variables:
-    private elapsedTime: number = 0;
-    private direction: number = 1;
-    private moveCount: number = 0;
-    private rightMoves: number = 3;
-    private leftMoves: number = 6;
-    private currentState: 'right' | 'left' = 'right';
+    public static instance: GameMode;
     
     constructor(app: Application){
         this.app = app;
         this.ticker = Ticker.shared;
         this.currentLevel = 'none';
+        GameMode.instance = this;
         this.init();
     }
 
@@ -26,7 +21,6 @@ export default class GameMode {
     }
 
     private update(deltaTime: number) {
-        // this.debugPlayerMove(deltaTime);
         // Update the shooter
         this.battle.actorsContainer.children.forEach((child) => {
             if (typeof child.draw == 'function') {
@@ -107,34 +101,5 @@ export default class GameMode {
 
     public resize(responsiveMode: string  = 'landscape') {
         this.battle.resize(responsiveMode);
-    }
-
-    private debugPlayerMove(deltaTime: number) {
-        this.elapsedTime += deltaTime; // Increment elapsed time by the time since the last frame
-
-        // Check if 30 seconds have passed
-        if (this.elapsedTime >= 30) {
-            this.battle.player.moveX(this.direction);
-            this.battle.player.moveY(this.direction);
-            this.moveCount++; // Increment the move count
-            this.elapsedTime = 0; // Reset elapsed time
-            
-            // Check if we've reached the move count for the current state
-            if ((this.currentState === 'right' && this.moveCount >= this.rightMoves) ||
-                (this.currentState === 'left' && this.moveCount >= this.leftMoves)) {
-                // Toggle direction
-                this.direction *= -1; // Change direction
-                this.moveCount = 0; // Reset move count
-                
-                // Update the current state
-                this.currentState = this.currentState === 'right' ? 'left' : 'right';
-                // Adjust the number of moves for the next state
-                if (this.currentState === 'left') {
-                    this.leftMoves = 6; // Set to 6 moves left
-                } else {
-                    this.rightMoves = 6; // Set to 6 moves right
-                }
-            }
-        }
     }
 }

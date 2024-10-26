@@ -1,8 +1,7 @@
 import { Container, Graphics } from 'pixi.js';
+import GameMode from '../managers/gameMode';
 
 export class Actor extends Container {
-    private screenRef: Container;
-    protected projectilesContainer: Container;
     protected hasAi: bool;
     protected posAccX: number;
     protected posAccY: number;
@@ -21,18 +20,16 @@ export class Actor extends Container {
     private globalLimitB: number;
 
     constructor(
-        screenRef: Container,
         hasAi: bool = false,
         scaleRatio: number = 1,
-        projectilesContainer: Container,
         initPosAccX?: number,
         initPosAccY?: number,
         debugBgColor: string = 'yellow'
     ) {
+        const gameMode = GameMode.instance;
         super();
-        
-        this.screenRef = screenRef;
-        this.projectilesContainer = projectilesContainer;
+        this.screenRef = gameMode.battle.screen;
+        this.projectilesContainer = gameMode.battle.projectilesContainer;
         this.hasAi = hasAi;
         this.debugBgColor = debugBgColor;
         this.posAccX = initPosAccX || 0;

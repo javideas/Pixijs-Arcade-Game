@@ -14,14 +14,6 @@ export default class Battle {
     private projectilesContainer: Container;
     private player: Player;
 
-    private elapsedTime: number = 0; // Track elapsed time
-    private direction: number = 1; // 1 for right, -1 for left
-    private moveCount: number = 0; // Track how many times moveX has been called
-    private rightMoves: number = 3; // Number of moves to the right
-    private leftMoves: number = 6; // Number of moves to the left
-    private currentState: 'right' | 'left' = 'right'; // Track current state
-
-
     constructor(app: Application) {
         this.app = app;      
     }
@@ -72,7 +64,7 @@ export default class Battle {
         this.actorsContainer = new Container();
         this.app.stage.addChild(this.actorsContainer);
         
-        this.player = new Player(this.screen, false, 1, this.projectilesContainer);
+        this.player = new Player(false, 1);
         this.actorsContainer.addChild(this.player);
     }
 

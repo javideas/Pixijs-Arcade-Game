@@ -3,16 +3,14 @@ import { Actor } from './actor';
 import { Projectile } from './projectile';
 
 export class Shooter extends Actor {
-    private projectileCount: number;
+    // private projectileCount: number;
     private fireRate: number;
     private cooldown: number;
     private hasShot: boolean;
 
     constructor(
-        screenRef: Container,
         hasAi: boolean = false,
         scaleRatio: number = 1,
-        projectilesContainer: Container,
         initPosAccX?: number,
         initPosAccY?: number,
         projectileCount: number = 1,
@@ -20,16 +18,12 @@ export class Shooter extends Actor {
         debugBgColor: string = 'red'
     ) {
         super(
-            screenRef,
             hasAi,
             scaleRatio,
-            projectilesContainer,
             initPosAccX,
             initPosAccY,
             debugBgColor
         );
-        this.projectilesContainer = projectilesContainer;
-        this.projectileCount = projectileCount;
         this.fireRate = fireRate;
         this.cooldown = 0;
         this.hasShot = false;
@@ -48,7 +42,7 @@ export class Shooter extends Actor {
     public shoot() {
         // Check if the player is trying to shoot and hasn't shot yet
         if (!this.hasShot) {
-            const projectile = new Projectile(this.screenRef, this.projectilesContainer, 0.5);
+            const projectile = new Projectile(0.5);
             this.projectilesContainer.addChild(projectile);
             this.hasShot = true;
             this.cooldown = 0;
