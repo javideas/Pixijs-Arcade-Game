@@ -109,7 +109,6 @@ export default class Battle {
         this.actorsContainer.children.forEach((child) => {
             if(typeof child.draw === 'function') {
                 child.setResponsive();
-                child.trackPos();
                 child.draw();
             }
         });

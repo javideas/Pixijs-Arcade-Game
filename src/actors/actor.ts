@@ -33,20 +33,17 @@ export class Actor extends Container {
         this.posAccX = 0;
         this.posAccY = 0.8;
         this.scaleRatio = scaleRatio;
-        this.speedRatio = 1;
+        this.speedGlobalRatio = 1;
         this.lookAt = [0, 1]; // looking Straight-up
 
         this.bgShape = new Graphics();
         this.addChild(this.bgShape);
         this.setResponsive();
-        this.trackPos();
         this.draw();
         // console.log(`Class Name: ${this.constructor.name}`);
     }
 
     public draw() {
-        // this.setResponsive();
-        
         this.debugShape();
     }
 
@@ -64,7 +61,7 @@ export class Actor extends Container {
         const newPosAccX = this.calcMove( 'x', this.posAccX, inputX, this.globalLimitL, this.globalLimitR);
         if (newPosAccX !== null) {
             this.posAccX = newPosAccX; // Update posAccX only if within limits
-            this.trackPos();
+            this.setResponsive();
         }
     }
     
@@ -72,18 +69,25 @@ export class Actor extends Container {
         const newPosAccY = this.calcMove( 'y', this.posAccY, inputY, this.globalLimitT, this.globalLimitB);
         if (newPosAccY !== null) {
             this.posAccY = newPosAccY; // Update posAccY only if within limits
-            this.trackPos();
+            this.setResponsive();
         }
     }
     
     private calcMove(axis: string, currentPosAcc: number, input: number, limitL: number, limitR: number): number | null {
-        // Adjusted scale per axis and multiplied by Speed ratio.
-        const movementScale = axis === 'x' ? (0.004 * this.speedRatio) : (0.0025 * this.speedRatio);
-        const newPosAcc = currentPosAcc + (input * movementScale);
+        // Calculate the effective screen size based on global limits
+        const effectiveScreenSize = limitR - limitL;
+        
+        // Adjusted scale per axis, normalized by the effective screen size
+        const speedRatioX = 0.007;
+        const speedRatioY = 0.003;
+        const baseMovementScale = axis === 'x' ? speedRatioX : speedRatioY;
+        const normalizedMovementScale = baseMovementScale * this.speedGlobalRatio * (effectiveScreenSize / (this.globalLimitR - this.globalLimitL));
+        
+        const newPosAcc = currentPosAcc + (input * normalizedMovementScale);
     
         // Calculate the resulting position
         const resultingPosition = (newPosAcc + 1) / 2 * (limitR - limitL) + limitL;
-    
+
         // Check if the resulting position is within the limits
         if (resultingPosition >= limitL && resultingPosition <= limitR) {
             return newPosAcc; // Return the new position accumulator if within limits
@@ -102,19 +106,20 @@ export class Actor extends Container {
         this.destroy(true);
     }
 
-    public trackPos() {
+    private trackPos() {
         // Map positions X and Y (-1 to 1) to [globalLimitL, globalLimitR]
         this.x = (this.posAccX + 1) / 2 * (this.globalLimitR - this.globalLimitL) + this.globalLimitL;
         this.y = (this.posAccY + 1) / 2 * (this.globalLimitB - this.globalLimitT) + this.globalLimitT;
     }
 
     public setResponsive() {
-        this.calcRespScale(this.screenRef.frameB);
+        this.calcRespScale();
         this.calcRespLimits();
+        this.trackPos();
     }
 
-    private calcRespScale(ratio: number = 1) {
-        this.colWidth = (0.07 * this.scaleRatio) * ratio;
+    private calcRespScale() {
+        this.colWidth = (0.07 * this.scaleRatio) * this.screenRef.frameB;
         this.colPosX = -this.colWidth / 2;
         this.colPosY = -this.colWidth / 2;
         this.colHeight = this.colWidth;
