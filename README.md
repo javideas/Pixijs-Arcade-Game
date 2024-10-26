@@ -13,7 +13,7 @@
 # PixiJs Arcade Game
 
 ## Project Description:
-A classic arcade-style vertical scrolling game built with PixiJS and TypeScript inspired by [1943: The Battle of Midway](https://www.youtube.com/watch?v=C4D5S8XqQBQ). In my version, the player controls a hero character, a spaceship, moving upwards through an endless scrolling space, dodging or destroying enemies and obstacles. The objective is to survive as long as possible while accumulating points by defeating enemies and avoiding crashes.
+A classic arcade-style vertical scrolling game built with PixiJS and TypeScript inspired by [1943: The Battle of Midway](https://www.youtube.com/watch?v=FbUN5ITWQQo). In my version, the player controls a hero character, a spaceship, moving upwards through an endless scrolling space, dodging or destroying enemies and obstacles. The objective is to survive as long as possible while accumulating points by defeating enemies and avoiding crashes.
 
 ## Key Features:
 - **Endless Vertical Scrolling**: The game world scrolls continuously from top to bottom, giving the illusion that the player is moving upward through a dynamic environment.
