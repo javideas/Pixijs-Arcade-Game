@@ -6,13 +6,23 @@ export class Player extends Shooter {
         screenRef: Container,
         hasAi: bool = false,
         scaleRatio: number = 1,
-        projectilesContainer: Container
+        projectilesContainer: Container,
+        initPosAccX?: number,
+        initPosAccY?: number,
+        projectileCount: number = 1,
+        fireRate: number = 15,
+        debugBgColor: string = 'yellow'
     ) {
         super(
             screenRef,
             hasAi,
             scaleRatio,
-            projectilesContainer
+            projectilesContainer,
+            initPosAccX,
+            initPosAccY,
+            projectileCount,
+            fireRate,
+            debugBgColor
         );
     }
 }

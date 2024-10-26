@@ -16,7 +16,7 @@ export default class GameMode {
     constructor(app: Application){
         this.app = app;
         this.ticker = Ticker.shared;
-        this.gameMode = 'none';
+        this.currentLevel = 'none';
         this.init();
     }
 
@@ -47,7 +47,7 @@ export default class GameMode {
     }
 
     public playerInput(action: string = 'none') {
-        switch(this.gameMode) {
+        switch(this.currentLevel) {
             case 'battle':
                 this.inputSystBattle(action);
             return;
@@ -96,7 +96,7 @@ export default class GameMode {
     }
 
     private async loadScene(scene: string = 'battle') {
-        this.gameMode = scene;
+        this.currentLevel = scene;
         switch(scene){
             case 'battle':
                 this.battle = new Battle(this.app);

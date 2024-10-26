@@ -4,6 +4,9 @@ export class Actor extends Container {
     private screenRef: Container;
     protected projectilesContainer: Container;
     protected hasAi: bool;
+    protected posAccX: number;
+    protected posAccY: number;
+
     public debugBgColor: string;
     private bgShape: Graphics;
     private colWidth: number;
@@ -22,6 +25,8 @@ export class Actor extends Container {
         hasAi: bool = false,
         scaleRatio: number = 1,
         projectilesContainer: Container,
+        initPosAccX?: number,
+        initPosAccY?: number,
         debugBgColor: string = 'yellow'
     ) {
         super();
@@ -30,8 +35,8 @@ export class Actor extends Container {
         this.projectilesContainer = projectilesContainer;
         this.hasAi = hasAi;
         this.debugBgColor = debugBgColor;
-        this.posAccX = 0;
-        this.posAccY = 0.8;
+        this.posAccX = initPosAccX || 0;
+        this.posAccY = initPosAccY || 0.8;
         this.scaleRatio = scaleRatio;
         this.speedGlobalRatio = 1;
         this.lookAt = [0, 1]; // looking Straight-up
@@ -97,16 +102,17 @@ export class Actor extends Container {
     }
 
     private onLimit() {
-        // console.log(this.parent);
-        // Remove from parent container
+        // Remove from parent container and Destroy
         if (this.parent) {
             this.parent.removeChild(this); // Remove this instance from its parent
         }
-        // Call the destroy method to clean up Pixi.js resources
         this.destroy(true);
     }
 
     private trackPos() {
+        if (!this.parent) {
+            return; // Case to prevent is destoryed but not cleaned from memory yet
+        }
         // Map positions X and Y (-1 to 1) to [globalLimitL, globalLimitR]
         this.x = (this.posAccX + 1) / 2 * (this.globalLimitR - this.globalLimitL) + this.globalLimitL;
         this.y = (this.posAccY + 1) / 2 * (this.globalLimitB - this.globalLimitT) + this.globalLimitT;

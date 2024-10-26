@@ -3,22 +3,21 @@ import { Actor } from "./actor";
 
 export class Projectile extends Actor {
     constructor(
-        posX: number,
-        posY: number,
         screenRef: Container,
-        hasAi: bool = false,
         projectilesContainer: Container,
         scaleRatio: number,
-        debugBgColor: string = 'red',
+        initPosAccX?: number,
+        initPosAccY?: number,
+        debugBgColor: string = 'red'
     ) {
         super(
             screenRef,
-            hasAi,
+            true,
             scaleRatio,
             projectilesContainer,
+            initPosAccX,
+            initPosAccY,
             debugBgColor
         );
-        this.x = posX;
-        this.y = posY;
     }
 }
