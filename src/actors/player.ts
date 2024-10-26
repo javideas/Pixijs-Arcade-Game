@@ -12,7 +12,6 @@ export class Player extends Shooter {
     ) {
         super(
             'player',
-            false, // hasAi
             scaleRatio,
             health,
             initPosAccX,

@@ -21,7 +21,6 @@ export class Actor extends Container {
 
     constructor(
         id: string,
-        hasAi: bool = false,
         scaleRatio: number = 1,
         health: number = 4,
         initPosAccX: number = 0,
@@ -34,7 +33,6 @@ export class Actor extends Container {
         this.projectilesContainer = gameMode.battle.projectilesContainer;
 
         this.id = id; // either 'player' or 'enemy', for proyectile damage case
-        this.hasAi = hasAi;
         this.scaleRatio = scaleRatio;
         this.health = health;
         this.posAccX = initPosAccX;

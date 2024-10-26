@@ -4,8 +4,9 @@ import { Actor } from "./actor";
 export class Projectile extends Actor {
     constructor(
         shooterRef: Container,
-        directionX: number = 0,
-        directionY: number = -1,
+        trackOpponent: boolean,
+        dirX: number = 0,
+        dirY: number = -1,
         offsetX: number = 0,
         offsetY: number = 0,
         scaleRatio: number = 0.5,
@@ -13,24 +14,24 @@ export class Projectile extends Actor {
     ) {
         super(
             shooterRef.id,
-            true, // hasAi
             scaleRatio,
             1, // health
             shooterRef.posAccX + offsetX,
             shooterRef.posAccY - offsetY,
             debugBgColor
         );
+        this.trackOpponent = trackOpponent;
         this.speedGlobalRatio = 2;
-        this.directionX = directionX;
-        this.directionY = directionY;
+        this.dirX = dirX;
+        this.dirY = dirY;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
     }
 
     public update() {
-        if(this.hasAi) {
-            this.moveX(this.directionX);
-            this.moveY(this.directionY);
+        if(!this.trackOpponent) {
+            this.moveX(this.dirX);
+            this.moveY(this.dirY);
         }
     }
 

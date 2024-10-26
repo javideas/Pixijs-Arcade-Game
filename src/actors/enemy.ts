@@ -13,7 +13,6 @@ export class Enemy extends Shooter {
     ) {
         super(
             'enemy',
-            true, // hasAi
             scaleRatio,
             health,
             initPosAccX,
@@ -21,14 +20,25 @@ export class Enemy extends Shooter {
             fireRate,
             debugBgColor
         );
+        this.shotDirY = 1;
+        this.autoShoot = false;
+    }
+
+    public update(delta: number) {
+        super.update(delta);
+        if (this.autoShoot) this.shoot('trinormal', 1);
+    }
+
+    public shoot(weaponType: string = 'trinormal', dirY: number = -1, dirX: number = 0) {
+        super.shoot(weaponType, dirY, dirX);
     }
 
     private init() {
         super.init();
-        this.initPlacement();
+        this.aibehaviour();
     }
 
-    private initPlacement() {
+    private aibehaviour() {
         // Create a timeline for the animations
         const tl = gsap.timeline({ onUpdate: () => this.setResponsive() });
 
@@ -54,7 +64,10 @@ export class Enemy extends Shooter {
         tl.to(this, {
             posAccY: 0,
             duration: 3,
-            ease: 'power3.inOut'
+            ease: 'power3.inOut',
+            onStart: () => {
+                this.autoShoot = true;
+            }
         }, '-=2.9')
 
         // Total duration for posAccY movement
@@ -77,13 +90,19 @@ export class Enemy extends Shooter {
         .to(this, {
             posAccY: -0.8,
             duration: 6,
-            ease: 'sine.inOut'
+            ease: 'sine.inOut',
+            onStart: () => {
+                this.shotDirY = -1;
+            }
         }, '-=7.5')
 
         tl.to(this, {
             posAccX: -2,
             duration: 2,
-            ease: 'power2.out'
-        }, '-=1');
+            ease: 'power2.out',
+            onStart: () => {
+                this.autoShoot = false;
+            }
+        }, '-=1.5');
     }
 }

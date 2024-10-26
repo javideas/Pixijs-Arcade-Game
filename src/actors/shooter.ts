@@ -9,7 +9,6 @@ export class Shooter extends Actor {
 
     constructor(
         id: string,
-        hasAi: boolean = false,
         scaleRatio: number = 1,
         health: number,
         initPosAccX?: number,
@@ -19,7 +18,6 @@ export class Shooter extends Actor {
     ) {
         super(
             id,
-            hasAi,
             scaleRatio,
             health,
             initPosAccX,
@@ -29,6 +27,7 @@ export class Shooter extends Actor {
         this.fireRate = fireRate;
         this.cooldown = 0;
         this.hasShot = false;
+        this.shotDirY = -1;
     }
 
     public update(delta: number) {
@@ -46,13 +45,13 @@ export class Shooter extends Actor {
         if (!this.hasShot) {
             switch(weaponType) {
                 case 'trinormal':
-                    this.spawnProjectile(0.5, -1);
-                    this.spawnProjectile(-0.5, -1);
-                    this.spawnProjectile(0, -1);
+                    this.spawnProjectile(false, 0.5, this.shotDirY);
+                    this.spawnProjectile(false, -0.5, this.shotDirY);
+                    this.spawnProjectile(false, 0, this.shotDirY);
                     break;
                 case 'doubleFwd':
-                    this.spawnProjectile(0, -1, 0.13, 0);
-                    this.spawnProjectile(0, -1, -0.13, 0);
+                    this.spawnProjectile(false, 0, this.shotDirY, 0.13, 0);
+                    this.spawnProjectile(false, 0, this.shotDirY, -0.13, 0);
                     break;
             }
 
@@ -61,8 +60,8 @@ export class Shooter extends Actor {
         }
     }
 
-    private spawnProjectile(dirX: number, dirY: number, offsetX: number, offsetY: number) {
-        const projectile = new Projectile(this, dirX, dirY, offsetX, offsetY);
+    private spawnProjectile(trackOpponent: boolean, dirX: number, dirY: number, offsetX: number, offsetY: number) {
+        const projectile = new Projectile(this, trackOpponent, dirX, dirY, offsetX, offsetY);
         this.projectilesContainer.addChild(projectile);
     }
 }
