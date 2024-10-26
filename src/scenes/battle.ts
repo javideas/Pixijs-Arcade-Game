@@ -15,7 +15,7 @@ export default class Battle {
     private player: Player;
 
     constructor(app: Application) {
-        this.app = app;      
+        this.app = app;
     }
 
     /** Spawn the initial elements on the stage */
@@ -29,13 +29,18 @@ export default class Battle {
     /** Initialize the screen and decks */
     spawnChildren(): Promise<void> {
         return new Promise((resolve) => {
+            // Load screen elements
             this.loadUI();
-            this.loadActors();
+            this.loadContainers();
+            // Spawn Player
+            this.player = new Player(false, 1);
+            this.actorsContainer.addChild(this.player);
             // Resolve the promise after initialization is complete
             resolve();
         });
     }
     
+    /** load the User Interface */
     loadUI() {
         // Create and add the Screen to the stage
         this.screen = new Screen('black');
@@ -57,15 +62,13 @@ export default class Battle {
         this.deckL.ratioWidth = defaultRatioWidth;
     }
 
-    loadActors() {
+    /** Load Container for player and enemys, AND container for projectiles */
+    loadContainers() {
         this.projectilesContainer = new Container();
         this.app.stage.addChild(this.projectilesContainer);
 
         this.actorsContainer = new Container();
         this.app.stage.addChild(this.actorsContainer);
-        
-        this.player = new Player(false, 1);
-        this.actorsContainer.addChild(this.player);
     }
 
     /** Resize responsive */

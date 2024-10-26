@@ -3,7 +3,6 @@ import { Actor } from './actor';
 import { Projectile } from './projectile';
 
 export class Shooter extends Actor {
-    // private projectileCount: number;
     private fireRate: number;
     private cooldown: number;
     private hasShot: boolean;
@@ -13,7 +12,6 @@ export class Shooter extends Actor {
         scaleRatio: number = 1,
         initPosAccX?: number,
         initPosAccY?: number,
-        projectileCount: number = 1,
         fireRate: number = 15,
         debugBgColor: string = 'red'
     ) {

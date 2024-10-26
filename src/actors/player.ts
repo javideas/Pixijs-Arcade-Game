@@ -7,7 +7,6 @@ export class Player extends Shooter {
         scaleRatio: number = 1,
         initPosAccX?: number,
         initPosAccY?: number,
-        projectileCount: number = 1,
         fireRate: number = 15,
         debugBgColor: string = 'yellow'
     ) {
@@ -16,7 +15,6 @@ export class Player extends Shooter {
             scaleRatio,
             initPosAccX,
             initPosAccY,
-            projectileCount,
             fireRate,
             debugBgColor
         );
