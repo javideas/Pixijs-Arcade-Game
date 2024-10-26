@@ -1,7 +1,8 @@
 import { Application, Container, Ticker } from 'pixi.js';
-import { Screen } from '../stage/screen.js';
-import { Deck } from '../stage/deck.js';
-import { Player } from '../actors/player.js';
+import { Screen } from '../stage/screen';
+import { Deck } from '../stage/deck';
+import { Player } from '../actors/player';
+import { Enemy } from '../actors/enemy';
 import { Projectile } from '../actors/projectile';
 
 export default class Battle {
@@ -20,14 +21,14 @@ export default class Battle {
 
     /** Spawn the initial elements on the stage */
     init() {
-        this.spawnChildren().then(() => {
+        this.spawnOnInit().then(() => {
             // Call responsive only after initialization
             window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
         });
     }
 
     /** Initialize the screen and decks */
-    spawnChildren(): Promise<void> {
+    spawnOnInit(): Promise<void> {
         return new Promise((resolve) => {
             // Load screen elements
             this.loadUI();
@@ -35,9 +36,16 @@ export default class Battle {
             // Spawn Player
             this.player = new Player(1);
             this.actorsContainer.addChild(this.player);
+            
             // Resolve the promise after initialization is complete
             resolve();
         });
+    }
+
+    spawnEnemy() {
+        const enemy = new Enemy(1,1,2,-0.8);
+        this.actorsContainer.addChild(enemy);
+        enemy.setResponsive();
     }
     
     /** load the User Interface */

@@ -45,6 +45,10 @@ export class Actor extends Container {
         this.bgShape = new Graphics();
         this.addChild(this.bgShape);
 
+        this.init();
+    }
+
+    private init(){
         this.setResponsive();
         this.draw();
     }
