@@ -31,9 +31,9 @@ export class Shooter extends Actor {
         this.hasShot = false;
     }
 
-    public update(deltaTime: number) {
+    public update(delta: number) {
         // Increment cooldown by the time since the last frame
-        this.cooldown += deltaTime;
+        this.cooldown += delta;
 
         // Check if the cooldown has elapsed and reset the shot flag
         if (this.cooldown >= this.fireRate) {

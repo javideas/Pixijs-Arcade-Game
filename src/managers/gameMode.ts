@@ -1,15 +1,17 @@
+import { gsap } from 'gsap';
 import Battle from '../scenes/battle.js'
-import { Application, Ticker } from 'pixi.js';
+import { Application } from 'pixi.js';
 
 export default class GameMode {
     private app: Application;
     private ticker: Ticker;
     private battle: Battle;
     public static instance: GameMode;
+    private elapsedTime: number = 0;
     
     constructor(app: Application){
         this.app = app;
-        this.ticker = Ticker.shared;
+        gsap.ticker.add(this.update.bind(this));
         this.currentLevel = 'none';
         GameMode.instance = this;
         this.init();
@@ -17,27 +19,29 @@ export default class GameMode {
 
     private async init() {
         await this.loadScene();
-        this.startTicker();
     }
 
-    private update(deltaTime: number) {
+    private update(time: number, deltaTime: number) {
+        const delta = gsap.ticker.deltaRatio(60); // Normalize to 60 FPS
+        this.elapsedTime += delta; // Accumulate delta time
+        // Log every second
+        if (this.elapsedTime >= 1) {
+            console.log('second has passed');
+            this.elapsedTime = 0; // Reset the counter
+        }
+
         // Update the shooter
         this.battle.actorsContainer.children.forEach((child) => {
             if (typeof child.draw == 'function') {
-                child.update(deltaTime);
+                child.update(delta);
             }
         });
 
         this.battle.projectilesContainer.children.forEach((child) => {
             if (typeof child.draw == 'function') {
-                child.update(deltaTime);
+                child.update(delta);
             }
         })
-    }
-    
-    private startTicker() {
-        this.ticker.add(this.update.bind(this));
-        this.ticker.start();
     }
 
     public playerInput(action: string = 'none') {
