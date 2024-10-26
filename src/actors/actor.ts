@@ -41,7 +41,7 @@ export class Actor extends Container {
         this.setResponsive();
         this.trackPos();
         this.draw();
-        console.log(`Class Name: ${this.constructor.name}`);
+        // console.log(`Class Name: ${this.constructor.name}`);
     }
 
     public draw() {
@@ -108,6 +108,11 @@ export class Actor extends Container {
         this.y = (this.posAccY + 1) / 2 * (this.globalLimitB - this.globalLimitT) + this.globalLimitT;
     }
 
+    public setResponsive() {
+        this.calcRespScale(this.screenRef.frameB);
+        this.calcRespLimits();
+    }
+
     private calcRespScale(ratio: number = 1) {
         this.colWidth = (0.07 * this.scaleRatio) * ratio;
         this.colPosX = -this.colWidth / 2;
@@ -123,11 +128,6 @@ export class Actor extends Container {
         this.globalLimitL = window.innerWidth / 2 + limitRefL;
         this.globalLimitT = this.colHeight / 2;
         this.globalLimitB = this.screenRef.frameB - this.colHeight / 2;
-    }
-
-    public setResponsive() {
-        this.calcRespScale(this.screenRef.frameB);
-        this.calcRespLimits();
     }
 
     private debugShape() {

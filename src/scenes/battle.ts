@@ -76,7 +76,7 @@ export default class Battle {
         this.actorsContainer.addChild(this.player);
     }
 
-    /** Resize based on Device's rotation */
+    /** Resize responsive */
     resize(mode: string = 'landscape') {
         if (mode === 'landscape') {
             this.deckR.ratioWidth = 0.3;
@@ -91,7 +91,7 @@ export default class Battle {
             const offsetDeskY = -window.innerHeight / 2;
             const lengthDeskY = window.innerHeight;
             // "Extra step" function for custom sizes cases
-            this.respRelative(
+            this.uiRespRelative(
                 offsetScreenY,
                 lengthScreenY,
                 deskRposX,
@@ -102,7 +102,7 @@ export default class Battle {
                 lengthDeskY
             );
         } else if (mode === 'portrait') {
-            this.respAbsolute();
+            this.uiRespAbsolute();
         }
 
         // Drawing actors on resize
@@ -116,7 +116,7 @@ export default class Battle {
     }
 
     /** if Deck, based to the Screen sides. if Screen, based on 16/9 ratio */
-    respRelative(
+    uiRespRelative(
         offsetScreenY: number = 0,
         lengthScreenY: number = -window.innerHeight / 2,
         deskRposX: number = 0,
@@ -151,7 +151,7 @@ export default class Battle {
     }
 
     /** Responsiveness Absolute to the window */
-    respAbsolute() {
+    uiRespAbsolute() {
         this.screen.respAbsolute(window.innerHeight * 0.8);
 
         this.deckR.respAbsolute(
