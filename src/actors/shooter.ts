@@ -8,16 +8,20 @@ export class Shooter extends Actor {
     private hasShot: boolean;
 
     constructor(
+        id: string,
         hasAi: boolean = false,
         scaleRatio: number = 1,
+        health: number,
         initPosAccX?: number,
         initPosAccY?: number,
         fireRate: number = 15,
         debugBgColor: string = 'red'
     ) {
         super(
+            id,
             hasAi,
             scaleRatio,
+            health,
             initPosAccX,
             initPosAccY,
             debugBgColor

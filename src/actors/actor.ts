@@ -20,14 +20,17 @@ export class Actor extends Container {
     private globalLimitB: number;
 
     constructor(
+        id: string,
         hasAi: bool = false,
         scaleRatio: number = 1,
+        health: number = 4,
         initPosAccX: number = 0,
         initPosAccY: number = 0.8,
         debugBgColor: string = 'yellow'
     ) {
         const gameMode = GameMode.instance;
         super();
+        this.id = id; // either 'player' or 'enemy', for proyectile damage case
         this.screenRef = gameMode.battle.screen;
         this.projectilesContainer = gameMode.battle.projectilesContainer;
         this.hasAi = hasAi;
@@ -36,12 +39,16 @@ export class Actor extends Container {
         this.posAccY = initPosAccY;
         this.scaleRatio = scaleRatio;
         this.speedGlobalRatio = 1;
+        this.health = health;
 
         this.bgShape = new Graphics();
         this.addChild(this.bgShape);
         this.setResponsive();
         this.draw();
-        // console.log(`Class Name: ${this.constructor.name}`);
+    }
+
+    public damage(amount: number = 1) { 
+        this.health -= amount;
     }
 
     public draw() {

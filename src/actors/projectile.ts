@@ -8,8 +8,10 @@ export class Projectile extends Actor {
         debugBgColor: string = 'red'
     ) {
         super(
+            shooterRef.id,
             true,
             scaleRatio,
+            1,
             shooterRef.posAccX,
             shooterRef.posAccY,
             debugBgColor
