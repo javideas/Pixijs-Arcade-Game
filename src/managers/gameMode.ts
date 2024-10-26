@@ -1,10 +1,11 @@
 import { gsap } from 'gsap';
 import Battle from '../scenes/battle.js'
-import { Application, Assets, Sprite } from 'pixi.js';
+import { Application, Assets, Container, Sprite } from 'pixi.js';
 import TextureManager from './textureManager';
 
 export default class GameMode {
     private app: Application;
+    private stageContainer: Container;
     private ticker: Ticker;
     private battle: Battle;
     public static instance: GameMode;
@@ -12,8 +13,9 @@ export default class GameMode {
     private currentTime: number = 0;
     private randomInterval: number = 0;
     
-    constructor(app: Application){
+    constructor(app: Application, stageContainer: Container){
         this.app = app;
+        this.stageContainer = stageContainer;
         this.randomInterval = 2000;
         
         this.currentLevel = 'none';

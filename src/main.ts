@@ -1,4 +1,6 @@
-import { Application, settings, SCALE_MODES } from 'pixi.js';
+import { Application, BaseTexture, SCALE_MODES, Container } from 'pixi.js';
+import { CRTFilter } from '@pixi/filter-crt';
+import { DotFilter } from '@pixi/filter-dot';
 import GameMode from './managers/gameMode.js';
 
 const bgColor = "#142332";
@@ -13,6 +15,34 @@ export const app = new Application({
     antialias: false,
 });
 
+// Create a container for the main stage
+const stageContainer = new Container();
+
+// Apply the CRT filter to the stageContainer
+const crtFilter = new CRTFilter({
+    enabled: true,
+    animating: true,
+    curvature: 10,
+    lineWidth: 0.1,
+    lineContrast: 10,
+    verticalLine: false,
+    noise: 0.2,
+    noiseSize: 0.1,
+    vignetting: 0.6,
+    vignettingAlpha: 0.5,
+    vignettingBlur: 1,
+    time: 14
+});
+
+// Apply the Dot filter to the stageContainer
+const dotFilter = new DotFilter({
+    scale: 1.0, // Adjust the scale of the dots
+    angle: 5.0, // Adjust the angle of the dots
+    grayscale: false
+});
+
+// stageContainer.filters = [crtFilter]
+stageContainer.filters = [ dotFilter];
 let gameMode: GameMode;
 
 /** Initialize the application */
@@ -22,11 +52,17 @@ init();
 async function init() {
     // Add pixi canvas element (app.view) to the document's body
     document.body.appendChild(app.view as HTMLCanvasElement);
+
+    // Add the stageContainer to the application
+    app.stage.addChild(stageContainer);
+
     // Set image rendering to pixelated
     app.view.style.imageRendering = 'pixelated';
-    // Set default scale mode to nearest neighbor
-    settings.SCALE_MODE = SCALE_MODES.NEAREST;
-    gameMode = new GameMode(app);
+    // Set default scale mode to nearest neighbor using the new method
+    BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
+
+    // Initialize the game mode
+    gameMode = new GameMode(app, stageContainer);
     await gameMode.init();
 
     /** Add event listeners */

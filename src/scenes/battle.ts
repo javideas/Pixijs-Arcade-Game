@@ -1,4 +1,5 @@
-import { Application, Container, Ticker } from 'pixi.js';
+import { Application, Container } from 'pixi.js';
+import GameMode from '../managers/gameMode';
 import { Screen } from '../stage/screen';
 import { Deck } from '../stage/deck';
 import { Player } from '../actors/player';
@@ -17,6 +18,7 @@ export default class Battle {
 
     constructor(app: Application) {
         this.app = app;
+        this.gameMode = GameMode.instance;
     }
 
     /** Spawn the initial elements on the stage */
@@ -73,10 +75,10 @@ export default class Battle {
     /** Load Container for player and enemys, AND container for projectiles */
     loadContainers() {
         this.projectilesContainer = new Container();
-        this.app.stage.addChild(this.projectilesContainer);
+        this.gameMode.stageContainer.addChild(this.projectilesContainer);
 
         this.actorsContainer = new Container();
-        this.app.stage.addChild(this.actorsContainer);
+        this.gameMode.stageContainer.addChild(this.actorsContainer);
     }
 
     /** Resize responsive */
