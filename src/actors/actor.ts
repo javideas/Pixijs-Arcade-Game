@@ -30,19 +30,21 @@ export class Actor extends Container {
     ) {
         const gameMode = GameMode.instance;
         super();
-        this.id = id; // either 'player' or 'enemy', for proyectile damage case
         this.screenRef = gameMode.battle.screen;
         this.projectilesContainer = gameMode.battle.projectilesContainer;
+
+        this.id = id; // either 'player' or 'enemy', for proyectile damage case
         this.hasAi = hasAi;
-        this.debugBgColor = debugBgColor;
+        this.scaleRatio = scaleRatio;
+        this.health = health;
         this.posAccX = initPosAccX;
         this.posAccY = initPosAccY;
-        this.scaleRatio = scaleRatio;
         this.speedGlobalRatio = 1;
-        this.health = health;
-
+        
+        this.debugBgColor = debugBgColor;
         this.bgShape = new Graphics();
         this.addChild(this.bgShape);
+
         this.setResponsive();
         this.draw();
     }
@@ -53,13 +55,6 @@ export class Actor extends Container {
 
     public draw() {
         this.debugShape();
-    }
-
-    public update() {
-        if(this.hasAi) {
-            this.moveY(-1);
-            this.moveX(0.5);
-        }
     }
     
     public moveX(inputX: number = 1) {
@@ -97,16 +92,11 @@ export class Actor extends Container {
         if (resultingPosition >= limitL && resultingPosition <= limitR) {
             return newPosAcc; // Return the new position accumulator if within limits
         }
-        if(this.hasAi) this.onLimit();
-        return null; // Return null if out of limits
+        return this.onLimit();
     }
 
     private onLimit() {
-        // Remove from parent container and Destroy
-        if (this.parent) {
-            this.parent.removeChild(this); // Remove this instance from its parent
-        }
-        this.destroy(true);
+        return null;
     }
 
     private trackPos() {

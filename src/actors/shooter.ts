@@ -41,13 +41,28 @@ export class Shooter extends Actor {
         }
     }
 
-    public shoot() {
+    public shoot(weaponType: string = 'trinormal') {
         // Check if the player is trying to shoot and hasn't shot yet
         if (!this.hasShot) {
-            const projectile = new Projectile(this, 0.5);
-            this.projectilesContainer.addChild(projectile);
+            switch(weaponType) {
+                case 'trinormal':
+                    this.spawnProjectile(0.5, -1);
+                    this.spawnProjectile(-0.5, -1);
+                    this.spawnProjectile(0, -1);
+                    break;
+                case 'doubleFwd':
+                    this.spawnProjectile(0, -1, 0.13, 0);
+                    this.spawnProjectile(0, -1, -0.13, 0);
+                    break;
+            }
+
             this.hasShot = true;
             this.cooldown = 0;
         }
+    }
+
+    private spawnProjectile(dirX: number, dirY: number, offsetX: number, offsetY: number) {
+        const projectile = new Projectile(this, dirX, dirY, offsetX, offsetY);
+        this.projectilesContainer.addChild(projectile);
     }
 }

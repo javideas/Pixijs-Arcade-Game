@@ -33,7 +33,7 @@ export default class Battle {
             this.loadUI();
             this.loadContainers();
             // Spawn Player
-            this.player = new Player(false, 1);
+            this.player = new Player(1);
             this.actorsContainer.addChild(this.player);
             // Resolve the promise after initialization is complete
             resolve();

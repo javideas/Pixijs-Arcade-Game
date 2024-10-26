@@ -1,18 +1,18 @@
 import { Container } from 'pixi.js';
 import { Shooter } from "./shooter";
 
-export class Player extends Shooter {
+export class Enemy extends Shooter {
     constructor(
         scaleRatio: number = 1,
         health: number,
         initPosAccX?: number,
         initPosAccY?: number,
         fireRate: number = 15,
-        debugBgColor: string = 'yellow'
+        debugBgColor: string = 'green'
     ) {
         super(
-            'player',
-            false, // hasAi
+            'enemy',
+            true, // hasAi
             scaleRatio,
             health,
             initPosAccX,
@@ -20,9 +20,5 @@ export class Player extends Shooter {
             fireRate,
             debugBgColor
         );
-    }
-
-    public shoot() {
-        super.shoot('doubleFwd');
     }
 }
