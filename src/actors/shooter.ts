@@ -42,7 +42,7 @@ export class Shooter extends Actor {
     public shoot() {
         // Check if the player is trying to shoot and hasn't shot yet
         if (!this.hasShot) {
-            const projectile = new Projectile(0.5);
+            const projectile = new Projectile(this, 0.5);
             this.projectilesContainer.addChild(projectile);
             this.hasShot = true;
             this.cooldown = 0;

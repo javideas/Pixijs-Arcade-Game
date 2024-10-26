@@ -22,8 +22,8 @@ export class Actor extends Container {
     constructor(
         hasAi: bool = false,
         scaleRatio: number = 1,
-        initPosAccX?: number,
-        initPosAccY?: number,
+        initPosAccX: number = 0,
+        initPosAccY: number = 0.8,
         debugBgColor: string = 'yellow'
     ) {
         const gameMode = GameMode.instance;
@@ -32,11 +32,10 @@ export class Actor extends Container {
         this.projectilesContainer = gameMode.battle.projectilesContainer;
         this.hasAi = hasAi;
         this.debugBgColor = debugBgColor;
-        this.posAccX = initPosAccX || 0;
-        this.posAccY = initPosAccY || 0.8;
+        this.posAccX = initPosAccX;
+        this.posAccY = initPosAccY;
         this.scaleRatio = scaleRatio;
         this.speedGlobalRatio = 1;
-        this.lookAt = [0, 1]; // looking Straight-up
 
         this.bgShape = new Graphics();
         this.addChild(this.bgShape);
@@ -53,9 +52,6 @@ export class Actor extends Container {
         if(this.hasAi) {
             this.moveY(-1);
             this.moveX(0.5);
-            console.log('ey');
-            // console.log('actor parent: ', this.parent);
-            // console.log(`Class Name: ${this.constructor.name}`);
         }
     }
     
@@ -81,7 +77,7 @@ export class Actor extends Container {
         
         // Adjusted scale per axis, normalized by the effective screen size
         const speedRatioX = 0.007;
-        const speedRatioY = 0.003;
+        const speedRatioY = 0.0015;
         const baseMovementScale = axis === 'x' ? speedRatioX : speedRatioY;
         const normalizedMovementScale = baseMovementScale * this.speedGlobalRatio * (effectiveScreenSize / (this.globalLimitR - this.globalLimitL));
         
