@@ -40,6 +40,6 @@ export class Projectile extends Actor {
         if (this.parent) {
             this.parent.removeChild(this);
         }
-        this.destroy(true);
+        this.destroy({ children: true, texture: false, baseTexture: false });
     }
 }

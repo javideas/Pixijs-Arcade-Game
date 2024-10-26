@@ -1,7 +1,8 @@
-import { Container, Graphics } from 'pixi.js';
+import { Container, Graphics, Sprite, Texture } from 'pixi.js';
 import GameMode from '../managers/gameMode';
 
 export class Actor extends Container {
+    protected sprite: Sprite;
     protected hasAi: bool;
     protected posAccX: number;
     protected posAccY: number;
@@ -25,7 +26,8 @@ export class Actor extends Container {
         health: number = 4,
         initPosAccX: number = 0,
         initPosAccY: number = 0.8,
-        debugBgColor: string = 'yellow'
+        debugBgColor: string = 'yellow',
+        spriteName: string = 'ShipPlayer-FullHealth'
     ) {
         const gameMode = GameMode.instance;
         super();
@@ -42,6 +44,14 @@ export class Actor extends Container {
         this.debugBgColor = debugBgColor;
         this.bgShape = new Graphics();
         this.addChild(this.bgShape);
+
+        const texture = gameMode.getTexture(spriteName);
+        if (texture) {
+            this.sprite = new Sprite(texture);
+            this.addChild(this.sprite);
+        } else {
+            console.error(`Texture ${spriteName} not found`);
+        }
 
         this.init();
     }

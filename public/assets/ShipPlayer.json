@@ -1,0 +1,378 @@
+{"frames": {
+
+"EngineFire-0.png":
+{
+	"frame": {"x":277,"y":20,"w":7,"h":7},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":6,"w":7,"h":7},
+	"sourceSize": {"w":12,"h":24}
+},
+"EngineFire-1.png":
+{
+	"frame": {"x":277,"y":20,"w":7,"h":7},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":6,"w":7,"h":7},
+	"sourceSize": {"w":12,"h":24}
+},
+"EngineFire-2.png":
+{
+	"frame": {"x":291,"y":50,"w":7,"h":8},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":6,"w":7,"h":8},
+	"sourceSize": {"w":12,"h":24}
+},
+"EngineFire-3.png":
+{
+	"frame": {"x":291,"y":50,"w":7,"h":8},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":6,"w":7,"h":8},
+	"sourceSize": {"w":12,"h":24}
+},
+"EngineFire-4.png":
+{
+	"frame": {"x":291,"y":50,"w":7,"h":8},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":5,"w":7,"h":8},
+	"sourceSize": {"w":12,"h":24}
+},
+"EngineFire-5.png":
+{
+	"frame": {"x":291,"y":50,"w":7,"h":8},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":5,"w":7,"h":8},
+	"sourceSize": {"w":12,"h":24}
+},
+"EngineFire-6.png":
+{
+	"frame": {"x":286,"y":20,"w":7,"h":7},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":6,"w":7,"h":7},
+	"sourceSize": {"w":12,"h":24}
+},
+"EngineFire-7.png":
+{
+	"frame": {"x":286,"y":20,"w":7,"h":7},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":6,"w":7,"h":7},
+	"sourceSize": {"w":12,"h":24}
+},
+"EngineFire-8.png":
+{
+	"frame": {"x":282,"y":50,"w":7,"h":9},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":7,"w":7,"h":9},
+	"sourceSize": {"w":12,"h":24}
+},
+"EngineFire-9.png":
+{
+	"frame": {"x":282,"y":50,"w":7,"h":9},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":7,"w":7,"h":9},
+	"sourceSize": {"w":12,"h":24}
+},
+"EngineFire-10.png":
+{
+	"frame": {"x":273,"y":50,"w":7,"h":10},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":7,"w":7,"h":10},
+	"sourceSize": {"w":12,"h":24}
+},
+"EngineFire-11.png":
+{
+	"frame": {"x":273,"y":50,"w":7,"h":10},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":7,"w":7,"h":10},
+	"sourceSize": {"w":12,"h":24}
+},
+"EngineFire-12.png":
+{
+	"frame": {"x":295,"y":20,"w":7,"h":7},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":7,"w":7,"h":7},
+	"sourceSize": {"w":12,"h":24}
+},
+"EngineFire-13.png":
+{
+	"frame": {"x":295,"y":20,"w":7,"h":7},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":7,"w":7,"h":7},
+	"sourceSize": {"w":12,"h":24}
+},
+"Invincibility-0.png":
+{
+	"frame": {"x":69,"y":1,"w":34,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":17,"w":34,"h":30},
+	"sourceSize": {"w":64,"h":64}
+},
+"Invincibility-1.png":
+{
+	"frame": {"x":69,"y":33,"w":34,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":17,"w":34,"h":30},
+	"sourceSize": {"w":64,"h":64}
+},
+"Invincibility-2.png":
+{
+	"frame": {"x":105,"y":1,"w":34,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":17,"w":34,"h":30},
+	"sourceSize": {"w":64,"h":64}
+},
+"Invincibility-3.png":
+{
+	"frame": {"x":105,"y":33,"w":34,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":17,"w":34,"h":30},
+	"sourceSize": {"w":64,"h":64}
+},
+"Invincibility-4.png":
+{
+	"frame": {"x":141,"y":1,"w":34,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":17,"w":34,"h":30},
+	"sourceSize": {"w":64,"h":64}
+},
+"Invincibility-5.png":
+{
+	"frame": {"x":141,"y":33,"w":34,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":17,"w":34,"h":30},
+	"sourceSize": {"w":64,"h":64}
+},
+"Invincibility-6.png":
+{
+	"frame": {"x":177,"y":1,"w":34,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":17,"w":34,"h":30},
+	"sourceSize": {"w":64,"h":64}
+},
+"Invincibility-7.png":
+{
+	"frame": {"x":177,"y":33,"w":34,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":17,"w":34,"h":30},
+	"sourceSize": {"w":64,"h":64}
+},
+"Invincibility-8.png":
+{
+	"frame": {"x":69,"y":1,"w":34,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":17,"w":34,"h":30},
+	"sourceSize": {"w":64,"h":64}
+},
+"Invincibility-9.png":
+{
+	"frame": {"x":69,"y":1,"w":34,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":17,"w":34,"h":30},
+	"sourceSize": {"w":64,"h":64}
+},
+"Projectile-0.png":
+{
+	"frame": {"x":328,"y":23,"w":7,"h":17},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":9,"w":7,"h":17},
+	"sourceSize": {"w":32,"h":32}
+},
+"Projectile-1.png":
+{
+	"frame": {"x":299,"y":29,"w":7,"h":19},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":9,"w":7,"h":19},
+	"sourceSize": {"w":32,"h":32}
+},
+"Projectile-2.png":
+{
+	"frame": {"x":329,"y":1,"w":7,"h":20},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":9,"w":7,"h":20},
+	"sourceSize": {"w":32,"h":32}
+},
+"ShipPlayer-BaseEngine.png":
+{
+	"frame": {"x":273,"y":31,"w":24,"h":17},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":19,"w":24,"h":17},
+	"sourceSize": {"w":48,"h":48}
+},
+"ShipPlayer-BigPulseEngine.png":
+{
+	"frame": {"x":308,"y":19,"w":18,"h":21},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":16,"w":18,"h":21},
+	"sourceSize": {"w":48,"h":48}
+},
+"ShipPlayer-BurstEngine.png":
+{
+	"frame": {"x":277,"y":1,"w":24,"h":17},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":23,"w":24,"h":17},
+	"sourceSize": {"w":48,"h":48}
+},
+"ShipPlayer-Damaged.png":
+{
+	"frame": {"x":1,"y":35,"w":32,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":10,"w":32,"h":28},
+	"sourceSize": {"w":48,"h":48}
+},
+"ShipPlayer-FullHealth.png":
+{
+	"frame": {"x":35,"y":35,"w":32,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":10,"w":32,"h":28},
+	"sourceSize": {"w":48,"h":48}
+},
+"ShipPlayer-SlightDamage.png":
+{
+	"frame": {"x":213,"y":1,"w":32,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":10,"w":32,"h":28},
+	"sourceSize": {"w":48,"h":48}
+},
+"ShipPlayer-SuperEngine.png":
+{
+	"frame": {"x":303,"y":1,"w":24,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":20,"w":24,"h":16},
+	"sourceSize": {"w":48,"h":48}
+},
+"ShipPlayer-VeryDamaged.png":
+{
+	"frame": {"x":213,"y":31,"w":32,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":10,"w":32,"h":28},
+	"sourceSize": {"w":48,"h":48}
+},
+"VfxGreen-0.png":
+{
+	"frame": {"x":308,"y":42,"w":20,"h":20},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":6,"w":20,"h":20},
+	"sourceSize": {"w":32,"h":32}
+},
+"VfxGreen-1.png":
+{
+	"frame": {"x":247,"y":31,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":4,"w":24,"h":24},
+	"sourceSize": {"w":32,"h":32}
+},
+"VfxGreen-2.png":
+{
+	"frame": {"x":247,"y":1,"w":28,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":2,"w":28,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+"VfxGreen-3.png":
+{
+	"frame": {"x":1,"y":1,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"VfxGreen-4.png":
+{
+	"frame": {"x":35,"y":1,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"VfxGreen-5.png":
+{
+	"frame": {"x":308,"y":42,"w":20,"h":20},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":6,"w":20,"h":20},
+	"sourceSize": {"w":32,"h":32}
+},
+"VfxGreen-6.png":
+{
+	"frame": {"x":247,"y":31,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":4,"w":24,"h":24},
+	"sourceSize": {"w":32,"h":32}
+},
+"VfxGreen-7.png":
+{
+	"frame": {"x":247,"y":1,"w":28,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":2,"w":28,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+"VfxGreen-8.png":
+{
+	"frame": {"x":1,"y":1,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"VfxGreen-9.png":
+{
+	"frame": {"x":35,"y":1,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+}},
+"animations": {
+	"EngineFire": ["EngineFire-0.png","EngineFire-1.png","EngineFire-2.png","EngineFire-3.png","EngineFire-4.png","EngineFire-5.png","EngineFire-6.png","EngineFire-7.png","EngineFire-8.png","EngineFire-9.png","EngineFire-10.png","EngineFire-11.png","EngineFire-12.png","EngineFire-13.png"],
+	"Invincibility": ["Invincibility-0.png","Invincibility-1.png","Invincibility-2.png","Invincibility-3.png","Invincibility-4.png","Invincibility-5.png","Invincibility-6.png","Invincibility-7.png","Invincibility-8.png","Invincibility-9.png"],
+	"Projectile": ["Projectile-0.png","Projectile-1.png","Projectile-2.png"],
+	"VfxGreen": ["VfxGreen-0.png","VfxGreen-1.png","VfxGreen-2.png","VfxGreen-3.png","VfxGreen-4.png","VfxGreen-5.png","VfxGreen-6.png","VfxGreen-7.png","VfxGreen-8.png","VfxGreen-9.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "ShipPlayer.png",
+	"format": "RGBA8888",
+	"size": {"w":337,"h":64},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:6ead61c20456afc0983f2fa6fdb77b21:78f44e100cb8f1601fe219a28f1c8eb1:ec5eb3ea4e0061a9c74ffbf3d4beab7e$"
+}
+}

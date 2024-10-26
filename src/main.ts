@@ -13,22 +13,23 @@ export const app = new Application({
     antialias: true,
 });
 
+let gameMode: GameMode;
+
 /** Initialize the application */
 init();
-
-/** Create an instance of GameMode */
-const gameMode = new GameMode(app);
-
-/** Add event listeners */
-addEventListeners(gameMode);
-
-/** Resize the app */
-resize();
 
 /** Functions List */
 async function init() {
     // Add pixi canvas element (app.view) to the document's body
     document.body.appendChild(app.view as HTMLCanvasElement);
+    gameMode = new GameMode(app);
+    await gameMode.init();
+
+    /** Add event listeners */
+    addEventListeners(gameMode);
+
+    /** Resize the app */
+    resize();
 }
 
 function addEventListeners(gameMode: GameMode) {

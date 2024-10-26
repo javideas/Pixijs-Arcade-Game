@@ -1,6 +1,7 @@
 import { gsap } from 'gsap';
 import Battle from '../scenes/battle.js'
-import { Application } from 'pixi.js';
+import { Application, Assets, Sprite } from 'pixi.js';
+import TextureManager from './textureManager';
 
 export default class GameMode {
     private app: Application;
@@ -14,15 +15,41 @@ export default class GameMode {
     constructor(app: Application){
         this.app = app;
         this.randomInterval = 2000;
-        gsap.ticker.add(this.update.bind(this));
+        
         this.currentLevel = 'none';
         GameMode.instance = this;
-        this.init();
     }
 
     private async init() {
+        await this.loadAssets();
         await this.loadScene();
+        gsap.ticker.add(this.update.bind(this));
         this.battle.spawnEnemy();
+    }
+
+    private async loadAssets() {
+        const textureManager = TextureManager.getInstance();
+        const spritePath = '../assets/ShipPlayer.json';
+
+        try {
+            const spritesheet = await Assets.load(spritePath);
+            // console.log('Spritesheet loaded:', spritesheet);
+
+            // Iterate over all textures in the spritesheet and add them to the TextureManager
+            for (const [textureName, texture] of Object.entries(spritesheet.textures)) {
+                // Remove the '.png' extension from the texture name
+                const nameWithoutExtension = textureName.replace(/\.png$/, '');
+                textureManager.addTexture(nameWithoutExtension, texture as Texture);
+            }
+        } catch (error) {
+            console.error('Error loading spritesheet:', error);
+        }
+    }
+
+    // Add this method to retrieve textures
+    public getTexture(spriteName: string): Texture | undefined {
+        const textureManager = TextureManager.getInstance();
+        return textureManager.getTexture(spriteName);
     }
 
     private update(time: number, deltaTime: number) {
@@ -46,7 +73,6 @@ export default class GameMode {
             }
         })
     }
-
 
     private spawnEnemies(){
         // if check every 5 seconds, checking this.currentTime
