@@ -52,6 +52,7 @@ export class Actor extends Container {
         } else {
             console.error(`Texture ${spriteName} not found`);
         }
+        this.spriteScaleRatio = 1.6;
 
         this.init();
     }
@@ -66,6 +67,13 @@ export class Actor extends Container {
     }
 
     public draw() {
+        
+        // Set the size of the sprite
+        this.sprite.width = this.colWidth * this.spriteScaleRatio;
+        this.sprite.height = this.colHeight * this.spriteScaleRatio;
+        // Set the position of the sprite
+        this.sprite.x = -this.sprite.width/2;
+        this.sprite.y = -this.sprite.height/2;
         this.debugShape();
     }
     

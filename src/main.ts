@@ -1,4 +1,4 @@
-import { Application } from 'pixi.js';
+import { Application, settings, SCALE_MODES } from 'pixi.js';
 import GameMode from './managers/gameMode.js';
 
 const bgColor = "#142332";
@@ -10,7 +10,7 @@ export const app = new Application({
     resolution: Math.max(window.devicePixelRatio, 2),
     resizeTo: window,
     autoDensity: true,
-    antialias: true,
+    antialias: false,
 });
 
 let gameMode: GameMode;
@@ -22,6 +22,10 @@ init();
 async function init() {
     // Add pixi canvas element (app.view) to the document's body
     document.body.appendChild(app.view as HTMLCanvasElement);
+    // Set image rendering to pixelated
+    app.view.style.imageRendering = 'pixelated';
+    // Set default scale mode to nearest neighbor
+    settings.SCALE_MODE = SCALE_MODES.NEAREST;
     gameMode = new GameMode(app);
     await gameMode.init();
 
