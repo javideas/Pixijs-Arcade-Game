@@ -33,8 +33,8 @@ async function init() {
     document.body.appendChild(app.view as HTMLCanvasElement);
 
     // Add the filteredContainer AND stageContainer to the app
-    app.stage.addChild(crtFilterContainer);
     app.stage.addChild(stageContainer);
+    app.stage.addChild(crtFilterContainer);
 
     // Set image rendering to pixelated
     app.view.style.imageRendering = 'pixelated';

@@ -1,4 +1,4 @@
-import { Application, Container, Filter, Graphics, RenderTexture, Sprite, SpriteMaskFilter } from 'pixi.js';
+import { Application, BLEND_MODES, Container, Filter, Graphics, RenderTexture, Sprite, SpriteMaskFilter } from 'pixi.js';
 import { CRTFilter } from '@pixi/filter-crt';
 import { AdjustmentFilter } from '@pixi/filter-adjustment';
 import { BloomFilter } from '@pixi/filter-bloom';
@@ -45,7 +45,10 @@ export default class Ui {
     /** Manage Filters */
     private applyFilters() {
         this.setCrtFilter();
-        this.setFiltersToStage();
+        // this.setFiltersToStage();
+        // Set blend mode for the stageContainer
+        this.gameMode.crtFilterContainer.blendMode = BLEND_MODES.SCREEN;
+        this.gameMode.crtFilterContainer.alpha = 0.5
     }
 
     private setFiltersToStage() {
@@ -150,12 +153,12 @@ export default class Ui {
         }
 
         this.gameMode.battle.responsive();
-        this.updateFilterMasks();
+        // this.updateFilterMasks();
     }
 
     private updateFilterMasks() {
         // Redraw the stage mask shape with updated dimensions
-        this.drawStageMaskShape();
+        // this.drawStageMaskShape();
 
         // Create a new render texture with updated dimensions
         const renderTexture = RenderTexture.create({ width: this.app.screen.width, height: this.app.screen.height });
