@@ -29,6 +29,16 @@ export default class GameMode {
         this.battle.spawnEnemy();
     }
 
+    private async loadScene(scene: string = 'battle') {
+        this.currentLevel = scene;
+        switch(scene){
+            case 'battle':
+                this.battle = new Battle(this.app);
+                await this.battle.init();
+                return;
+        }
+    }
+
     private async loadAssets() {
         const textureManager = TextureManager.getInstance();
         const spritePath = '../assets/ShipPlayer.json';
@@ -151,15 +161,7 @@ export default class GameMode {
         }
     }
 
-    private async loadScene(scene: string = 'battle') {
-        this.currentLevel = scene;
-        switch(scene){
-            case 'battle':
-                this.battle = new Battle(this.app);
-                await this.battle.init();
-                return;
-        }
-    }
+
 
     public resize(responsiveMode: string  = 'landscape') {
         this.battle.resize(responsiveMode);

@@ -54,7 +54,7 @@ export default class Battle {
     loadUI() {
         // Create and add the Screen to the stage
         this.screen = new Screen('black');
-        this.app.stage.addChild(this.screen);
+        this.gameMode.stageContainer.addChild(this.screen);
         
         // Create and add the Decks to the stage
         this.deckR = new Deck('blue');

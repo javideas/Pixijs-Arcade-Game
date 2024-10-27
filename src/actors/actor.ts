@@ -74,7 +74,7 @@ export class Actor extends Container {
         // Set the position of the sprite
         this.sprite.x = -this.sprite.width/2;
         this.sprite.y = -this.sprite.height/2;
-        this.debugShape();
+        // this.debugShape();
     }
     
     public moveX(inputX: number = 1) {
