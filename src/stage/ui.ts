@@ -2,84 +2,21 @@ import { Application, Container } from 'pixi.js';
 import GameMode from '../managers/gameMode';
 import { Screen } from '../stage/screen';
 import { Deck } from '../stage/deck';
-import { Player } from '../actors/player';
-import { Enemy } from '../actors/enemy';
-import { Projectile } from '../actors/projectile';
 
-export default class Battle {
+export default class Ui {
     private app: Application;
 
     private screen: Screen;
     private deckR: Deck;
     private deckL: Deck;
-    private actorsContainer: Container;
-    private projectilesContainer: Container;
-    private player: Player;
 
     constructor(app: Application) {
         this.app = app;
         this.gameMode = GameMode.instance;
     }
 
-    /** Spawn the initial elements on the stage */
-    init() {
-        this.spawnOnInit().then(() => {
-            // Call responsive only after initialization
-            // window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
-        });
-    }
-
-    /** Initialize the screen and decks */
-    spawnOnInit(): Promise<void> {
-        return new Promise((resolve) => {
-            // Load screen elements
-            // this.loadUI(); // now in ui class
-            this.loadContainers();
-            // Spawn Player
-            this.player = new Player(1);
-            this.actorsContainer.addChild(this.player);
-            
-            // Resolve the promise after initialization is complete
-            resolve();
-        });
-    }
-
-    spawnEnemy() {
-        const enemy = new Enemy(0.7,1,2,-0.8);
-        this.actorsContainer.addChild(enemy);
-        enemy.setResponsive();
-    }
-    
-    /** Load Container for player and enemys, AND container for projectiles */
-    loadContainers() {
-        this.projectilesContainer = new Container();
-        this.gameMode.stageContainer.addChild(this.projectilesContainer);
-
-        this.actorsContainer = new Container();
-        this.gameMode.stageContainer.addChild(this.actorsContainer);
-    }
-
-    responsive() {
-        // Drawing actors on resize
-        this.actorsContainer.children.forEach((child) => {
-            if(typeof child.setResponsive === 'function' && typeof child.draw === 'function') {
-                child.setResponsive();
-                child.draw();
-            }
-        });
-
-        this.projectilesContainer.children.forEach((child) => {
-            if(typeof child.setResponsive === 'function' && typeof child.draw === 'function') {
-                child.setResponsive();
-                child.draw();
-            }
-        })
-    }
-
-    /** -------------------------------------------- */
-
     /** load the User Interface */
-    loadUI() {
+    init() {
         // Create and add the Screen to the stage
         this.screen = new Screen('black');
         this.gameMode.stageContainer.addChild(this.screen);
@@ -99,7 +36,7 @@ export default class Battle {
         this.deckL.ratioX = defaulRatioX;
         this.deckL.ratioWidth = defaultRatioWidth;
     }
-
+    
     /** Resize responsive */
     resize(mode: string = 'landscape') {
         if (mode === 'landscape') {
@@ -129,20 +66,7 @@ export default class Battle {
             this.uiRespAbsolute();
         }
 
-        // Drawing actors on resize
-        this.actorsContainer.children.forEach((child) => {
-            if(typeof child.setResponsive === 'function' && typeof child.draw === 'function') {
-                child.setResponsive();
-                child.draw();
-            }
-        });
-
-        this.projectilesContainer.children.forEach((child) => {
-            if(typeof child.setResponsive === 'function' && typeof child.draw === 'function') {
-                child.setResponsive();
-                child.draw();
-            }
-        })
+        this.gameMode.battle.responsive()
     }
 
     /** if Deck, based to the Screen sides. if Screen, based on 16/9 ratio */

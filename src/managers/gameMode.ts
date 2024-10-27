@@ -1,5 +1,6 @@
 import { gsap } from 'gsap';
-import Battle from '../scenes/battle.js'
+import Ui from '../stage/ui';
+import Battle from '../scenes/battle'
 import { Application, Assets, Container, Sprite } from 'pixi.js';
 import TextureManager from './textureManager';
 
@@ -24,9 +25,16 @@ export default class GameMode {
 
     private async init() {
         await this.loadAssets();
+        await this.loadUi();
         await this.loadScene();
         gsap.ticker.add(this.update.bind(this));
         this.battle.spawnEnemy();
+    }
+
+    private async loadUi() {
+        this.ui = new Ui(this.app);
+        await this.ui.init();
+        return;
     }
 
     private async loadScene(scene: string = 'battle') {
@@ -161,9 +169,7 @@ export default class GameMode {
         }
     }
 
-
-
     public resize(responsiveMode: string  = 'landscape') {
-        this.battle.resize(responsiveMode);
+        this.ui.resize(responsiveMode);
     }
 }

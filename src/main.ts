@@ -66,7 +66,7 @@ const maskSprite = new Sprite(renderTexture);
 const maskFilter = new SpriteMaskFilter(maskSprite);
 
 // Apply filters to the stageContainer
-stageContainer.filters = [crtFilter, maskFilter];
+// stageContainer.filters = [crtFilter, maskFilter];
 
 // Add the maskSprite to the stage (optional, if you want to see the mask)
 app.stage.addChild(maskSprite);

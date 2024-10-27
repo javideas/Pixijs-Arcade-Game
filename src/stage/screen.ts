@@ -1,4 +1,4 @@
-import { Tab } from "../ui/tab";
+import { Tab } from "./tab";
 
 export class Screen extends Tab {
     constructor(

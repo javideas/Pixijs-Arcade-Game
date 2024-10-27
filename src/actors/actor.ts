@@ -31,7 +31,7 @@ export class Actor extends Container {
     ) {
         const gameMode = GameMode.instance;
         super();
-        this.screenRef = gameMode.battle.screen;
+        this.screenRef = gameMode.ui.screen;
         this.projectilesContainer = gameMode.battle.projectilesContainer;
 
         this.id = id; // either 'player' or 'enemy', for proyectile damage case
