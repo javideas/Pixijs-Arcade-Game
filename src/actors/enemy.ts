@@ -18,6 +18,7 @@ export class Enemy extends Shooter {
             initPosAccX,
             initPosAccY,
             fireRate,
+            'ShipPlayer-FullHealth',
             debugBgColor
         );
         this.shotDirY = 1;

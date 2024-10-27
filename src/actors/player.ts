@@ -17,6 +17,7 @@ export class Player extends Shooter {
             initPosAccX,
             initPosAccY,
             fireRate,
+            'ShipPlayer-FullHealth',
             debugBgColor
         );
     }

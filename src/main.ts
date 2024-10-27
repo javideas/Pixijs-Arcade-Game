@@ -1,8 +1,7 @@
 import { Application, BaseTexture, SCALE_MODES, Container } from 'pixi.js';
 import { CRTFilter } from '@pixi/filter-crt';
 import { DotFilter } from '@pixi/filter-dot';
-import { ContainerBounded } from './stage/containerBounded'
-import GameMode from './managers/gameMode.js';
+import GameMode from './managers/gameMode';
 
 const bgColor = "#142332";
 document.body.style.backgroundColor = bgColor;
@@ -116,7 +115,7 @@ var origentationDetected = false;
 function handleOrientationChange(event: MediaQueryListEvent) {
     origentationDetected = true;
     if (event.matches) {
-        checkRatioSize();
+        checkRatioSize('landscape');
     } else {
         checkRatioSize('portrait');
     }

@@ -2,9 +2,7 @@ import { Application, BLEND_MODES, Container, Filter, Graphics, RenderTexture, S
 import { AlphaFilter } from '@pixi/filter-alpha';
 import { CRTFilter } from '@pixi/filter-crt';
 import { AdjustmentFilter } from '@pixi/filter-adjustment';
-// advance bloom filter
 import { AdvancedBloomFilter } from '@pixi/filter-advanced-bloom';
-import { BloomFilter } from '@pixi/filter-bloom';
 import { RGBSplitFilter } from '@pixi/filter-rgb-split';
 import GameMode from '../managers/gameMode';
 import { Screen } from '../stage/screen';

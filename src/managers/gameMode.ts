@@ -104,7 +104,6 @@ export default class GameMode {
             if (this.currentTime > this.randomInterval) {
                 // Check every 5 seconds
                 this.randomInterval = this.randomInterval + this.getRandomNumber(1000, 3000);
-                console.log('Enemy spawned');
             }
         }
     }

@@ -18,6 +18,7 @@ export class Projectile extends Actor {
             1, // health
             shooterRef.posAccX + offsetX,
             shooterRef.posAccY - offsetY,
+            'ShipPlayer-FullHealth',
             debugBgColor
         );
         this.trackOpponent = trackOpponent;

@@ -26,8 +26,8 @@ export class Actor extends Container {
         health: number = 4,
         initPosAccX: number = 0,
         initPosAccY: number = 0.8,
-        debugBgColor: string = 'yellow',
-        spriteName: string = 'ShipPlayer-FullHealth'
+        spriteName: string = 'ShipPlayer-FullHealth',
+        debugBgColor: string = 'yellow'
     ) {
         const gameMode = GameMode.instance;
         super();
