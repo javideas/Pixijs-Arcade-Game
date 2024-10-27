@@ -12,8 +12,8 @@ export default class Battle {
     private screen: Screen;
     private deckR: Deck;
     private deckL: Deck;
-    private actorsContainer: Container;
-    private projectilesContainer: Container;
+    private playerContainer: Container;
+    private enemyContainer: Container;
     private player: Player;
 
     constructor(app: Application) {
@@ -26,34 +26,36 @@ export default class Battle {
         await this.loadContainers();
 
         this.player = new Player(1);
-        this.actorsContainer.addChild(this.player);
+        this.playerContainer.addChild(this.player);
+
+        this.spawnEnemy();
     }
 
     public spawnEnemy() {
         const enemy = new Enemy(0.7,1,2,-0.8);
-        this.actorsContainer.addChild(enemy);
+        this.enemyContainer.addChild(enemy);
         enemy.setResponsive();
     }
     
     /** Load Container for player and enemys, AND container for projectiles */
     private async loadContainers() {
-        this.projectilesContainer = new Container();
-        this.gameMode.stageContainer.addChild(this.projectilesContainer);
+        this.enemyContainer = new Container();
+        this.gameMode.stageContainer.addChild(this.enemyContainer);
 
-        this.actorsContainer = new Container();
-        this.gameMode.stageContainer.addChild(this.actorsContainer);
+        this.playerContainer = new Container();
+        this.gameMode.stageContainer.addChild(this.playerContainer);
     }
 
     /** Drawing actors on resize */
     public responsive() {
-        this.actorsContainer.children.forEach((child) => {
+        this.playerContainer.children.forEach((child) => {
             if(typeof child.setResponsive === 'function' && typeof child.draw === 'function') {
                 child.setResponsive();
                 child.draw();
             }
         });
 
-        this.projectilesContainer.children.forEach((child) => {
+        this.enemyContainer.children.forEach((child) => {
             if(typeof child.setResponsive === 'function' && typeof child.draw === 'function') {
                 child.setResponsive();
                 child.draw();

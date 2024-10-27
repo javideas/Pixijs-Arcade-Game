@@ -32,8 +32,6 @@ export default class GameMode {
         await this.loadScene();
         window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
         gsap.ticker.add(this.update.bind(this));
-
-        this.battle.spawnEnemy();
     }
 
     private async loadUi() {
@@ -87,13 +85,13 @@ export default class GameMode {
         this.ui.screen.moveSpaceBackground();
 
         // Update the shooter
-        this.battle.actorsContainer.children.forEach((child) => {
+        this.battle.playerContainer.children.forEach((child) => {
             if (typeof child.draw == 'function') {
                 child.update(delta);
             }
         });
 
-        this.battle.projectilesContainer.children.forEach((child) => {
+        this.battle.enemyContainer.children.forEach((child) => {
             if (typeof child.draw == 'function') {
                 child.update(delta);
             }

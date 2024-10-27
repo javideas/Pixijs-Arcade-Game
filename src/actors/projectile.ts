@@ -13,7 +13,7 @@ export class Projectile extends Actor {
         debugBgColor: string = 'red'
     ) {
         super(
-            shooterRef.id,
+            shooterRef.idTeam,
             'projectile',
             scaleRatio,
             1, // health
@@ -31,6 +31,7 @@ export class Projectile extends Actor {
     }
 
     public update() {
+        super.update();
         if(!this.trackOpponent) {
             this.moveX(this.dirX);
             this.moveY(this.dirY);

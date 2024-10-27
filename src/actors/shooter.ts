@@ -8,7 +8,7 @@ export class Shooter extends Actor {
     private hasShot: boolean;
 
     constructor(
-        id: string,
+        idTeam: string,
         scaleRatio: number = 1,
         health: number,
         initPosAccX?: number,
@@ -18,7 +18,7 @@ export class Shooter extends Actor {
         debugBgColor: string = 'red'
     ) {
         super(
-            id,
+            idTeam,
             'ship',
             scaleRatio,
             health,
@@ -34,6 +34,7 @@ export class Shooter extends Actor {
     }
 
     public update(delta: number) {
+        super.update();
         // Increment cooldown by the time since the last frame
         this.cooldown += delta;
 
@@ -65,6 +66,6 @@ export class Shooter extends Actor {
 
     private spawnProjectile(trackOpponent: boolean, dirX: number, dirY: number, offsetX: number, offsetY: number) {
         const projectile = new Projectile(this, trackOpponent, dirX, dirY, offsetX, offsetY);
-        this.projectilesContainer.addChild(projectile);
+        this.idTeam === 'player' ? this.playerContainer.addChild(projectile) : this.enemyContainer.addChild(projectile);
     }
 }

@@ -24,7 +24,7 @@ export class Actor extends Container {
         idTeam: string,
         idClass: string,
         scaleRatio: number = 1,
-        health: number = 4,
+        health: number = 1,
         initPosAccX: number = 0,
         initPosAccY: number = 0.8,
         spriteName: string = 'ShipPlayer-FullHealth',
@@ -33,8 +33,8 @@ export class Actor extends Container {
         const gameMode = GameMode.instance;
         super();
         this.screenRef = gameMode.ui.screen;
-        this.projectilesContainer = gameMode.battle.projectilesContainer;
-
+        this.enemyContainer = gameMode.battle.enemyContainer;
+        this.playerContainer = gameMode.battle.playerContainer;
         this.idTeam = idTeam; // either 'player' or 'enemy', for proyectile damage case
         this.idClass = idClass; // either 'ship' or 'projectile', projectiles should go a little faster down
         this.scaleRatio = scaleRatio;
@@ -59,6 +59,12 @@ export class Actor extends Container {
         this.init();
     }
 
+    public update() {
+        if(this.idTeam === 'player') {
+
+        }
+    }
+
     private init(){
         this.setResponsive();
         this.draw();
@@ -69,7 +75,6 @@ export class Actor extends Container {
     }
 
     public draw() {
-        
         // Set the size of the sprite
         this.sprite.width = this.colWidth * this.spriteScaleRatio;
         this.sprite.height = this.colHeight * this.spriteScaleRatio;
