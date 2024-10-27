@@ -5,6 +5,7 @@ import { Shooter } from "./shooter";
 export class Enemy extends Shooter {
     constructor(
         scaleRatio: number = 1,
+        damage: number = 1,
         health: number,
         initPosAccX?: number,
         initPosAccY?: number,
@@ -13,6 +14,7 @@ export class Enemy extends Shooter {
     ) {
         super(
             'enemy',
+            damage,
             scaleRatio,
             health,
             initPosAccX,
@@ -31,13 +33,13 @@ export class Enemy extends Shooter {
     }
 
     public shoot(weaponType: string = 'trinormal', dirY: number = -1, dirX: number = 0) {
-        super.shoot(weaponType, dirY, dirX);
+        // super.shoot(weaponType, dirY, dirX);
     }
 
     private init() {
         super.init();
         this.aibehaviour();
-    }d
+    }
 
     private aibehaviour() {
         // Create a timeline for the animations

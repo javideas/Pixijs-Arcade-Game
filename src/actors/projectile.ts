@@ -5,6 +5,7 @@ export class Projectile extends Actor {
     constructor(
         shooterRef: Container,
         trackOpponent: boolean,
+        damage: number = 1,
         dirX: number = 0,
         dirY: number = -1,
         offsetX: number = 0,
@@ -15,6 +16,7 @@ export class Projectile extends Actor {
         super(
             shooterRef.idTeam,
             'projectile',
+            damage,
             scaleRatio,
             1, // health
             shooterRef.posAccX + offsetX,
@@ -39,10 +41,6 @@ export class Projectile extends Actor {
     }
 
     private onLimit() {
-        // Remove from parent container and Destroy
-        if (this.parent) {
-            this.parent.removeChild(this);
-        }
-        this.destroy({ children: true, texture: false, baseTexture: false });
+        this.destroyActor();
     }
 }

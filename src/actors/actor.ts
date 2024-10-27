@@ -23,6 +23,7 @@ export class Actor extends Container {
     constructor(
         idTeam: string,
         idClass: string,
+        damage: number = 1,
         scaleRatio: number = 1,
         health: number = 1,
         initPosAccX: number = 0,
@@ -30,15 +31,17 @@ export class Actor extends Container {
         spriteName: string = 'ShipPlayer-FullHealth',
         debugBgColor: string = 'yellow'
     ) {
-        const gameMode = GameMode.instance;
         super();
+        const gameMode = GameMode.instance;
         this.screenRef = gameMode.ui.screen;
         this.enemyContainer = gameMode.battle.enemyContainer;
         this.playerContainer = gameMode.battle.playerContainer;
         this.idTeam = idTeam; // either 'player' or 'enemy', for proyectile damage case
         this.idClass = idClass; // either 'ship' or 'projectile', projectiles should go a little faster down
+        this.damage = damage;
         this.scaleRatio = scaleRatio;
-        this.health = health;
+        this.maxHealth = health;
+        this.currentHealth = this.maxHealth;
         this.posAccX = initPosAccX;
         this.posAccY = initPosAccY;
         this.speedGlobalRatio = 1;
@@ -59,19 +62,66 @@ export class Actor extends Container {
         this.init();
     }
 
-    public update() {
-        if(this.idTeam === 'player') {
-
-        }
-    }
-
     private init(){
         this.setResponsive();
         this.draw();
     }
 
-    public damage(amount: number = 1) { 
-        this.health -= amount;
+    public update() {
+        if(this.idTeam === 'player') {
+            for (const enemy of this.enemyContainer.children) {
+                if (this.checkCollision(enemy as Actor)) {
+                    // if actor is Projetile
+                    if(this.idClass === 'projectile') {
+                        // if enemy is projectile
+                        if(enemy.idClass === 'projectile') {
+                            enemy.destroyActor();
+                            this.destroyActor();
+                        } else {
+                            console.log(enemy.idTeam);
+                            enemy.hit(this.damage);
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public hit(amount: number = 1) { 
+        this.currentHealth -= amount;
+        if(this.currentHealth <= 0) {
+            this.destroyActor();
+        } else {
+            this.hurtFlicker();
+        }
+    }
+
+    private hurtFlicker() {
+        
+    }
+
+    public destroyActor() {
+        // Remove from parent container and Destroy
+        if (this.parent) {
+            this.parent.removeChild(this);
+        }
+        this.destroy({ children: true, texture: false, baseTexture: false });
+    }
+
+    public checkCollision(other: Actor): boolean {
+        if (!this.parent || !other.parent) {
+            // If either object is not part of the display list, skip collision check
+            return false;
+        }
+
+        const thisBounds = this.getBounds();
+        const otherBounds = other.getBounds();
+
+        return thisBounds.x < otherBounds.x + otherBounds.width &&
+               thisBounds.x + thisBounds.width > otherBounds.x &&
+               thisBounds.y < otherBounds.y + otherBounds.height &&
+               thisBounds.y + thisBounds.height > otherBounds.y;
     }
 
     public draw() {
