@@ -17,9 +17,10 @@ export const app = new Application({
 });
 
 // Create a container for the main stage
-const stageContainer = new ContainerBounded(window.innerWidth, window.innerHeight);
-const filteredContainer = new Container;
-filteredContainer.name = 'filteredContainer';
+const crtFilterContainer = new Container();
+crtFilterContainer.name = 'crtFilterContainer';
+const stageContainer = new Container();
+stageContainer.name = 'stageContainer';
 
 let gameMode: GameMode;
 
@@ -32,7 +33,7 @@ async function init() {
     document.body.appendChild(app.view as HTMLCanvasElement);
 
     // Add the filteredContainer AND stageContainer to the app
-    stageContainer.addChild(filteredContainer);
+    app.stage.addChild(crtFilterContainer);
     app.stage.addChild(stageContainer);
 
     // Set image rendering to pixelated

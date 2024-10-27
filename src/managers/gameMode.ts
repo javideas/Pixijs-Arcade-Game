@@ -7,7 +7,7 @@ import TextureManager from './textureManager';
 
 export default class GameMode {
     private app: Application;
-    private stageContainer: ContainerBounded;
+    private stageContainer: Container;
     private ticker: Ticker;
     private battle: Battle;
     public static instance: GameMode;
@@ -15,10 +15,10 @@ export default class GameMode {
     private currentTime: number = 0;
     private randomInterval: number = 0;
     
-    constructor(app: Application, stageContainer: ContainerBounded){
+    constructor(app: Application, stageContainer: Container){
         this.app = app;
         this.stageContainer = stageContainer;
-        this.filteredContainer = stageContainer.getChildByName('filteredContainer') as Container;
+        this.crtFilterContainer = app.stage.getChildByName('crtFilterContainer') as Container;
         this.randomInterval = 2000;
         
         this.currentLevel = 'none';

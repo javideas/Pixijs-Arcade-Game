@@ -22,7 +22,7 @@ export default class Ui {
     /** load the User Interface */
     public init() {
         this.screen = new Screen('black');
-        this.gameMode.filteredContainer.addChild(this.screen);
+        this.gameMode.stageContainer.addChild(this.screen);
 
         // Create and add the Decks to the stage
         this.deckR = new Deck('blue');
@@ -39,31 +39,60 @@ export default class Ui {
         this.deckL.ratioX = defaulRatioX;
         this.deckL.ratioWidth = defaultRatioWidth;
 
-        this.loadFilters();
+        this.applyFilters();
     }
 
-    private loadFilters() {
-        
-        // Update the width and height of the stageContainer
-        this.gameMode.stageContainer.width = this.screen.frameR;
-        this.gameMode.stageContainer.height = this.screen.frameB;
+    /** Manage Filters */
+    private applyFilters() {
+        this.setCrtFilter();
+        this.setFiltersToStage();
+    }
 
-        // Calculate the center position
-        const centerX = (window.innerWidth - this.screen.frameR) / 2;
-        const centerY = (window.innerHeight - this.screen.frameB) / 2;
+    private setFiltersToStage() {
+        const adjustmentFilter = new AdjustmentFilter({
+            gamma: 1,
+            contrast: 1.2,
+            saturation: 1.5,
+            brightness: 2
+        });
+    
+        const bloomFilter = new BloomFilter({
+            strength: 2,
+            strengthX: 2,
+            strengthY: 2
+        });
 
-        // // Calculate the offset
-        const offsetX = centerX - this.gameMode.stageContainer.x;
-        const offsetY = centerY - this.gameMode.stageContainer.y;
+        const rgbSplitFilter = new RGBSplitFilter(
+            [-1, 1], [0, 0], [1, 1] // RGB
+        );
 
-        // Set the position to center the container
-        this.gameMode.stageContainer.position.set(centerX, centerY);
+        this.stageMaskShape = new Graphics();
+        this.drawStageMaskShape();
+        // Create a sprite from the render texture
+        this.maskSprite = new Sprite(this.renderTexture);
+        // Create a SpriteMaskFilter using the maskSprite
+        this.maskFilter = new SpriteMaskFilter(this.maskSprite);
 
-        // Offset the children by the same amount
-        this.gameMode.filteredContainer.x -= offsetX;
-        this.gameMode.filteredContainer.y -= offsetY;
+        this.gameMode.stageContainer.filters = [
+            rgbSplitFilter,
+            // bloomFilter,
+            adjustmentFilter,
+            this.maskFilter
+        ];
+    }
 
-        // // Apply the CRT filter to the stageContainer
+    private drawStageMaskShape() {
+        this.stageMaskShape.clear();
+        this.stageMaskShape.beginFill('yellow');
+        this.stageMaskShape.drawRect(this.screen.frameL + this.screen.x, this.screen.frameT + this.screen.y, this.screen.frameR, this.screen.frameB);
+        this.stageMaskShape.endFill();
+        // Render the Graphics to a texture
+        this.renderTexture = RenderTexture.create({ width: this.app.screen.width, height: this.app.screen.height });
+        this.app.renderer.render(this.stageMaskShape, { renderTexture: this.renderTexture });
+    }
+
+    private setCrtFilter() {
+        // Apply the CRT filter to the stageContainer
         const crtFilter = new CRTFilter({
             curvature: 3,    
             lineContrast: 5,    
@@ -77,49 +106,18 @@ export default class Ui {
             vignettingAlpha: 0.7,
             vignettingBlur: 0.5
         });
-
-        const adjustmentFilter = new AdjustmentFilter({
-            gamma: 1,
-            contrast: 1.2,
-            saturation: 1.5,
-            brightness: 2
-        });
-    
-
-        const bloomFilter = new BloomFilter({
-            strength: 2,
-            strengthX: 2,
-            strengthY: 2
-        });
         
-        const rgbSplitFilter = new RGBSplitFilter([-1, 1], [0, 0], [1, 1]);
+        this.crtMaskShape = new Graphics();
+        this.drawCrtMaskShape();
+        this.gameMode.crtFilterContainer.addChild(this.crtMaskShape);
+        this.gameMode.crtFilterContainer.filters = [ crtFilter ];
+    }
 
-        this.bgShape = new Graphics();
-        this.bgShape.alpha = 1;
-        this.bgShape.clear();
-        this.bgShape.beginFill('yellow');
-        this.bgShape.drawRect(this.screen.frameL + this.screen.x, this.screen.frameT + this.screen.y, this.screen.frameR, this.screen.frameB);
-        this.bgShape.endFill();
-
-        // Render the Graphics to a texture
-        const renderTexture = RenderTexture.create({ width: this.app.screen.width, height: this.app.screen.height });
-        this.app.renderer.render(this.bgShape, { renderTexture });
-
-        // Create a sprite from the render texture
-        const maskSprite = new Sprite(renderTexture);
-
-        // Create a SpriteMaskFilter using the maskSprite
-        const maskFilter = new SpriteMaskFilter(maskSprite);
-        this.gameMode.stageContainer.filters = [
-            crtFilter,
-            rgbSplitFilter,
-            bloomFilter,
-            adjustmentFilter,
-            maskFilter
-        ];
-
-        // Add the maskSprite to the stage (optional, if you want to see the mask)
-        // this.app.stage.addChild(this.bgShape);
+    private drawCrtMaskShape() {
+        this.crtMaskShape.clear();
+        this.crtMaskShape.beginFill('#142332');
+        this.crtMaskShape.drawRect(this.screen.frameL + this.screen.x, this.screen.frameT + this.screen.y, this.screen.frameR, this.screen.frameB);
+        this.crtMaskShape.endFill();
     }
     
     /** Resize responsive */
@@ -151,7 +149,26 @@ export default class Ui {
             this.uiRespAbsolute();
         }
 
-        this.gameMode.battle.responsive()
+        this.gameMode.battle.responsive();
+        this.updateFilterMasks();
+    }
+
+    private updateFilterMasks() {
+        // Redraw the stage mask shape with updated dimensions
+        this.drawStageMaskShape();
+
+        // Create a new render texture with updated dimensions
+        const renderTexture = RenderTexture.create({ width: this.app.screen.width, height: this.app.screen.height });
+        this.app.renderer.render(this.stageMaskShape, { renderTexture });
+
+        // Create a new sprite from the updated render texture
+        const maskSprite = new Sprite(renderTexture);
+
+        // Update the mask filter with the new sprite
+        this.maskFilter.maskSprite = maskSprite;
+
+        this.drawCrtMaskShape();
+        this.drawStageMaskShape();
     }
 
     /** if Deck, based to the Screen sides. if Screen, based on 16/9 ratio */
