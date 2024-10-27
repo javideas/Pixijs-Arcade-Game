@@ -21,7 +21,8 @@ export default class GameMode {
         this.crtFilterContainer = app.stage.getChildByName('crtFilterContainer') as Container;
         this.randomInterval = 2000;
         
-        this.currentLevel = 'none';
+        this.currentMode = 'none';
+        this.battleLevel = 1;
         GameMode.instance = this;
     }
 
@@ -42,7 +43,7 @@ export default class GameMode {
     }
 
     private async loadScene(scene: string = 'battle') {
-        this.currentLevel = scene;
+        this.currentMode = scene;
         switch(scene){
             case 'battle':
                 this.battle = new Battle(this.app);
@@ -83,6 +84,7 @@ export default class GameMode {
         this.logElapsedTime();
         
         this.spawnEnemies();
+        this.ui.screen.moveSpaceBackground();
 
         // Update the shooter
         this.battle.actorsContainer.children.forEach((child) => {
@@ -104,6 +106,12 @@ export default class GameMode {
             if (this.currentTime > this.randomInterval) {
                 // Check every 5 seconds
                 this.randomInterval = this.randomInterval + this.getRandomNumber(1000, 3000);
+            } else if (this.currentTime > 4000 * this.battleLevel) {
+                // // Check every 5 seconds
+                const speedUp = 1;
+                this.ui.screen.speedRatio += (speedUp * 0.5);
+                this.battleLevel++;
+                console.log('Current Level: ', this.battleLevel);
             }
         }
     }
@@ -124,7 +132,7 @@ export default class GameMode {
     }
 
     public playerInput(action: string = 'none') {
-        switch(this.currentLevel) {
+        switch(this.currentMode) {
             case 'battle':
                 this.inputSystBattle(action);
             return;
