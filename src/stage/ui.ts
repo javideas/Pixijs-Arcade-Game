@@ -1,6 +1,8 @@
-import { Application, Container, Graphics, RenderTexture, Sprite, SpriteMaskFilter } from 'pixi.js';
+import { Application, Container, Filter, Graphics, RenderTexture, Sprite, SpriteMaskFilter } from 'pixi.js';
 import { CRTFilter } from '@pixi/filter-crt';
-
+import { AdjustmentFilter } from '@pixi/filter-adjustment';
+import { BloomFilter } from '@pixi/filter-bloom';
+import { RGBSplitFilter } from '@pixi/filter-rgb-split';
 import GameMode from '../managers/gameMode';
 import { Screen } from '../stage/screen';
 import { Deck } from '../stage/deck';
@@ -41,40 +43,7 @@ export default class Ui {
     }
 
     private loadFilters() {
-        // Apply the CRT filter to the stageContainer
-        const crtFilter = new CRTFilter({
-            curvature: 2,    
-            lineContrast: 5,    
-            lineWidth: 1,    
-            noise: 0.1,  
-            noiseSize: 1,
-            seed: 0,
-            time: 1,
-            verticalLine: false,
-            vignetting: 0.5,
-            vignettingAlpha: 0.5,
-            vignettingBlur: 0.5
-        });
-
-        this.bgShape = new Graphics();
-        this.bgShape.alpha = 1;
-        this.bgShape.clear();
-        this.bgShape.beginFill('yellow');
-        this.bgShape.drawRect(this.screen.frameL + this.screen.x, this.screen.frameT + this.screen.y, this.screen.frameR, this.screen.frameB);
-        this.bgShape.endFill();
-
-        // Render the Graphics to a texture
-        const renderTexture = RenderTexture.create({ width: this.app.screen.width, height: this.app.screen.height });
-        this.app.renderer.render(this.bgShape, { renderTexture });
-
-        // Create a sprite from the render texture
-        const maskSprite = new Sprite(renderTexture);
-
-        // Create a SpriteMaskFilter using the maskSprite
-        const maskFilter = new SpriteMaskFilter(maskSprite);
-        this.gameMode.stageContainer.filters = [crtFilter, maskFilter];
-        this.gameMode.stageContainer.filters[0].mask = 0;
-
+        
         // Update the width and height of the stageContainer
         this.gameMode.stageContainer.width = this.screen.frameR;
         this.gameMode.stageContainer.height = this.screen.frameB;
@@ -93,6 +62,61 @@ export default class Ui {
         // Offset the children by the same amount
         this.gameMode.filteredContainer.x -= offsetX;
         this.gameMode.filteredContainer.y -= offsetY;
+
+        // // Apply the CRT filter to the stageContainer
+        const crtFilter = new CRTFilter({
+            curvature: 3,    
+            lineContrast: 5,    
+            lineWidth: 1,    
+            noise: 0.1,  
+            noiseSize: 1,
+            seed: 0,
+            time: 1,
+            verticalLine: false,
+            vignetting: 0.6,
+            vignettingAlpha: 0.7,
+            vignettingBlur: 0.5
+        });
+
+        const adjustmentFilter = new AdjustmentFilter({
+            gamma: 1,
+            contrast: 1.2,
+            saturation: 1.5,
+            brightness: 2
+        });
+    
+
+        const bloomFilter = new BloomFilter({
+            strength: 2,
+            strengthX: 2,
+            strengthY: 2
+        });
+        
+        const rgbSplitFilter = new RGBSplitFilter([-1, 1], [0, 0], [1, 1]);
+
+        this.bgShape = new Graphics();
+        this.bgShape.alpha = 1;
+        this.bgShape.clear();
+        this.bgShape.beginFill('yellow');
+        this.bgShape.drawRect(this.screen.frameL + this.screen.x, this.screen.frameT + this.screen.y, this.screen.frameR, this.screen.frameB);
+        this.bgShape.endFill();
+
+        // Render the Graphics to a texture
+        const renderTexture = RenderTexture.create({ width: this.app.screen.width, height: this.app.screen.height });
+        this.app.renderer.render(this.bgShape, { renderTexture });
+
+        // Create a sprite from the render texture
+        const maskSprite = new Sprite(renderTexture);
+
+        // Create a SpriteMaskFilter using the maskSprite
+        const maskFilter = new SpriteMaskFilter(maskSprite);
+        this.gameMode.stageContainer.filters = [
+            crtFilter,
+            rgbSplitFilter,
+            bloomFilter,
+            adjustmentFilter,
+            maskFilter
+        ];
 
         // Add the maskSprite to the stage (optional, if you want to see the mask)
         // this.app.stage.addChild(this.bgShape);
