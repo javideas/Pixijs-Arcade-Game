@@ -5,8 +5,8 @@ import { Shooter } from "./shooter";
 export class Enemy extends Shooter {
     constructor(
         scaleRatio: number = 1,
+        health: number = 5,
         damage: number = 1,
-        health: number,
         initPosAccX?: number,
         initPosAccY?: number,
         fireRate: number = 15,
@@ -14,9 +14,9 @@ export class Enemy extends Shooter {
     ) {
         super(
             'enemy',
+            health,
             damage,
             scaleRatio,
-            health,
             initPosAccX,
             initPosAccY,
             fireRate,

@@ -16,9 +16,9 @@ export class Projectile extends Actor {
         super(
             shooterRef.idTeam,
             'projectile',
+            1, // health
             damage,
             scaleRatio,
-            1, // health
             shooterRef.posAccX + offsetX,
             shooterRef.posAccY - offsetY,
             'ShipPlayer-FullHealth',

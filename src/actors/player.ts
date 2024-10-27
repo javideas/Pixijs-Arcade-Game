@@ -12,9 +12,9 @@ export class Player extends Shooter {
     ) {
         super(
             'player',
+            health,
             1, // damage to others
             scaleRatio,
-            health,
             initPosAccX,
             initPosAccY,
             fireRate,

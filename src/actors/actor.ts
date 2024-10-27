@@ -1,5 +1,6 @@
 import { Container, Graphics, Sprite, Texture } from 'pixi.js';
 import GameMode from '../managers/gameMode';
+import { gsap } from 'gsap';
 
 export class Actor extends Container {
     protected sprite: Sprite;
@@ -23,9 +24,9 @@ export class Actor extends Container {
     constructor(
         idTeam: string,
         idClass: string,
+        health: number = 1,
         damage: number = 1,
         scaleRatio: number = 1,
-        health: number = 1,
         initPosAccX: number = 0,
         initPosAccY: number = 0.8,
         spriteName: string = 'ShipPlayer-FullHealth',
@@ -75,12 +76,12 @@ export class Actor extends Container {
                     if(this.idClass === 'projectile') {
                         // if enemy is projectile
                         if(enemy.idClass === 'projectile') {
+                            enemy.hitted(this.damage);
                             enemy.destroyActor();
                             this.destroyActor();
                         } else {
-                            console.log(enemy.idTeam);
-                            enemy.hit(this.damage);
-                            
+                            enemy.hitted(this.damage);
+                            this.destroyActor();
                         }
                     }
                 }
@@ -88,7 +89,7 @@ export class Actor extends Container {
         }
     }
 
-    public hit(amount: number = 1) { 
+    public hitted(amount: number = 1) { 
         this.currentHealth -= amount;
         if(this.currentHealth <= 0) {
             this.destroyActor();
@@ -98,7 +99,17 @@ export class Actor extends Container {
     }
 
     private hurtFlicker() {
-        
+        if (this.sprite) {
+            gsap.to(this.sprite, {
+                tint: 0xff0000, // Red tint
+                duration: 0.1,
+                repeat: 3,
+                yoyo: true,
+                onComplete: () => {
+                    this.sprite.tint = 0xFFFFFF; // Restore original tint
+                }
+            });
+        }
     }
 
     public destroyActor() {

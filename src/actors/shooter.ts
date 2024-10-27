@@ -9,9 +9,9 @@ export class Shooter extends Actor {
 
     constructor(
         idTeam: string,
+        health: number,
         damage: number = 1,
         scaleRatio: number = 1,
-        health: number,
         initPosAccX?: number,
         initPosAccY?: number,
         fireRate: number = 15,
@@ -21,9 +21,9 @@ export class Shooter extends Actor {
         super(
             idTeam,
             'ship',
+            health,
             damage,
             scaleRatio,
-            health,
             initPosAccX,
             initPosAccY,
             spriteName,
