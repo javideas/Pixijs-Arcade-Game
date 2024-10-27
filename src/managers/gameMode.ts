@@ -27,7 +27,9 @@ export default class GameMode {
         await this.loadAssets();
         await this.loadUi();
         await this.loadScene();
+        window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
         gsap.ticker.add(this.update.bind(this));
+
         this.battle.spawnEnemy();
     }
 

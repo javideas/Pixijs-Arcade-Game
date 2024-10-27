@@ -1,4 +1,6 @@
-import { Application, Container } from 'pixi.js';
+import { Application, Container, Graphics, RenderTexture, Sprite, SpriteMaskFilter } from 'pixi.js';
+import { CRTFilter } from '@pixi/filter-crt';
+import { DotFilter } from '@pixi/filter-dot';
 import GameMode from '../managers/gameMode';
 import { Screen } from '../stage/screen';
 import { Deck } from '../stage/deck';
@@ -16,7 +18,7 @@ export default class Ui {
     }
 
     /** load the User Interface */
-    init() {
+    public init() {
         // Create and add the Screen to the stage
         this.screen = new Screen('black');
         this.gameMode.stageContainer.addChild(this.screen);
@@ -35,6 +37,53 @@ export default class Ui {
         this.deckR.ratioWidth = defaultRatioWidth;
         this.deckL.ratioX = defaulRatioX;
         this.deckL.ratioWidth = defaultRatioWidth;
+
+        this.loadFilters();
+    }
+
+    private loadFilters() {
+        // Apply the CRT and Dot filters to the stageContainer
+        const crtFilter = new CRTFilter({
+            animating: true,
+            curvature: 10,
+            lineWidth: 0.01,
+            lineContrast: 3,
+            verticalLine: false,
+            noise: 0.2,
+            noiseSize: 0.1,
+            vignetting: 0.6,
+            vignettingAlpha: 0.5,
+            vignettingBlur: 1,
+            time: 14
+        });
+        // const dotFilter = new DotFilter(
+        //     5, // Adjust the scale of the dots
+        //     5, // Adjust the angle of the dots
+        //     false
+        // );
+
+
+        this.bgShape = new Graphics();
+        this.bgShape.alpha = 1;
+        this.bgShape.clear();
+        this.bgShape.beginFill('yellow');
+        this.bgShape.drawRect(this.screen.frameL + this.screen.x, this.screen.frameT + this.screen.y, this.screen.frameR, this.screen.frameB);
+        this.bgShape.endFill();
+
+        // Render the Graphics to a texture
+        const renderTexture = RenderTexture.create({ width: this.app.screen.width, height: this.app.screen.height });
+        this.app.renderer.render(this.bgShape, { renderTexture });
+
+        // Create a sprite from the render texture
+        const maskSprite = new Sprite(renderTexture);
+
+        // Create a SpriteMaskFilter using the maskSprite
+        const maskFilter = new SpriteMaskFilter(maskSprite);
+
+        this.gameMode.stageContainer.filters = [crtFilter, maskFilter];
+
+        // Add the maskSprite to the stage (optional, if you want to see the mask)
+        // this.app.stage.addChild(this.bgShape);
     }
     
     /** Resize responsive */
