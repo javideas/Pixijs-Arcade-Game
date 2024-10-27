@@ -19,6 +19,7 @@ export class Shooter extends Actor {
     ) {
         super(
             id,
+            'ship',
             scaleRatio,
             health,
             initPosAccX,

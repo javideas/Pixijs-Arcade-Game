@@ -61,12 +61,12 @@ export class Screen extends Tab {
     
         // Check if spriteA is out of view and reposition it above spriteB
         if (this.spriteA.y >= screenHeight /2 - 10 ) {
-            this.spriteA.y = -this.spriteB.height * 1.5;
+            this.spriteA.y = -this.spriteB.height * 1.49;
         }
     
         // Check if spriteB is out of view and reposition it above spriteA
         if (this.spriteB.y >= screenHeight / 2 - 10) {
-            this.spriteB.y = -this.spriteA.height * 1.5;
+            this.spriteB.y = -this.spriteA.height * 1.49;
         }
     }
 }

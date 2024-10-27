@@ -20,6 +20,7 @@ export class Player extends Shooter {
             'ShipPlayer-FullHealth',
             debugBgColor
         );
+        this.speedGlobalRatio = 2;
     }
 
     public shoot() {

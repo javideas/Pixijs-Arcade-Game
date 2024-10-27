@@ -14,6 +14,7 @@ export class Projectile extends Actor {
     ) {
         super(
             shooterRef.id,
+            'projectile',
             scaleRatio,
             1, // health
             shooterRef.posAccX + offsetX,

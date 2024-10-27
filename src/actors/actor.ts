@@ -21,7 +21,8 @@ export class Actor extends Container {
     private globalLimitB: number;
 
     constructor(
-        id: string,
+        idTeam: string,
+        idClass: string,
         scaleRatio: number = 1,
         health: number = 4,
         initPosAccX: number = 0,
@@ -34,7 +35,8 @@ export class Actor extends Container {
         this.screenRef = gameMode.ui.screen;
         this.projectilesContainer = gameMode.battle.projectilesContainer;
 
-        this.id = id; // either 'player' or 'enemy', for proyectile damage case
+        this.idTeam = idTeam; // either 'player' or 'enemy', for proyectile damage case
+        this.idClass = idClass; // either 'ship' or 'projectile', projectiles should go a little faster down
         this.scaleRatio = scaleRatio;
         this.health = health;
         this.posAccX = initPosAccX;
@@ -99,7 +101,18 @@ export class Actor extends Container {
         
         // Adjusted scale per axis, normalized by the effective screen size
         const speedRatioX = 0.007;
-        const speedRatioY = 0.0015;
+        // Projectiles go a little faster following screen direction
+        let speedRatioY;
+        if(this.idClass === 'projectile') {
+            if(axis === 'y' && input > 0) {
+                speedRatioY = 0.004;
+            } else if (axis === 'y' && input < 0){
+                speedRatioY = 0.003;
+            }
+        } else {
+            speedRatioY = 0.0015;
+        }
+
         const baseMovementScale = axis === 'x' ? speedRatioX : speedRatioY;
         const normalizedMovementScale = baseMovementScale * this.speedGlobalRatio * (effectiveScreenSize / (this.globalLimitR - this.globalLimitL));
         
