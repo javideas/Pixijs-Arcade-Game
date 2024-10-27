@@ -38,10 +38,10 @@ export default class Battle {
     /** Load Container for player and enemys, AND container for projectiles */
     private async loadContainers() {
         this.projectilesContainer = new Container();
-        this.gameMode.stageContainer.addChild(this.projectilesContainer);
+        this.gameMode.filteredContainer.addChild(this.projectilesContainer);
 
         this.actorsContainer = new Container();
-        this.gameMode.stageContainer.addChild(this.actorsContainer);
+        this.gameMode.filteredContainer.addChild(this.actorsContainer);
     }
 
     /** Drawing actors on resize */

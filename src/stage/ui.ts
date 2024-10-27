@@ -19,10 +19,9 @@ export default class Ui {
 
     /** load the User Interface */
     public init() {
-        // Create and add the Screen to the stage
         this.screen = new Screen('black');
-        this.gameMode.stageContainer.addChild(this.screen);
-        
+        this.gameMode.filteredContainer.addChild(this.screen);
+
         // Create and add the Decks to the stage
         this.deckR = new Deck('blue');
         this.app.stage.addChild(this.deckR);
@@ -42,6 +41,7 @@ export default class Ui {
     }
 
     private loadFilters() {
+        
         // Apply the CRT and Dot filters to the stageContainer
         const crtFilter = new CRTFilter({
             animating: true,
@@ -62,7 +62,6 @@ export default class Ui {
         //     false
         // );
 
-
         this.bgShape = new Graphics();
         this.bgShape.alpha = 1;
         this.bgShape.clear();
@@ -79,8 +78,27 @@ export default class Ui {
 
         // Create a SpriteMaskFilter using the maskSprite
         const maskFilter = new SpriteMaskFilter(maskSprite);
-
         this.gameMode.stageContainer.filters = [crtFilter, maskFilter];
+
+        // Update the width and height of the stageContainer
+        this.gameMode.stageContainer.width = this.screen.frameR;
+        this.gameMode.stageContainer.height = this.screen.frameB;
+
+        // Calculate the center position
+        const centerX = (window.innerWidth - this.screen.frameR) / 2;
+        const centerY = (window.innerHeight - this.screen.frameB) / 2;
+
+        // // Calculate the offset
+        const offsetX = centerX - this.gameMode.stageContainer.x;
+        const offsetY = centerY - this.gameMode.stageContainer.y;
+
+        // Set the position to center the container
+        this.gameMode.stageContainer.position.set(centerX, centerY);
+
+        // Offset the children by the same amount
+        this.gameMode.filteredContainer.x -= offsetX;
+        this.gameMode.filteredContainer.y -= offsetY;
+        
 
         // Add the maskSprite to the stage (optional, if you want to see the mask)
         // this.app.stage.addChild(this.bgShape);

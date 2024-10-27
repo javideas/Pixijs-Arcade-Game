@@ -1,12 +1,13 @@
 import { gsap } from 'gsap';
 import Ui from '../stage/ui';
 import Battle from '../scenes/battle'
+import { ContainerBounded } from '../stage/containerBounded'
 import { Application, Assets, Container, Sprite } from 'pixi.js';
 import TextureManager from './textureManager';
 
 export default class GameMode {
     private app: Application;
-    private stageContainer: Container;
+    private stageContainer: ContainerBounded;
     private ticker: Ticker;
     private battle: Battle;
     public static instance: GameMode;
@@ -14,9 +15,10 @@ export default class GameMode {
     private currentTime: number = 0;
     private randomInterval: number = 0;
     
-    constructor(app: Application, stageContainer: Container){
+    constructor(app: Application, stageContainer: ContainerBounded){
         this.app = app;
         this.stageContainer = stageContainer;
+        this.filteredContainer = stageContainer.getChildByName('filteredContainer') as Container;
         this.randomInterval = 2000;
         
         this.currentLevel = 'none';

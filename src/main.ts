@@ -1,6 +1,7 @@
 import { Application, BaseTexture, SCALE_MODES, Container, RenderTexture, Sprite, Filter, Texture, SpriteMaskFilter, Graphics } from 'pixi.js';
 import { CRTFilter } from '@pixi/filter-crt';
 import { DotFilter } from '@pixi/filter-dot';
+import { ContainerBounded } from './stage/containerBounded'
 import GameMode from './managers/gameMode.js';
 
 const bgColor = "#142332";
@@ -16,7 +17,9 @@ export const app = new Application({
 });
 
 // Create a container for the main stage
-const stageContainer = new Container();
+const stageContainer = new ContainerBounded(window.innerWidth, window.innerHeight);
+const filteredContainer = new Container;
+filteredContainer.name = 'filteredContainer';
 
 let gameMode: GameMode;
 
@@ -28,7 +31,8 @@ async function init() {
     // Add pixi canvas element (app.view) to the document's body
     document.body.appendChild(app.view as HTMLCanvasElement);
 
-    // Add the stageContainer to the application
+    // Add the filteredContainer AND stageContainer to the app
+    stageContainer.addChild(filteredContainer);
     app.stage.addChild(stageContainer);
 
     // Set image rendering to pixelated
