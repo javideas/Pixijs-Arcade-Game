@@ -1,6 +1,9 @@
 import { Application, BLEND_MODES, Container, Filter, Graphics, RenderTexture, Sprite, SpriteMaskFilter } from 'pixi.js';
+import { AlphaFilter } from '@pixi/filter-alpha';
 import { CRTFilter } from '@pixi/filter-crt';
 import { AdjustmentFilter } from '@pixi/filter-adjustment';
+// advance bloom filter
+import { AdvancedBloomFilter } from '@pixi/filter-advanced-bloom';
 import { BloomFilter } from '@pixi/filter-bloom';
 import { RGBSplitFilter } from '@pixi/filter-rgb-split';
 import GameMode from '../managers/gameMode';
@@ -45,24 +48,27 @@ export default class Ui {
     /** Manage Filters */
     private applyFilters() {
         this.setCrtFilter();
-        // this.setFiltersToStage();
-        // Set blend mode for the stageContainer
-        this.gameMode.crtFilterContainer.blendMode = BLEND_MODES.SCREEN;
-        this.gameMode.crtFilterContainer.alpha = 0.5
+        this.setFiltersToStage();
     }
 
     private setFiltersToStage() {
         const adjustmentFilter = new AdjustmentFilter({
             gamma: 1,
             contrast: 1.2,
-            saturation: 1.5,
-            brightness: 2
+            saturation: 2,
+            brightness: 1
         });
     
-        const bloomFilter = new BloomFilter({
-            strength: 2,
+        const advancedBloomFilter = new AdvancedBloomFilter({
+            threshold: 0.35,
+            bloomScale: 1,
+            brightness: 0.5,
+            blur: 4,
+            quality: 4,
+            pixelSize: 0.5,
+            strength: 0.5,
             strengthX: 2,
-            strengthY: 2
+            strengthY: 2  // Vertical strength of the bloom
         });
 
         const rgbSplitFilter = new RGBSplitFilter(
@@ -78,8 +84,8 @@ export default class Ui {
 
         this.gameMode.stageContainer.filters = [
             rgbSplitFilter,
-            // bloomFilter,
             adjustmentFilter,
+            advancedBloomFilter,
             this.maskFilter
         ];
     }
@@ -105,15 +111,31 @@ export default class Ui {
             seed: 0,
             time: 1,
             verticalLine: false,
-            vignetting: 0.6,
-            vignettingAlpha: 0.7,
-            vignettingBlur: 0.5
+            vignetting: 0.4,
+            vignettingAlpha: 0.8,
+            vignettingBlur: 0.2
+        });
+
+        const alphaFilter = new AlphaFilter(0.25);
+        alphaFilter.blendMode = BLEND_MODES.ADD;
+
+        const advancedBloomFilter = new AdvancedBloomFilter({
+            threshold: 0.1,
+            bloomScale: 3,
+            brightness: 4,
+            blur: 1,
+            quality: 4,
+            pixelSize: 0.5,
+            strength: 1,
+            strengthX: 2,
+            strengthY: 2
         });
         
         this.crtMaskShape = new Graphics();
         this.drawCrtMaskShape();
         this.gameMode.crtFilterContainer.addChild(this.crtMaskShape);
-        this.gameMode.crtFilterContainer.filters = [ crtFilter ];
+        // Create an AlphaFilter and set its alpha value
+        this.gameMode.crtFilterContainer.filters = [ crtFilter, alphaFilter, advancedBloomFilter ];
     }
 
     private drawCrtMaskShape() {
@@ -153,7 +175,7 @@ export default class Ui {
         }
 
         this.gameMode.battle.responsive();
-        // this.updateFilterMasks();
+        this.updateFilterMasks();
     }
 
     private updateFilterMasks() {

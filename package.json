@@ -30,6 +30,7 @@
   "dependencies": {
     "@pixi/filter-adjustment": "^5.1.1",
     "@pixi/filter-advanced-bloom": "^5.1.1",
+    "@pixi/filter-alpha": "^7.4.2",
     "@pixi/filter-bloom": "^5.1.1",
     "@pixi/filter-bulge-pinch": "^5.1.1",
     "@pixi/filter-crt": "^5.1.1",
