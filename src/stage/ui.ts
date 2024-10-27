@@ -1,6 +1,6 @@
 import { Application, Container, Graphics, RenderTexture, Sprite, SpriteMaskFilter } from 'pixi.js';
 import { CRTFilter } from '@pixi/filter-crt';
-import { DotFilter } from '@pixi/filter-dot';
+
 import GameMode from '../managers/gameMode';
 import { Screen } from '../stage/screen';
 import { Deck } from '../stage/deck';
@@ -41,26 +41,20 @@ export default class Ui {
     }
 
     private loadFilters() {
-        
-        // Apply the CRT and Dot filters to the stageContainer
+        // Apply the CRT filter to the stageContainer
         const crtFilter = new CRTFilter({
-            animating: true,
-            curvature: 10,
-            lineWidth: 0.01,
-            lineContrast: 3,
+            curvature: 2,    
+            lineContrast: 5,    
+            lineWidth: 1,    
+            noise: 0.1,  
+            noiseSize: 1,
+            seed: 0,
+            time: 1,
             verticalLine: false,
-            noise: 0.2,
-            noiseSize: 0.1,
-            vignetting: 0.6,
+            vignetting: 0.5,
             vignettingAlpha: 0.5,
-            vignettingBlur: 1,
-            time: 14
+            vignettingBlur: 0.5
         });
-        // const dotFilter = new DotFilter(
-        //     5, // Adjust the scale of the dots
-        //     5, // Adjust the angle of the dots
-        //     false
-        // );
 
         this.bgShape = new Graphics();
         this.bgShape.alpha = 1;
@@ -79,6 +73,7 @@ export default class Ui {
         // Create a SpriteMaskFilter using the maskSprite
         const maskFilter = new SpriteMaskFilter(maskSprite);
         this.gameMode.stageContainer.filters = [crtFilter, maskFilter];
+        this.gameMode.stageContainer.filters[0].mask = 0;
 
         // Update the width and height of the stageContainer
         this.gameMode.stageContainer.width = this.screen.frameR;
@@ -98,7 +93,6 @@ export default class Ui {
         // Offset the children by the same amount
         this.gameMode.filteredContainer.x -= offsetX;
         this.gameMode.filteredContainer.y -= offsetY;
-        
 
         // Add the maskSprite to the stage (optional, if you want to see the mask)
         // this.app.stage.addChild(this.bgShape);

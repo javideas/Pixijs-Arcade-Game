@@ -36,7 +36,7 @@ export class Enemy extends Shooter {
     private init() {
         super.init();
         this.aibehaviour();
-    }
+    }d
 
     private aibehaviour() {
         // Create a timeline for the animations
