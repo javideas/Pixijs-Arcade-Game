@@ -22,7 +22,7 @@ const stageContainer = new Container();
 stageContainer.name = 'stageContainer';
 
 let gameMode: GameMode;
-
+var orientationDetected = false;
 /** Initialize the application */
 init();
 
@@ -106,15 +106,13 @@ function addEventListeners(gameMode: GameMode) {
     // Force initial check
     handleOrientationChange(mediaQuery as MediaQueryListEvent);
 }
-let resizeTimeout: number;
+
 function checkRatioSize(responsiveMode: string = 'landscape') {
-    origentationDetected = false;
     gameMode.resize(responsiveMode);
 }
 
-var origentationDetected = false;
+
 function handleOrientationChange(event: MediaQueryListEvent) {
-    origentationDetected = true;
     if (event.matches) {
         checkRatioSize('landscape');
     } else {
@@ -126,8 +124,14 @@ function resize() {
     // Resize the renderer to match the new window dimensions
     app.renderer.resize(window.innerWidth, window.innerHeight);
 
-    window.innerWidth > window.innerHeight ? checkRatioSize() : checkRatioSize('portrait');
-    if (!origentationDetected) {
+    if(window.innerWidth > window.innerHeight) {
+        orientationDetected = false;
+        checkRatioSize('landscape');
+    } else {
+        orientationDetected = true;
+        checkRatioSize('portrait');
+    }
+    if (!orientationDetected) {
         checkRatioSize();
     }
 }
