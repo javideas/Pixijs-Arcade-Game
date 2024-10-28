@@ -37,7 +37,7 @@ export class Shooter extends Actor {
     }
 
     public update(delta: number) {
-        super.update();
+        super.update(delta);
         // Increment cooldown by the time since the last frame
         this.cooldown += delta;
 

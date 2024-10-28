@@ -33,8 +33,8 @@ export class Projectile extends Actor {
         this.offsetY = offsetY;
     }
 
-    public update() {
-        super.update();
+    public update(delta: number) {
+        super.update(delta);
         if(!this.trackOpponent) {
             this.moveX(this.dirX);
             this.moveY(this.dirY);

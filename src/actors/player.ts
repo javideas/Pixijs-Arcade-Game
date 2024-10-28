@@ -9,16 +9,21 @@ export class Player extends Shooter {
     ) {
         super(
             'player',
-            4, // Health
-            1, // damage to others
-            1, // scale
+            10, // Health
+            1, // Damage On Collision
+            1, // Scale
             initPosAccX,
             initPosAccY,
-            8,
+            8, // fireRate
             'ShipPlayer-FullHealth.png',
             debugBgColor
         );
         this.speedGlobalRatio = 2;
+    }
+
+    public update(delta: number) {
+        super.update(delta);
+        // console.log(this.currentHealth);
     }
 
     public shoot() {

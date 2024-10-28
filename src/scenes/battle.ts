@@ -32,7 +32,14 @@ export default class Battle {
     }
 
     public spawnEnemy() {
-        const enemy = new Enemy(0.7,5,1,2,-0.8);
+        const enemy = new Enemy(
+            0.7, // ScaleRatio
+            5, // Health
+            1, // Damage
+            2, //initPosAccX
+            -0.8, //initPosAccY
+            15 // fireRate
+        );
         this.enemyShipCont.addChild(enemy);
         enemy.setResponsive();
     }

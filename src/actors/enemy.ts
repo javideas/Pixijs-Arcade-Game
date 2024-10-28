@@ -15,7 +15,7 @@ export class Enemy extends Shooter {
         super(
             'enemy',
             health,
-            damage,
+            damage, // Damage On Collision
             scaleRatio,
             initPosAccX,
             initPosAccY,
@@ -37,7 +37,7 @@ export class Enemy extends Shooter {
     }
 
     public shoot(weaponType: string = 'trinormal', dirY: number = -1, dirX: number = 0) {
-        super.shoot(weaponType, dirY, dirX);
+        // super.shoot(weaponType, dirY, dirX);
     }
 
     private init() {

@@ -50,6 +50,7 @@ export class Actor extends Container {
         this.posAccY = initPosAccY;
         this.speedGlobalRatio = 1;
         this.isDestroyed = false;
+        this.isInmune = false;
         
         this.debugBgColor = debugBgColor;
         this.bgShape = new Graphics();
@@ -71,7 +72,7 @@ export class Actor extends Container {
         this.draw();
     }
 
-    public update() {
+    public update(delta: number) {
         // Check only on Player Team for performance
         if (!this.isDestroyed) { // flag to avoid check if destroyed actor still in memory
             if(this.idTeam === 'player') {
@@ -79,7 +80,7 @@ export class Actor extends Container {
                     // Iterate through both enemy containers: enemyProjCont AND enemyShipCont
                     for (const enemy of containers.children) {
                         if (!enemy.isDestroyed && this.checkCollision(enemy as Actor)) {
-                            // if this actor is Player Projetile
+                            // if this actor is Player Projectile
                             if(this.idClass === 'projectile') {
                                 // if enemy is Projectile:
                                 if(enemy.idClass === 'projectile') {
@@ -87,11 +88,31 @@ export class Actor extends Container {
                                     enemy.hitted(this.damage);
                                     // Destroy this projectile
                                     this.destroyActor();
-                                } else { // if enemy is Ship:
+                                    return;
+                                // if enemy is Ship:
+                                } else if(this.idClass === 'ship') {
                                     // Hit Enemy
                                     enemy.hitted(this.damage);
                                     // Destroy this projectile
                                     this.destroyActor();
+                                    return;
+                                }
+                            // if this actor is Player Ship
+                            } else if(this.idClass === 'ship') {
+                                // if enemy is Projectile:
+                                if(enemy.idClass === 'projectile') {
+                                    // Hit Enemy
+                                    enemy.animDestroyed();
+                                    // Destroy this projectile
+                                    this.hitted(enemy.damage);
+                                    return;
+                                // if enemy is Ship:
+                                } else if(enemy.idClass === 'ship' && !enemy.isInmune) {
+                                    // Hit Enemy
+                                    enemy.hitted(this.damage);
+                                    // Destroy this projectile
+                                    this.hitted(enemy.damage);
+                                    return;
                                 }
                             }
                         }
@@ -101,11 +122,16 @@ export class Actor extends Container {
         }
     }
 
-    public hitted(damage: number = 1) { 
+    private toggleInmunity() {
+        this.isInmune = !this.isInmune;
+    }
+
+    public hitted(damage: number = 1) {
         this.currentHealth -= damage;
         if(this.currentHealth <= 0) {
             this.animDestroyed();
         } else {
+            if(!this.isInmune) this.toggleInmunity();
             this.animHurt();
         }
     }
@@ -119,6 +145,7 @@ export class Actor extends Container {
                 yoyo: true,
                 onComplete: () => {
                     this.sprite.tint = 0xFFFFFF; // Restore original tint
+                    if(this.isInmune) this.toggleInmunity(); // Deactivate Inmunity
                 }
             });
         }
