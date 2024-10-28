@@ -49,6 +49,7 @@ export class Actor extends Container {
         this.posAccX = initPosAccX;
         this.posAccY = initPosAccY;
         this.speedGlobalRatio = 1;
+        this.stopMovement = false;
         
         this.debugBgColor = debugBgColor;
         this.bgShape = new Graphics();
@@ -77,13 +78,18 @@ export class Actor extends Container {
                     if (this.checkCollision(enemy as Actor)) {
                         // if actor is Projetile
                         if(this.idClass === 'projectile') {
-                            // if enemy is projectile
+                            // if enemy is Projectile:
                             if(enemy.idClass === 'projectile') {
+                                // Hurt Enemy
                                 enemy.hitted(this.damage);
+                                // Destroy Enemy Actor
                                 enemy.destroyActor();
+                                // Destroy this projectile
                                 this.destroyActor();
-                            } else {
+                            } else { // if enemy is Ship:
+                                // Hurt Enemy
                                 enemy.hitted(this.damage);
+                                // Destroy this projectile
                                 this.destroyActor();
                             }
                         }
@@ -93,16 +99,16 @@ export class Actor extends Container {
         }
     }
 
-    public hitted(amount: number = 1) { 
-        this.currentHealth -= amount;
+    public hitted(damage: number = 1) { 
+        this.currentHealth -= damage;
         if(this.currentHealth <= 0) {
-            this.destroyActor();
+            this.animDestroyed();
         } else {
-            this.hurtFlicker();
+            this.animHurt();
         }
     }
 
-    private hurtFlicker() {
+    private animHurt() {
         if (this.sprite) {
             gsap.to(this.sprite, {
                 tint: 0xff0000, // Red tint
@@ -114,6 +120,10 @@ export class Actor extends Container {
                 }
             });
         }
+    }
+
+    private animDestroyed() {
+        this.loadAnimation('Explosion', 'destroyed');
     }
 
     public destroyActor() {
@@ -134,11 +144,19 @@ export class Actor extends Container {
         }
     }
 
-    private loadAnimation(animationName: string) {
+    private loadAnimation(animationName: string, animLabel: string = 'none') {
         const textures = this.gameMode.getAnimationTextures(animationName);
         if (textures && textures.length > 0) {
+            if (this.sprite) {
+                this.removeChild(this.sprite); // Remove existing sprite
+            }
             this.sprite = new AnimatedSprite(textures);
-            this.sprite.animationSpeed = 0.1; // Adjust speed as needed
+            this.sprite.animationSpeed = 0.1;
+            if (animLabel === 'destroyed') {
+                this.stopMovement = true;
+                this.sprite.loop = false;
+                this.sprite.onComplete = () => this.destroyActor();
+            }
             this.sprite.play();
             this.addChild(this.sprite);
         } else {

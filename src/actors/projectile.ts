@@ -26,7 +26,7 @@ export class Projectile extends Actor {
             debugBgColor
         );
         this.trackOpponent = trackOpponent;
-        this.speedGlobalRatio = 0.3;
+        this.speedGlobalRatio = 1;
         this.dirX = dirX;
         this.dirY = dirY;
         this.offsetX = offsetX;

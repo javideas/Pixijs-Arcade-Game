@@ -44,8 +44,19 @@ export class Enemy extends Shooter {
 
     private aibehaviour() {
         // Create a timeline for the animations
-        const tl = gsap.timeline({ onUpdate: () => this.setResponsive() });
+        const tl = gsap.timeline({
+            onUpdate: () => {
+                this.setResponsive();
+                if (this.stopMovement) {
+                    tl.kill();
+                }
+            }
+        });
 
+        this.aiMoveEightShape(tl);
+    }
+
+    private aiMoveEightShape(tl: gsap.timeline) {
         // Simultaneous initial animations for posAccX and posAccY
         tl.to(this, {
             posAccX: 0,
