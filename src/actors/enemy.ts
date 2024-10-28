@@ -23,6 +23,9 @@ export class Enemy extends Shooter {
             'ShipPlayer-FullHealth.png',
             debugBgColor
         );
+        this.colWidthRatio = 0.4;
+        this.colHeightRatio = 0.6;
+
         this.shotDirY = 1;
         this.autoShoot = false;
         this.flipSprite(this.shotDirY);

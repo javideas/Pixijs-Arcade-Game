@@ -7,13 +7,17 @@ export class Actor extends Container {
     protected hasAi: bool;
     protected posAccX: number;
     protected posAccY: number;
+    protected colX: number;
+    protected colY: number;
+    protected colWidth: number;
+    protected colHeight: number;
 
     public debugBgColor: string;
     private bgShape: Graphics;
-    private colWidth: number;
-    private colHeight: number;
-    private colPosX: number;
-    private colPosY: number;
+    private contWidth: number;
+    private contHeight: number;
+    private contPosX: number;
+    private contPosY: number;
     private centerX: number;
     private centerY: number;
     private globalLimitR: number;
@@ -48,6 +52,9 @@ export class Actor extends Container {
         this.currentHealth = this.maxHealth;
         this.posAccX = initPosAccX;
         this.posAccY = initPosAccY;
+        this.colWidthRatio = 1;
+        this.colHeightRatio = 1;
+        this.isColVisible = false;
         this.speedGlobalRatio = 1;
         this.isDestroyed = false;
         this.isInmune = false;
@@ -55,6 +62,9 @@ export class Actor extends Container {
         this.debugBgColor = debugBgColor;
         this.bgShape = new Graphics();
         this.addChild(this.bgShape);
+
+        this.debugGraphics = new Graphics();
+        this.addChild(this.debugGraphics);
 
         if (animated) {
             this.loadAnimation(spriteName);
@@ -196,6 +206,7 @@ export class Actor extends Container {
             if (animLabel === 'destroyed') {
                 this.isDestroyed = true;
                 this.sprite.loop = false;
+                this.sprite.x = -this.sprite.width;
                 this.sprite.onComplete = () => this.destroyActor();
             }
             this.sprite.play();
@@ -207,27 +218,52 @@ export class Actor extends Container {
 
     public isAnActorColliding(other: Actor): boolean {
         if (!this.parent || !other.parent) {
-            // If either object is not part of the display list, skip collision check
             return false;
         }
 
-        const thisBounds = this.getBounds();
-        const otherBounds = other.getBounds();
+        // Update collision box positions
+        this.setCollisionBox();
+        other.setCollisionBox();
 
-        return thisBounds.x < otherBounds.x + otherBounds.width &&
-               thisBounds.x + thisBounds.width > otherBounds.x &&
-               thisBounds.y < otherBounds.y + otherBounds.height &&
-               thisBounds.y + thisBounds.height > otherBounds.y;
+        // Draw bounding boxes for debugging
+        if(this.isColVisible) {
+            this.drawDebugBoundingBox(this.colX, this.colY, this.colWidth, this.colHeight, 0x00FF00); // Green for this actor
+            other.drawDebugBoundingBox(other.colX, other.colY, other.colWidth, other.colHeight, 0xFF0000); // Red for the other actor
+        }
+
+        return this.colX < other.colX + other.colWidth &&
+               this.colX + this.colWidth > other.colX &&
+               this.colY < other.colY + other.colHeight &&
+               this.colY + this.colHeight > other.colY;
+    }
+
+    private drawDebugBoundingBox(x: number, y: number, width: number, height: number, color: number) {
+        this.debugGraphics.clear();
+        this.debugGraphics.lineStyle(2, color, 1);
+        this.debugGraphics.drawRect(
+            x - this.x,
+            y- this.y,
+            width,
+            height
+        );
+        // this.addChild(this.debugGraphics);
     }
 
     public draw() {
         // Set the size of the sprite
-        this.sprite.width = this.colWidth * this.spriteScaleRatio;
-        this.sprite.height = this.colHeight * this.spriteScaleRatio;
+        this.sprite.width = this.contWidth * this.spriteScaleRatio;
+        this.sprite.height = this.contHeight * this.spriteScaleRatio;
         // Set the position of the sprite
         this.sprite.x = -this.sprite.width/2;
         this.sprite.y = -this.sprite.height/2;
-        // this.debugShape();
+    }
+
+    private setCollisionBox() {
+        // Calculate custom bounding box for this actor
+        this.colX = this.x + this.sprite.x * this.colWidthRatio;
+        this.colY = this.y + this.sprite.y * this.colHeightRatio;
+        this.colWidth = this.sprite.width * this.colWidthRatio;
+        this.colHeight = this.sprite.height * this.colHeightRatio;
     }
     
     public moveX(inputX: number = 1) {
@@ -299,26 +335,26 @@ export class Actor extends Container {
     }
 
     private calcRespScale() {
-        this.colWidth = (0.07 * this.scaleRatio) * this.screenRef.frameB;
-        this.colPosX = -this.colWidth / 2;
-        this.colPosY = -this.colWidth / 2;
-        this.colHeight = this.colWidth;
+        this.contWidth = (0.07 * this.scaleRatio) * this.screenRef.frameB;
+        this.contPosX = -this.contWidth / 2;
+        this.contPosY = -this.contWidth / 2;
+        this.contHeight = this.contWidth;
     }
 
     private calcRespLimits() {
-        const limitRefR = this.screenRef.frameR / 2 - this.colWidth / 2;
-        const limitRefL = this.screenRef.frameL + this.colWidth / 2;
+        const limitRefR = this.screenRef.frameR / 2 - this.contWidth / 2;
+        const limitRefL = this.screenRef.frameL + this.contWidth / 2;
     
         this.globalLimitR = window.innerWidth / 2 + limitRefR;
         this.globalLimitL = window.innerWidth / 2 + limitRefL;
-        this.globalLimitT = this.colHeight / 2;
-        this.globalLimitB = this.screenRef.frameB - this.colHeight / 2;
+        this.globalLimitT = this.contHeight / 2;
+        this.globalLimitB = this.screenRef.frameB - this.contHeight / 2;
     }
 
-    private debugShape() {
-        this.bgShape.clear();
-        this.bgShape.beginFill(this.debugBgColor);
-        this.bgShape.drawRect(this.colPosX, this.colPosY, this.colWidth, this.colHeight);
-        this.bgShape.endFill();
-    }
+    // private debugShape() {
+    //     this.bgShape.clear();
+    //     this.bgShape.beginFill(this.debugBgColor);
+    //     this.bgShape.drawRect(this.contPosX, this.contPosY, this.contWidth, this.contHeight);
+    //     this.bgShape.endFill();
+    // }
 }

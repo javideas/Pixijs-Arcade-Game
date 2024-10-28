@@ -27,7 +27,7 @@ export class Shooter extends Actor {
             initPosAccX,
             initPosAccY,
             spriteName,
-            false,
+            false, // animated
             debugBgColor
         );
         this.fireRate = fireRate;

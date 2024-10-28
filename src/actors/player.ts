@@ -19,6 +19,9 @@ export class Player extends Shooter {
             debugBgColor
         );
         this.speedGlobalRatio = 2;
+        this.colWidthRatio = 0.4;
+        this.colHeightRatio = 0.6;
+        this.isColVisible = false; // TODO: either to be Global in GameMode or per Class
     }
 
     public update(delta: number) {

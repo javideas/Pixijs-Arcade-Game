@@ -21,11 +21,14 @@ export class Projectile extends Actor {
             scaleRatio,
             shooterRef.posAccX + offsetX,
             shooterRef.posAccY - offsetY,
-            'Projectile', // Animation name
-            true, // is Animated?
+            'Projectile', // Sprite/Animation name
+            true, // isAnimated?
             debugBgColor
         );
         this.trackOpponent = trackOpponent;
+        this.colWidthRatio = 0.15;
+        this.colHeightRatio = 0.35;
+
         this.speedGlobalRatio = 1;
         this.dirX = dirX;
         this.dirY = dirY;
