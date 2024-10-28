@@ -115,7 +115,8 @@ export default class GameMode {
     private update(time: number, deltaTime: number) {
         const delta = gsap.ticker.deltaRatio(60); // Normalize to 60 FPS
         this.elapsedDelta += delta; // Accumulate delta time
-
+        this.crtFilterContainer.filters[ 0 ].time -= delta / 5;
+        this.crtFilterContainer.filters[2].brightness = Math.sin(delta * 3) * -2 + 6;
         this.logElapsedTime();
         
         this.spawnEnemies();
@@ -150,7 +151,7 @@ export default class GameMode {
                 const speedUp = 1;
                 if(this.lightYears < 7) this.ui.screen.speedRatio += (speedUp * 0.5);
                 this.lightYears++;
-                console.log('Light Years: ', this.lightYears);
+                // console.log('Light Years: ', this.lightYears);
                 this.ui.updateLightYears(this.lightYears)
             }
         }

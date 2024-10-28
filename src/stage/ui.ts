@@ -129,26 +129,26 @@ export default class Ui {
     private setCrtFilter() {
         // Apply the CRT filter to the stageContainer
         const crtFilter = new CRTFilter({
-            curvature: 3,    
+            curvature: 2,    
             lineContrast: 5,    
             lineWidth: 1,    
-            noise: 0.1,  
+            noise: 0.05,  
             noiseSize: 1,
             seed: 0,
-            time: 1,
+            time: 14,
             verticalLine: false,
             vignetting: 0.4,
             vignettingAlpha: 0.8,
             vignettingBlur: 0.2
         });
 
-        const alphaFilter = new AlphaFilter(0.25);
+        const alphaFilter = new AlphaFilter(0.15);
         alphaFilter.blendMode = BLEND_MODES.ADD;
 
         const advancedBloomFilter = new AdvancedBloomFilter({
             threshold: 0.1,
             bloomScale: 3,
-            brightness: 4,
+            brightness: 5,
             blur: 1,
             quality: 4,
             pixelSize: 0.5,
