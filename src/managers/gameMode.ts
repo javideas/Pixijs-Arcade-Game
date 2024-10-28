@@ -22,7 +22,7 @@ export default class GameMode {
         this.randomInterval = 2000;
         
         this.currentMode = 'none';
-        this.battleLevel = 1;
+        this.lightYears = 0;
         GameMode.instance = this;
     }
 
@@ -31,12 +31,14 @@ export default class GameMode {
         await this.cleanupBattle();
         await this.loadScene('battle'); // Reload the battle scene
         window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
+        this.lightYears = 0;
     }
 
     private async init() {
         await this.loadAssets();
         await this.loadUi();
         await this.loadScene();
+        this.ui.textLightYears();
         window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
         gsap.ticker.add(this.update.bind(this));
     }
@@ -142,13 +144,14 @@ export default class GameMode {
         if(this.currentTime !== 0) {
             if (this.currentTime > this.randomInterval) {
                 // Check every 5 seconds
-                this.randomInterval = this.randomInterval + this.getRandomNumber(1000, 3000);
-            } else if (this.currentTime > 4000 * this.battleLevel) {
-                // // Check every 5 seconds
+                this.battle.spawnEnemy();
+                this.randomInterval = this.randomInterval + this.getRandomNumber(10000, 15000);
+            } else if (this.currentTime > 1000 * this.lightYears) {
                 const speedUp = 1;
-                if(this.battleLevel < 7) this.ui.screen.speedRatio += (speedUp * 0.5);
-                this.battleLevel++;
-                console.log('Current Level: ', this.battleLevel);
+                if(this.lightYears < 7) this.ui.screen.speedRatio += (speedUp * 0.5);
+                this.lightYears++;
+                console.log('Light Years: ', this.lightYears);
+                this.ui.updateLightYears(this.lightYears)
             }
         }
     }

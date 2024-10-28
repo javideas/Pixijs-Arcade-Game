@@ -10,6 +10,7 @@ export class Enemy extends Shooter {
         initPosAccX?: number,
         initPosAccY?: number,
         fireRate: number = 15,
+        spriteName: string = 'ShipPlayer-FullHealth.png',
         debugBgColor: string = 'green'
     ) {
         super(
@@ -20,7 +21,7 @@ export class Enemy extends Shooter {
             initPosAccX,
             initPosAccY,
             fireRate,
-            'ShipPlayer-FullHealth.png',
+            spriteName,
             debugBgColor
         );
         this.colWidthRatio = 0.4;
@@ -29,6 +30,10 @@ export class Enemy extends Shooter {
         this.shotDirY = 1;
         this.autoShoot = false;
         this.flipSprite(this.shotDirY);
+    }
+
+    public enemyType() {
+        
     }
 
     public update(delta: number) {
@@ -125,6 +130,9 @@ export class Enemy extends Shooter {
             ease: 'power2.out',
             onStart: () => {
                 this.autoShoot = false;
+            },
+            onComplete: () => {
+                this.destroyActor();
             }
         }, '-=1.5');
     }

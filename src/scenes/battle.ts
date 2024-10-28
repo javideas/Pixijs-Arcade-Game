@@ -27,7 +27,6 @@ export default class Battle {
 
         this.player = new Player();
         this.playerShipCont.addChild(this.player);
-
         this.spawnEnemy();
     }
 

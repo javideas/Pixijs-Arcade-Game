@@ -18,15 +18,11 @@ export class Player extends Shooter {
             'ShipPlayer-FullHealth.png',
             debugBgColor
         );
+        this.isInmune = true; // TODO: just Debug now, use SHIELD texture and add Shield()
         this.speedGlobalRatio = 2;
         this.colWidthRatio = 0.4;
         this.colHeightRatio = 0.6;
         this.isColVisible = false; // TODO: either to be Global in GameMode or per Class
-    }
-
-    public update(delta: number) {
-        super.update(delta);
-        // console.log(this.currentHealth);
     }
 
     public shoot() {

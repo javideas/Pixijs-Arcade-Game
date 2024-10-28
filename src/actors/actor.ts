@@ -141,12 +141,14 @@ export class Actor extends Container {
     }
 
     public hitted(damage: number = 1) {
-        this.currentHealth -= damage;
-        if(this.currentHealth <= 0) {
-            this.animDestroyed();
-        } else {
-            if(!this.isInmune) this.toggleInmunity();
-            this.animHurt();
+        if(!this.isInmune) {
+            this.currentHealth -= damage;
+            if(this.currentHealth <= 0) {
+                this.animDestroyed();
+            } else {
+                this.toggleInmunity();
+                this.animHurt();
+            }
         }
     }
 
@@ -246,7 +248,6 @@ export class Actor extends Container {
             width,
             height
         );
-        // this.addChild(this.debugGraphics);
     }
 
     public draw() {

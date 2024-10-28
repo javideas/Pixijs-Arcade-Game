@@ -1,4 +1,4 @@
-import { Application, BLEND_MODES, Container, Filter, Graphics, RenderTexture, Sprite, SpriteMaskFilter } from 'pixi.js';
+import { Application, BLEND_MODES, Container, Filter, Graphics, RenderTexture, Sprite, SpriteMaskFilter, Text, TextStyle } from 'pixi.js';
 import { AlphaFilter } from '@pixi/filter-alpha';
 import { CRTFilter } from '@pixi/filter-crt';
 import { AdjustmentFilter } from '@pixi/filter-adjustment';
@@ -41,6 +41,34 @@ export default class Ui {
         this.deckL.ratioWidth = defaultRatioWidth;
 
         this.applyFilters();
+    }
+
+    public textLightYears() {
+        // Create a text style for pixelated effect
+        const textStyle = new TextStyle({
+            fontFamily: 'Pixelify Sans', // Use the imported font
+            fontSize: 30, // Adjust size as needed
+            fill: 'white', // Text color
+            align: 'right',
+            resolution: 1, // Set resolution to 1 for pixelated effect
+        });
+
+        // Create the text element
+        this.pixelatedText = new Text('Light Years: 0', textStyle);
+
+        // Position the text on the stage
+        this.updateLightYears();
+
+        // Add the text to the stage
+        this.gameMode.stageContainer.addChild(this.pixelatedText);
+    }
+
+    public updateLightYears(value: number = 0) {
+        this.pixelatedText.text = `Light Years: ${value}`;
+        // Position/Scale the text on the stage
+        this.pixelatedText.x = this.screen.x - (this.screen.frameR * 0.4);
+        this.pixelatedText.y = this.screen.frameB * 0.03;
+        this.pixelatedText.scale.set(this.screen.frameB / 1000);
     }
 
     /** Manage Filters */
@@ -145,6 +173,7 @@ export default class Ui {
     
     /** Resize responsive */
     resize(mode: string = 'landscape') {
+        this.updateLightYears();
         if (mode === 'landscape') {
             this.deckR.ratioWidth = 0.3;
             this.deckL.ratioWidth = 0.3;
