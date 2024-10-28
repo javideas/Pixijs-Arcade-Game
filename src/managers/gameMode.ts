@@ -107,7 +107,7 @@ export default class GameMode {
             } else if (this.currentTime > 4000 * this.battleLevel) {
                 // // Check every 5 seconds
                 const speedUp = 1;
-                this.ui.screen.speedRatio += (speedUp * 0.5);
+                if(this.battleLevel < 7) this.ui.screen.speedRatio += (speedUp * 0.5);
                 this.battleLevel++;
                 console.log('Current Level: ', this.battleLevel);
             }

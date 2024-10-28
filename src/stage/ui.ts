@@ -178,20 +178,15 @@ export default class Ui {
 
     private updateFilterMasks() {
         // Redraw the stage mask shape with updated dimensions
-        // this.drawStageMaskShape();
-
+        this.drawCrtMaskShape();
+        this.drawStageMaskShape();
         // Create a new render texture with updated dimensions
         const renderTexture = RenderTexture.create({ width: this.app.screen.width, height: this.app.screen.height });
         this.app.renderer.render(this.stageMaskShape, { renderTexture });
-
         // Create a new sprite from the updated render texture
         const maskSprite = new Sprite(renderTexture);
-
         // Update the mask filter with the new sprite
         this.maskFilter.maskSprite = maskSprite;
-
-        this.drawCrtMaskShape();
-        this.drawStageMaskShape();
     }
 
     /** if Deck, based to the Screen sides. if Screen, based on 16/9 ratio */

@@ -106,8 +106,9 @@ function addEventListeners(gameMode: GameMode) {
     // Force initial check
     handleOrientationChange(mediaQuery as MediaQueryListEvent);
 }
-
+let resizeTimeout: number;
 function checkRatioSize(responsiveMode: string = 'landscape') {
+    origentationDetected = false;
     gameMode.resize(responsiveMode);
 }
 
