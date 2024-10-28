@@ -153,6 +153,7 @@ export class Actor extends Container {
 
     private animDestroyed() {
         this.loadAnimation('Explosion', 'destroyed');
+        // TODO: more features... other enemies react?
     }
 
     public destroyActor() {
@@ -161,6 +162,11 @@ export class Actor extends Container {
             this.parent.removeChild(this);
         }
         this.destroy({ children: true, texture: false, baseTexture: false });
+    }
+
+    private flipSprite(dirY: number, offsetDir: number = 1) {
+        dirY === 1 ? this.sprite.anchor.set(0, dirY) : this.sprite.anchor.set(0, 0);
+        this.sprite.scale.y *= (-dirY * offsetDir);
     }
 
     private loadSprite(spriteName: string) {

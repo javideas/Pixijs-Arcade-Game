@@ -31,6 +31,8 @@ export class Projectile extends Actor {
         this.dirY = dirY;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
+        
+        this.flipSprite(dirY);
     }
 
     public update(delta: number) {

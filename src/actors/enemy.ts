@@ -25,6 +25,7 @@ export class Enemy extends Shooter {
         );
         this.shotDirY = 1;
         this.autoShoot = false;
+        this.flipSprite(this.shotDirY);
     }
 
     public update(delta: number) {
@@ -37,7 +38,7 @@ export class Enemy extends Shooter {
     }
 
     public shoot(weaponType: string = 'trinormal', dirY: number = -1, dirX: number = 0) {
-        // super.shoot(weaponType, dirY, dirX);
+        super.shoot(weaponType, dirY, dirX);
     }
 
     private init() {
@@ -111,6 +112,7 @@ export class Enemy extends Shooter {
             ease: 'sine.inOut',
             onStart: () => {
                 this.shotDirY = -1;
+                this.flipSprite(this.shotDirY, -1)
             }
         }, '-=7.5')
 
