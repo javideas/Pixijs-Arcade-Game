@@ -224,7 +224,7 @@ export default class GameMode {
     private async cleanupBattle() {
         // Assuming you have a method to destroy or cleanup the battle instance
         if (this.battle) {
-            this.battle.destroy(); // Or any cleanup method you have
+            this.battle.destroy();
             this.battle = null;
         }
     }
