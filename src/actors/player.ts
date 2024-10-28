@@ -3,23 +3,19 @@ import { Shooter } from "./shooter";
 
 export class Player extends Shooter {
     constructor(
-        scaleRatio: number = 1,
-        health: number,
         initPosAccX?: number,
         initPosAccY?: number,
-        fireRate: number = 15,
         debugBgColor: string = 'yellow'
     ) {
         super(
             'player',
-            health,
+            4, // Health
             1, // damage to others
-            scaleRatio,
+            1, // scale
             initPosAccX,
             initPosAccY,
-            fireRate,
+            8,
             'ShipPlayer-FullHealth.png',
-            false,
             debugBgColor
         );
         this.speedGlobalRatio = 2;

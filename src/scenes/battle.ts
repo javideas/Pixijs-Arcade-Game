@@ -25,7 +25,7 @@ export default class Battle {
     public async init() {
         await this.loadContainers();
 
-        this.player = new Player(1);
+        this.player = new Player();
         this.playerShipCont.addChild(this.player);
 
         this.spawnEnemy();

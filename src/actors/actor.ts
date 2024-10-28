@@ -24,7 +24,7 @@ export class Actor extends Container {
     constructor(
         idTeam: string,
         idClass: string,
-        health: number = 1,
+        maxHealth: number = 1,
         damage: number = 1,
         scaleRatio: number = 1,
         initPosAccX: number = 0,
@@ -44,7 +44,7 @@ export class Actor extends Container {
         this.idClass = idClass; // either 'ship' or 'projectile', projectiles should go a little faster down
         this.damage = damage;
         this.scaleRatio = scaleRatio;
-        this.maxHealth = health;
+        this.maxHealth = maxHealth;
         this.currentHealth = this.maxHealth;
         this.posAccX = initPosAccX;
         this.posAccY = initPosAccY;
@@ -72,25 +72,27 @@ export class Actor extends Container {
     }
 
     public update() {
-        if(this.idTeam === 'player') {
-            for (const containers of this.enemyContainer.children) {
-                for (const enemy of containers.children) {
-                    if (this.checkCollision(enemy as Actor)) {
-                        // if actor is Projetile
-                        if(this.idClass === 'projectile') {
-                            // if enemy is Projectile:
-                            if(enemy.idClass === 'projectile') {
-                                // Hurt Enemy
-                                enemy.hitted(this.damage);
-                                // Destroy Enemy Actor
-                                enemy.destroyActor();
-                                // Destroy this projectile
-                                this.destroyActor();
-                            } else { // if enemy is Ship:
-                                // Hurt Enemy
-                                enemy.hitted(this.damage);
-                                // Destroy this projectile
-                                this.destroyActor();
+        // Check only on Player Team for performance
+        if (!this.isDestroyed) { // flag to avoid check if destroyed actor still in memory
+            if(this.idTeam === 'player') {
+                for (const containers of this.enemyContainer.children) {
+                    // Iterate through both enemy containers: enemyProjCont AND enemyShipCont
+                    for (const enemy of containers.children) {
+                        if (!enemy.isDestroyed && this.checkCollision(enemy as Actor)) {
+                            // if this actor is Player Projetile
+                            if(this.idClass === 'projectile') {
+                                // if enemy is Projectile:
+                                if(enemy.idClass === 'projectile') {
+                                    // Hit Enemy
+                                    enemy.hitted(this.damage);
+                                    // Destroy this projectile
+                                    this.destroyActor();
+                                // } else { // if enemy is Ship:
+                                    // Hit Enemy
+                                    enemy.hitted(this.damage);
+                                    // Destroy this projectile
+                                    this.destroyActor();
+                                }
                             }
                         }
                     }
@@ -211,13 +213,13 @@ export class Actor extends Container {
         
         // Adjusted scale per axis, normalized by the effective screen size
         const speedRatioX = 0.007;
-        // Projectiles go a little faster following screen direction
+        // Projectiles different speed by screen vertical direction
         let speedRatioY;
         if(this.idClass === 'projectile') {
-            if(axis === 'y' && input > 0) {
-                speedRatioY = 0.004;
-            } else if (axis === 'y' && input < 0){
+            if(axis === 'y' && input > 0) { // Going to the bottom of the screen
                 speedRatioY = 0.003;
+            } else if (axis === 'y' && input < 0){ // Going to the top of the screen
+                speedRatioY = 0.005;
             }
         } else {
             speedRatioY = 0.0015;

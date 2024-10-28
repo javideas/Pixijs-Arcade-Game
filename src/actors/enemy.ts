@@ -21,7 +21,6 @@ export class Enemy extends Shooter {
             initPosAccY,
             fireRate,
             'ShipPlayer-FullHealth.png',
-            false,
             debugBgColor
         );
         this.shotDirY = 1;
@@ -38,7 +37,7 @@ export class Enemy extends Shooter {
     }
 
     public shoot(weaponType: string = 'trinormal', dirY: number = -1, dirX: number = 0) {
-        // super.shoot(weaponType, dirY, dirX);
+        super.shoot(weaponType, dirY, dirX);
     }
 
     private init() {

@@ -15,14 +15,14 @@ export class Projectile extends Actor {
     ) {
         super(
             shooterRef.idTeam,
-            'projectile',
-            1, // health
+            'projectile', // idClass
+            1, // max Health
             damage,
             scaleRatio,
             shooterRef.posAccX + offsetX,
             shooterRef.posAccY - offsetY,
-            'Projectile',
-            true,
+            'Projectile', // Animation name
+            true, // is Animated?
             debugBgColor
         );
         this.trackOpponent = trackOpponent;
