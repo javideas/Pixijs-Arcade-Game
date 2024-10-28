@@ -87,7 +87,7 @@ export class Actor extends Container {
                                     enemy.hitted(this.damage);
                                     // Destroy this projectile
                                     this.destroyActor();
-                                // } else { // if enemy is Ship:
+                                } else { // if enemy is Ship:
                                     // Hit Enemy
                                     enemy.hitted(this.damage);
                                     // Destroy this projectile
