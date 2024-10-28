@@ -26,8 +26,11 @@ export default class GameMode {
         GameMode.instance = this;
     }
 
-    public gameOver() {
-        console.log('over');
+    public async gameOver() {
+        console.log('---Game Over---');
+        await this.cleanupBattle();
+        await this.loadScene('battle'); // Reload the battle scene
+        window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
     }
 
     private async init() {
@@ -216,5 +219,13 @@ export default class GameMode {
 
     public resize(responsiveMode: string  = 'landscape') {
         this.ui.resize(responsiveMode);
+    }
+
+    private async cleanupBattle() {
+        // Assuming you have a method to destroy or cleanup the battle instance
+        if (this.battle) {
+            this.battle.destroy(); // Or any cleanup method you have
+            this.battle = null;
+        }
     }
 }

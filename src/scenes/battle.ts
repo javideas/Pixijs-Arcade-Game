@@ -83,4 +83,18 @@ export default class Battle {
             });
         });
     }
+
+    public destroy() {
+        // Remove all children from containers
+        this.enemyProjCont.removeChildren();
+        this.enemyShipCont.removeChildren();
+        this.enemyContainer.removeChildren();
+        this.playerProjCont.removeChildren();
+        this.playerShipCont.removeChildren();
+        this.playerContainer.removeChildren();
+        // Nullify references to help with garbage collection
+        this.player = null;
+        this.enemyContainer = null;
+        this.playerContainer = null;
+    }
 }
