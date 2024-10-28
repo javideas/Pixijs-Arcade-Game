@@ -30,7 +30,11 @@ export class Enemy extends Shooter {
 
     public update(delta: number) {
         super.update(delta);
-        if (this.autoShoot) this.shoot('trinormal', 1);
+        if(!this.isDestroyed){
+            if(this.autoShoot) this.shoot('trinormal', 1);
+        } else {
+            this.y += this.screenRef.speedRatio;
+        }
     }
 
     public shoot(weaponType: string = 'trinormal', dirY: number = -1, dirX: number = 0) {
@@ -43,13 +47,13 @@ export class Enemy extends Shooter {
     }
 
     private aibehaviour() {
-        // Create a timeline for the animations
+        // Create a timeline for the animations this.screenRef.speedRatio
         const tl = gsap.timeline({
             onUpdate: () => {
                 this.setResponsive();
-                if (this.stopMovement) {
+                if (this.isDestroyed) {
                     tl.kill();
-                }
+                }  
             }
         });
 

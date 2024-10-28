@@ -31,7 +31,7 @@ export class Screen extends Tab {
         } else {
             console.error(`Texture ${spriteName} not found`);
         }
-        this.speedRatio = 1;
+        this.speedRatio = 2;
         this.loadSprite();
     }
 
@@ -52,12 +52,12 @@ export class Screen extends Tab {
     }
 
     public moveSpaceBackground() {
-        const speed = 2 * this.speedRatio; // Adjust the speed as needed
+        this.speedRatio; // Adjust the speed as needed
         const screenHeight = this.spriteA.height;
     
         // Move both sprites down
-        this.spriteA.y += speed;
-        this.spriteB.y += speed;
+        this.spriteA.y += this.speedRatio;
+        this.spriteB.y += this.speedRatio;
     
         // Check if spriteA is out of view and reposition it above spriteB
         if (this.spriteA.y >= screenHeight /2 - 10 ) {

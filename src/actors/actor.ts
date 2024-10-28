@@ -49,7 +49,7 @@ export class Actor extends Container {
         this.posAccX = initPosAccX;
         this.posAccY = initPosAccY;
         this.speedGlobalRatio = 1;
-        this.stopMovement = false;
+        this.isDestroyed = false;
         
         this.debugBgColor = debugBgColor;
         this.bgShape = new Graphics();
@@ -153,7 +153,7 @@ export class Actor extends Container {
             this.sprite = new AnimatedSprite(textures);
             this.sprite.animationSpeed = 0.1;
             if (animLabel === 'destroyed') {
-                this.stopMovement = true;
+                this.isDestroyed = true;
                 this.sprite.loop = false;
                 this.sprite.onComplete = () => this.destroyActor();
             }
