@@ -49,7 +49,7 @@ export class Shooter extends Actor {
 
     public shoot(weaponType: string = 'trinormal') {
         // Check if the player is trying to shoot and hasn't shot yet
-        if (!this.hasShot) {
+        if (!this.hasShot && !this.isDestroyed) {
             switch(weaponType) {
                 case 'trinormal':
                     this.spawnProjectile(false, 1, 0.5, this.shotDirY);

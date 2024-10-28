@@ -26,6 +26,10 @@ export default class GameMode {
         GameMode.instance = this;
     }
 
+    public gameOver() {
+        console.log('over');
+    }
+
     private async init() {
         await this.loadAssets();
         await this.loadUi();

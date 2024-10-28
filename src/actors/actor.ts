@@ -73,27 +73,31 @@ export class Actor extends Container {
     }
 
     public update(delta: number) {
-        // Check only on Player Team for performance
+        // Check Collisions needed on update, only on Player Team for performance
+        this.checkCollisions();
+    }
+
+    private checkCollisions() {
         if (!this.isDestroyed) { // flag to avoid check if destroyed actor still in memory
             if(this.idTeam === 'player') {
                 for (const containers of this.enemyContainer.children) {
                     // Iterate through both enemy containers: enemyProjCont AND enemyShipCont
                     for (const enemy of containers.children) {
-                        if (!enemy.isDestroyed && this.checkCollision(enemy as Actor)) {
+                        if (!enemy.isDestroyed && this.isAnActorColliding(enemy as Actor)) {
                             // if this actor is Player Projectile
                             if(this.idClass === 'projectile') {
                                 // if enemy is Projectile:
                                 if(enemy.idClass === 'projectile') {
                                     // Hit Enemy
                                     enemy.hitted(this.damage);
-                                    // Destroy this projectile
+                                    // Destroy this Player Projectile
                                     this.destroyActor();
                                     return;
                                 // if enemy is Ship:
-                                } else if(this.idClass === 'ship') {
+                                } else if(enemy.idClass === 'ship' && !enemy.isInmune) {
                                     // Hit Enemy
                                     enemy.hitted(this.damage);
-                                    // Destroy this projectile
+                                    // Destroy this Player Projectile
                                     this.destroyActor();
                                     return;
                                 }
@@ -101,16 +105,16 @@ export class Actor extends Container {
                             } else if(this.idClass === 'ship') {
                                 // if enemy is Projectile:
                                 if(enemy.idClass === 'projectile') {
-                                    // Hit Enemy
+                                    // Destroy Enemy Projectile
                                     enemy.animDestroyed();
-                                    // Destroy this projectile
+                                    // Hit Player Ship
                                     this.hitted(enemy.damage);
                                     return;
                                 // if enemy is Ship:
                                 } else if(enemy.idClass === 'ship' && !enemy.isInmune) {
                                     // Hit Enemy
                                     enemy.hitted(this.damage);
-                                    // Destroy this projectile
+                                    // Hit Player Ship
                                     this.hitted(enemy.damage);
                                     return;
                                 }
@@ -153,6 +157,7 @@ export class Actor extends Container {
 
     private animDestroyed() {
         this.loadAnimation('Explosion', 'destroyed');
+        // TODO: player get points when enemy destroyed
         // TODO: more features... other enemies react?
     }
 
@@ -161,6 +166,7 @@ export class Actor extends Container {
         if (this.parent) {
             this.parent.removeChild(this);
         }
+        if(this.idTeam === 'player' && this.idClass === 'ship') this.gameMode.gameOver();
         this.destroy({ children: true, texture: false, baseTexture: false });
     }
 
@@ -199,7 +205,7 @@ export class Actor extends Container {
         }
     }
 
-    public checkCollision(other: Actor): boolean {
+    public isAnActorColliding(other: Actor): boolean {
         if (!this.parent || !other.parent) {
             // If either object is not part of the display list, skip collision check
             return false;
