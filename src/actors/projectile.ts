@@ -10,7 +10,7 @@ export class Projectile extends Actor {
         dirY: number = -1,
         offsetX: number = 0,
         offsetY: number = 0,
-        scaleRatio: number = 0.5,
+        scaleRatio: number = 1,
         debugBgColor: string = 'red'
     ) {
         super(
@@ -21,11 +21,12 @@ export class Projectile extends Actor {
             scaleRatio,
             shooterRef.posAccX + offsetX,
             shooterRef.posAccY - offsetY,
-            'ShipPlayer-FullHealth',
+            'Projectile',
+            true,
             debugBgColor
         );
         this.trackOpponent = trackOpponent;
-        this.speedGlobalRatio = 2;
+        this.speedGlobalRatio = 0.3;
         this.dirX = dirX;
         this.dirY = dirY;
         this.offsetX = offsetX;

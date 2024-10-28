@@ -22,7 +22,7 @@ export class Screen extends Tab {
             posY
         );
         const gameMode = GameMode.instance;
-        const texture = gameMode.getTexture('Blue_Nebula_02-512x512');
+        const texture = gameMode.getTexture('Blue_Nebula_02-512x512.png');
         if (texture) {
             this.spriteA = new Sprite(texture);
             this.addChild(this.spriteA);

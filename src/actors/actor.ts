@@ -1,9 +1,9 @@
-import { Container, Graphics, Sprite, Texture } from 'pixi.js';
+import { AnimatedSprite, Container, Graphics, Sprite, Texture } from 'pixi.js';
 import GameMode from '../managers/gameMode';
 import { gsap } from 'gsap';
 
 export class Actor extends Container {
-    protected sprite: Sprite;
+    protected sprite: Sprite | AnimatedSprite;
     protected hasAi: bool;
     protected posAccX: number;
     protected posAccY: number;
@@ -29,14 +29,17 @@ export class Actor extends Container {
         scaleRatio: number = 1,
         initPosAccX: number = 0,
         initPosAccY: number = 0.8,
-        spriteName: string = 'ShipPlayer-FullHealth',
-        debugBgColor: string = 'yellow'
+        spriteName: string = 'ShipPlayer-FullHealth.png',
+        animated: boolean = false,
+        debugBgColor?: string = 'yellow'
     ) {
         super();
-        const gameMode = GameMode.instance;
-        this.screenRef = gameMode.ui.screen;
-        this.enemyContainer = gameMode.battle.enemyContainer;
-        this.playerContainer = gameMode.battle.playerContainer;
+        this.gameMode = GameMode.instance;
+        this.screenRef = this.gameMode.ui.screen;
+        this.enemyContainer = this.gameMode.battle.enemyContainer;
+        this.enemyProjCont = this.gameMode.battle.enemyProjCont;
+        this.playerContainer = this.gameMode.battle.playerContainer;
+        this.playerProjCont = this.gameMode.battle.playerProjCont;
         this.idTeam = idTeam; // either 'player' or 'enemy', for proyectile damage case
         this.idClass = idClass; // either 'ship' or 'projectile', projectiles should go a little faster down
         this.damage = damage;
@@ -51,13 +54,12 @@ export class Actor extends Container {
         this.bgShape = new Graphics();
         this.addChild(this.bgShape);
 
-        const texture = gameMode.getTexture(spriteName);
-        if (texture) {
-            this.sprite = new Sprite(texture);
-            this.addChild(this.sprite);
+        if (animated) {
+            this.loadAnimation(spriteName);
         } else {
-            console.error(`Texture ${spriteName} not found`);
+            this.loadSprite(spriteName);
         }
+        
         this.spriteScaleRatio = 1.6;
 
         this.init();
@@ -70,18 +72,20 @@ export class Actor extends Container {
 
     public update() {
         if(this.idTeam === 'player') {
-            for (const enemy of this.enemyContainer.children) {
-                if (this.checkCollision(enemy as Actor)) {
-                    // if actor is Projetile
-                    if(this.idClass === 'projectile') {
-                        // if enemy is projectile
-                        if(enemy.idClass === 'projectile') {
-                            enemy.hitted(this.damage);
-                            enemy.destroyActor();
-                            this.destroyActor();
-                        } else {
-                            enemy.hitted(this.damage);
-                            this.destroyActor();
+            for (const containers of this.enemyContainer.children) {
+                for (const enemy of containers.children) {
+                    if (this.checkCollision(enemy as Actor)) {
+                        // if actor is Projetile
+                        if(this.idClass === 'projectile') {
+                            // if enemy is projectile
+                            if(enemy.idClass === 'projectile') {
+                                enemy.hitted(this.damage);
+                                enemy.destroyActor();
+                                this.destroyActor();
+                            } else {
+                                enemy.hitted(this.damage);
+                                this.destroyActor();
+                            }
                         }
                     }
                 }
@@ -118,6 +122,28 @@ export class Actor extends Container {
             this.parent.removeChild(this);
         }
         this.destroy({ children: true, texture: false, baseTexture: false });
+    }
+
+    private loadSprite(spriteName: string) {
+        const texture = this.gameMode.getTexture(spriteName);
+        if (texture) {
+            this.sprite = new Sprite(texture);
+            this.addChild(this.sprite);
+        } else {
+            console.error(`Texture ${spriteName} not found`);
+        }
+    }
+
+    private loadAnimation(animationName: string) {
+        const textures = this.gameMode.getAnimationTextures(animationName);
+        if (textures && textures.length > 0) {
+            this.sprite = new AnimatedSprite(textures);
+            this.sprite.animationSpeed = 0.1; // Adjust speed as needed
+            this.sprite.play();
+            this.addChild(this.sprite);
+        } else {
+            console.error(`Animation ${animationName} not found`);
+        }
     }
 
     public checkCollision(other: Actor): boolean {

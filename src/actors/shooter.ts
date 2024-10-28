@@ -15,7 +15,8 @@ export class Shooter extends Actor {
         initPosAccX?: number,
         initPosAccY?: number,
         fireRate: number = 15,
-        spriteName: string = 'ShipPlayer-FullHealth',
+        spriteName: string = 'ShipPlayer-FullHealth.png',
+        animated: boolean = false,
         debugBgColor: string = 'red'
     ) {
         super(
@@ -27,6 +28,7 @@ export class Shooter extends Actor {
             initPosAccX,
             initPosAccY,
             spriteName,
+            animated,
             debugBgColor
         );
         this.fireRate = fireRate;
@@ -68,6 +70,6 @@ export class Shooter extends Actor {
 
     private spawnProjectile(trackOpponent: boolean, damage: number, dirX: number, dirY: number, offsetX: number, offsetY: number) {
         const projectile = new Projectile(this, trackOpponent, damage, dirX, dirY, offsetX, offsetY);
-        this.idTeam === 'player' ? this.playerContainer.addChild(projectile) : this.enemyContainer.addChild(projectile);
+        this.idTeam === 'player' ? this.playerProjCont.addChild(projectile) : this.enemyProjCont.addChild(projectile);
     }
 }

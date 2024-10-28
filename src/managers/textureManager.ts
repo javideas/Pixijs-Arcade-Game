@@ -2,11 +2,10 @@ import { Texture } from 'pixi.js';
 
 class TextureManager {
     private static instance: TextureManager;
-    private textures: Map<string, Texture>;
+    private textures: { [key: string]: Texture } = {};
+    private animations: { [key: string]: string[] } = {};
 
-    private constructor() {
-        this.textures = new Map();
-    }
+    private constructor() {}
 
     public static getInstance(): TextureManager {
         if (!TextureManager.instance) {
@@ -15,22 +14,26 @@ class TextureManager {
         return TextureManager.instance;
     }
 
-    public async loadTexture(id: string, path: string): Promise<Texture> {
-        if (this.textures.has(id)) {
-            return this.textures.get(id)!;
-        }
-
-        const texture = await Texture.fromURL(path);
-        this.textures.set(id, texture);
-        return texture;
+    public addTexture(name: string, texture: Texture) {
+        this.textures[name] = texture;
     }
 
-    public getTexture(id: string): Texture | undefined {
-        return this.textures.get(id);
+    public getTexture(name: string): Texture | undefined {
+        return this.textures[name];
     }
 
-    public addTexture(id: string, texture: Texture): void {
-        this.textures.set(id, texture);
+    public setAnimations(animations: { [key: string]: string[] }) {
+        // Ensure animations are stored as arrays of string names
+        this.animations = Object.fromEntries(
+            Object.entries(animations).map(([key, frames]) => [
+                key,
+                frames.map(frame => typeof frame === 'string' ? frame : frame.toString())
+            ])
+        );
+    }
+
+    public getAnimationFrames(animationName: string): string[] | undefined {
+        return this.animations[animationName];
     }
 }
 

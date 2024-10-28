@@ -53,26 +53,54 @@ export default class GameMode {
     private async loadAssets() {
         const textureManager = TextureManager.getInstance();
         const spritePath = '../assets/ShipPlayer.json';
-
+    
         try {
             const spritesheet = await Assets.load(spritePath);
-            // console.log('Spritesheet loaded:', spritesheet);
-
-            // Iterate over all textures in the spritesheet and add them to the TextureManager
+            
+            // Extract frame names from the spritesheet
+            const animations = Object.fromEntries(
+                Object.entries(spritesheet.animations).map(([key, frames]) => [
+                    key,
+                    frames.map(frame => frame.textureCacheIds[0]) // As textureCacheIds contains the frame names
+                ])
+            );
+    
+            textureManager.setAnimations(animations);
+    
             for (const [textureName, texture] of Object.entries(spritesheet.textures)) {
-                // Remove the '.png' extension from the texture name
-                const nameWithoutExtension = textureName.replace(/\.png$/, '');
-                textureManager.addTexture(nameWithoutExtension, texture as Texture);
+                textureManager.addTexture(textureName, texture as Texture);
             }
         } catch (error) {
             console.error('Error loading spritesheet:', error);
         }
     }
 
-    // Add this method to retrieve textures
     public getTexture(spriteName: string): Texture | undefined {
         const textureManager = TextureManager.getInstance();
         return textureManager.getTexture(spriteName);
+    }
+
+    public getAnimationTextures(animationName: string): Texture[] {
+        const textureManager = TextureManager.getInstance();
+        const animationFrames = textureManager.getAnimationFrames(animationName);
+    
+        if (!animationFrames) {
+            console.error(`Animation ${animationName} not found in JSON`);
+            return [];
+        }
+    
+        const textures = animationFrames.map(frameName => {
+            if (typeof frameName !== 'string') {
+                console.error(`Invalid frame name: ${frameName}`);
+                return undefined;
+            }
+            const texture = this.getTexture(frameName);
+            if (!texture) {
+                console.error(`Texture ${frameName} not found`);
+            }
+            return texture;
+        }).filter(texture => texture !== undefined);
+        return textures;
     }
 
     private update(time: number, deltaTime: number) {
@@ -84,18 +112,22 @@ export default class GameMode {
         this.spawnEnemies();
         this.ui.screen.moveSpaceBackground();
 
-        // Update the shooter
-        this.battle.playerContainer.children.forEach((child) => {
-            if (typeof child.draw == 'function') {
-                child.update(delta);
-            }
-        });
 
-        this.battle.enemyContainer.children.forEach((child) => {
-            if (typeof child.draw == 'function') {
-                child.update(delta);
-            }
+        this.battle.enemyContainer.children.forEach((containers) => {
+            containers.children.forEach((child) => {
+                if (typeof child.draw == 'function') {
+                    child.update(delta);
+                }
+            })
         })
+
+        this.battle.playerContainer.children.forEach((containers) => {
+            containers.children.forEach((child) => {
+                if (typeof child.draw == 'function') {
+                    child.update(delta);
+                }
+            });
+        });
     }
 
     private spawnEnemies(){

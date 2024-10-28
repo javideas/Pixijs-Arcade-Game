@@ -26,40 +26,54 @@ export default class Battle {
         await this.loadContainers();
 
         this.player = new Player(1);
-        this.playerContainer.addChild(this.player);
+        this.playerShipCont.addChild(this.player);
 
         this.spawnEnemy();
     }
 
     public spawnEnemy() {
         const enemy = new Enemy(0.7,5,1,2,-0.8);
-        this.enemyContainer.addChild(enemy);
+        this.enemyShipCont.addChild(enemy);
         enemy.setResponsive();
     }
     
     /** Load Container for player and enemys, AND container for projectiles */
     private async loadContainers() {
+        // Enemy container is behind Player Container
+        // AND Projectiles Container are behind Ships containers
         this.enemyContainer = new Container();
         this.gameMode.stageContainer.addChild(this.enemyContainer);
+        this.enemyProjCont = new Container();
+        this.enemyContainer.addChild(this.enemyProjCont);
+        this.enemyShipCont = new Container();
+        this.enemyContainer.addChild(this.enemyShipCont);
 
         this.playerContainer = new Container();
         this.gameMode.stageContainer.addChild(this.playerContainer);
+        this.playerProjCont = new Container();
+        this.playerContainer.addChild(this.playerProjCont);
+        this.playerShipCont = new Container();
+        this.playerContainer.addChild(this.playerShipCont);
     }
 
     /** Drawing actors on resize */
     public responsive() {
-        this.playerContainer.children.forEach((child) => {
-            if(typeof child.setResponsive === 'function' && typeof child.draw === 'function') {
-                child.setResponsive();
-                child.draw();
-            }
-        });
-
-        this.enemyContainer.children.forEach((child) => {
-            if(typeof child.setResponsive === 'function' && typeof child.draw === 'function') {
-                child.setResponsive();
-                child.draw();
-            }
+        this.enemyContainer.children.forEach((containers) => {
+            containers.children.forEach((child) => {
+                if(typeof child.setResponsive === 'function' && typeof child.draw === 'function') {
+                    child.setResponsive();
+                    child.draw();
+                }
+            })
         })
+
+        this.playerContainer.children.forEach((containers) => {
+            containers.children.forEach((child) => {
+                if(typeof child.setResponsive === 'function' && typeof child.draw === 'function') {
+                    child.setResponsive();
+                    child.draw();
+                }
+            });
+        });
     }
 }
