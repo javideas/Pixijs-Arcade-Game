@@ -298,7 +298,7 @@ export class Actor extends Container {
         let speedRatioY;
         if(this.idClass === 'projectile') {
             if(axis === 'y' && input > 0) { // Going to the bottom of the screen
-                speedRatioY = 0.003;
+                speedRatioY = 0.0055;
             } else if (axis === 'y' && input < 0){ // Going to the top of the screen
                 speedRatioY = 0.005;
             }

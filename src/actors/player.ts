@@ -18,13 +18,13 @@ export class Player extends Shooter {
             'ShipPlayer-FullHealth.png',
             debugBgColor
         );
+        this.isColVisible = true; // TODO: either to be Global in GameMode or per Class
         this.isInmune = false; // TODO: just Debug now, use SHIELD texture and add Shield()
         
         this.spriteName = 'ShipPlayer-FullHealth.png';
         this.speedGlobalRatio = 2;
         this.colWidthRatio = 0.4;
         this.colHeightRatio = 0.6;
-        this.isColVisible = false; // TODO: either to be Global in GameMode or per Class
     }
 
     public shoot() {

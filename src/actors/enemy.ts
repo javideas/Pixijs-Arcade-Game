@@ -10,6 +10,8 @@ function getEnemyProps(enemyType: string = 'malko') {
             health: 5,
             damage: 1,
             fireRate: 15,
+            colWidthRatio: 0.4,
+            colHeightRatio: 0.6,
             weaponType: 'doubleFwd'
         };
     } else if (enemyType === 'guliamo') {
@@ -19,16 +21,20 @@ function getEnemyProps(enemyType: string = 'malko') {
             health: 10,
             damage: 1,
             fireRate: 15,
+            colWidthRatio: 0.5,
+            colHeightRatio: 0.7,
             weaponType: 'trinormal'
         };
     } else if (enemyType === 'asteroid') {
         return {
             spriteName: 'Asteroid 01 - Base.png',
-            scaleRatio: 2,
+            scaleRatio: Math.random() * 3 + 1,
             health: 4,
             damage: 100,
-            fireRate: 15,
-            weaponType: 'trinormal'
+            fireRate: 0,
+            colWidthRatio: 0.4,
+            colHeightRatio: 0.2,
+            weaponType: 'none'
         };
     }
 }
@@ -54,8 +60,8 @@ export class Enemy extends Shooter {
         );
         this.enemyType = enemyType;
         this.weaponType = enemyProps.weaponType;
-        this.colWidthRatio = 0.4;
-        this.colHeightRatio = 0.6;
+        this.colWidthRatio = enemyProps.colWidthRatio;
+        this.colHeightRatio = enemyProps.colHeightRatio;
 
         this.shotDirY = 1;
         this.autoShoot = false;

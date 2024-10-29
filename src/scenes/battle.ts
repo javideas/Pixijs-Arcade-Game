@@ -29,7 +29,7 @@ export default class Battle {
         this.playerShipCont.addChild(this.player);
 
         this.spawnEnemy('malko', 1.3, -0.8);
-        this.spawnEnemy('asteroid', -0.7, -0.8);
+        this.spawnEnemy('asteroid', -0.7, -2);
     }
 
     public spawnRandEnemy() {
