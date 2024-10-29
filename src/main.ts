@@ -1,6 +1,4 @@
 import { Application, BaseTexture, SCALE_MODES, Container } from 'pixi.js';
-import { CRTFilter } from '@pixi/filter-crt';
-import { DotFilter } from '@pixi/filter-dot';
 import GameMode from './managers/gameMode.ts';
 
 const bgColor = "#020305";
@@ -36,7 +34,7 @@ async function init() {
     app.stage.addChild(crtFilterContainer);
 
     // Set image rendering to pixelated
-    app.view.style.imageRendering = 'pixelated';
+    (app.view as HTMLCanvasElement).style.imageRendering = 'pixelated' as any;
     // Set default scale mode to nearest neighbor using the new method
     BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
@@ -50,6 +48,7 @@ async function init() {
     /** Resize the app */
     resize();
 }
+
 
 function addEventListeners(gameMode: GameMode) {
     // Handle orientation change and add event listener
@@ -119,7 +118,7 @@ function addEventListeners(gameMode: GameMode) {
     gameLoop();
 
     // Force initial check
-    handleOrientationChange(mediaQuery as MediaQueryListEvent);
+    handleOrientationChange(mediaQuery);
 }
 
 function checkRatioSize(responsiveMode: string = 'landscape') {
@@ -127,7 +126,7 @@ function checkRatioSize(responsiveMode: string = 'landscape') {
 }
 
 
-function handleOrientationChange(event: MediaQueryListEvent) {
+function handleOrientationChange(event: MediaQueryList | MediaQueryListEvent) {
     if (event.matches) {
         checkRatioSize('landscape');
     } else {

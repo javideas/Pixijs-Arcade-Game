@@ -1,9 +1,9 @@
-import { Container } from 'pixi.js';
 import { Actor } from "./actor.ts";
+import { Shooter } from "./shooter.ts";
 
 export class Projectile extends Actor {
     constructor(
-        shooterRef: Container,
+        shooterRef: Shooter,
         trackOpponent: boolean,
         damage: number = 1,
         dirX: number = 0,
@@ -40,15 +40,11 @@ export class Projectile extends Actor {
         this.flipSprite(dirY);
     }
 
-    public update(delta: number) {
-        super.update(delta);
+    public update() {
+        super.update();
         if(!this.trackOpponent) {
             this.moveX(this.dirX);
             this.moveY(this.dirY);
         }
-    }
-
-    private onLimit() {
-        this.destroyActor();
     }
 }

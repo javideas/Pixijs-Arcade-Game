@@ -1,4 +1,4 @@
-import { Application, BLEND_MODES, Graphics, RenderTexture, Sprite, SpriteMaskFilter, Text, TextStyle } from 'pixi.js';
+import { Application, BLEND_MODES, Container, Graphics, RenderTexture, Sprite, SpriteMaskFilter, Text, TextStyle } from 'pixi.js';
 import { CRTFilter, AdjustmentFilter, AdvancedBloomFilter, RGBSplitFilter } from 'pixi-filters';
 import { AlphaFilter } from '@pixi/filter-alpha';
 import GameMode from '../managers/gameMode.ts';
@@ -8,15 +8,17 @@ import { Deck } from '../stage/deck.ts';
 export default class Ui {
     private app: Application;
     private gameMode: GameMode;
-    private screen: Screen;
-    private deckR: Deck;
-    private deckL: Deck;
+    public screen: Screen;
+    public deckR: Deck;
+    public deckL: Deck;
     private maskFilter: SpriteMaskFilter;
     private stageMaskShape: Graphics;
     private crtMaskShape: Graphics;
     private renderTexture: RenderTexture;
     private maskSprite: Sprite;
     public pixelatedText: Text;
+    protected playerProjCont: Container;
+    protected enemyProjCont: Container;
 
     constructor(app: Application) {
         this.app = app;
@@ -24,6 +26,8 @@ export default class Ui {
         this.screen = new Screen('black');
         this.deckR = new Deck('black');
         this.deckL = new Deck('black');
+        this.playerProjCont = new Container();
+        this.enemyProjCont = new Container();
         this.maskFilter = new SpriteMaskFilter(new Graphics());
         this.stageMaskShape = new Graphics();
         this.crtMaskShape = new Graphics();

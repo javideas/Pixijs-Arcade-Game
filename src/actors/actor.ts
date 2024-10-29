@@ -1,29 +1,57 @@
-import { AnimatedSprite, Container, Graphics, Sprite, Texture } from 'pixi.js';
+import { AnimatedSprite, Container, Graphics, Sprite } from 'pixi.js';
 import GameMode from '../managers/gameMode.ts';
+import { Screen } from '../stage/screen.ts';
 import { gsap } from 'gsap';
 
 export class Actor extends Container {
+    public gameMode: GameMode;
     protected sprite: Sprite | AnimatedSprite;
-    protected hasAi: bool;
-    protected posAccX: number;
-    protected posAccY: number;
+    protected hasAi: boolean;
+    public posAccX: number;
+    public posAccY: number;
     protected colX: number;
     protected colY: number;
     protected colWidth: number;
     protected colHeight: number;
+    public idTeam: string;
+    public isInmune: boolean;
+    public isColVisible: boolean;
+    public screenRef: Screen;
 
     public debugBgColor: string;
+    private debugGraphics: Graphics;
     private bgShape: Graphics;
     private contWidth: number;
     private contHeight: number;
-    private contPosX: number;
-    private contPosY: number;
-    private centerX: number;
-    private centerY: number;
+    public contPosX: number;
+    public contPosY: number;
     private globalLimitR: number;
     private globalLimitL: number;
     private globalLimitT: number;
     private globalLimitB: number;
+    public wasDestroyed: boolean;
+
+    public spriteName: string;
+    public trackOpponent: boolean;
+    public colWidthRatio: number;
+    public colHeightRatio: number;
+    public speedGlobalRatio: number;
+    public dirX: number;
+    public dirY: number;
+    public offsetX: number;
+    public offsetY: number;
+    public scaleRatio: number;
+    public idClass: string;
+    public shieldSprite: Sprite;
+    public spriteScaleRatio: number;
+    public currentHealth: number;
+    public damage: number;
+    public enemyContainer: Container;
+    public enemyProjCont: Container;
+    public playerContainer: Container;
+    public playerProjCont: Container;
+    public maxHealth: number;
+
 
     constructor(
         idTeam: string,
@@ -35,8 +63,8 @@ export class Actor extends Container {
         initPosAccY: number = 0.8,
         baseSpriteName: string = 'ShipPlayer-FullHealth.png',
         animated: boolean = false,
-        shieldSpriteName: string,
-        debugBgColor?: string = 'yellow'
+        shieldSpriteName?: string,
+        debugBgColor?: string
     ) {
         super();
         this.gameMode = GameMode.instance;
@@ -57,10 +85,31 @@ export class Actor extends Container {
         this.colHeightRatio = 1;
         this.isColVisible = false;
         this.speedGlobalRatio = 1;
-        this.isDestroyed = false;
+        this.wasDestroyed = false;
+        this.offsetY = 0;
+        this.offsetX = 0;
+        this.dirY = 0;
+        this.dirX = 0;
+        this.trackOpponent = false;
+        this.spriteName = 'none';
+        this.globalLimitL = 0;
+        this.globalLimitR = 0;
+        this.globalLimitT = 0;
+        this.globalLimitB = 0;
+        this.contHeight = 0;
+        this.contWidth = 0;
+        this.colHeight = 0;
+        this.colWidth = 0;
+        this.contPosY = 0;
+        this.contPosX = 0;
+        this.colY = 0;
+        this.colX = 0;
+        this.hasAi = false;
+        this.sprite = new Sprite();
+        this.debugBgColor = 'none';
         this.isInmune = false;
         
-        this.debugBgColor = debugBgColor;
+        if(debugBgColor) this.debugBgColor = debugBgColor;
         this.bgShape = new Graphics();
         this.addChild(this.bgShape);
 
@@ -72,8 +121,8 @@ export class Actor extends Container {
         } else {
             this.loadBaseSprite(baseSpriteName);
         }
-
-        if(shieldSpriteName !== 'none') this.loadShieldSprite(shieldSpriteName);
+        this.shieldSprite = new Sprite;
+        if(shieldSpriteName && shieldSpriteName !== 'none') this.loadShieldSprite(shieldSpriteName);
         
         this.spriteScaleRatio = 1.6;
 
@@ -85,51 +134,55 @@ export class Actor extends Container {
         this.draw();
     }
 
-    public update(delta: number) {
+    public update() {
         // Check Collisions needed on update, only on Player Team for performance
         this.checkCollisions();
     }
 
     private checkCollisions() {
-        if (!this.isDestroyed) { // flag to avoid check if destroyed actor still in memory
-            if(this.idTeam === 'player') {
+        if (!this.wasDestroyed) { // flag to avoid check if destroyed actor still in memory
+            if (this.idTeam === 'player') {
                 for (const containers of this.enemyContainer.children) {
-                    // Iterate through both enemy containers: enemyProjCont AND enemyShipCont
-                    for (const enemy of containers.children) {
-                        if (!enemy.isDestroyed && this.isAnActorColliding(enemy as Actor)) {
-                            // if this actor is Player Projectile
-                            if(this.idClass === 'projectile') {
-                                // if enemy is Projectile:
-                                if(enemy.idClass === 'projectile') {
-                                    // Hit Enemy
-                                    enemy.hitted(this.damage);
-                                    // Destroy this Player Projectile
-                                    this.destroyActor();
-                                    return;
-                                // if enemy is Ship:
-                                } else if(enemy.idClass === 'ship' && !enemy.isInmune) {
-                                    // Hit Enemy
-                                    enemy.hitted(this.damage);
-                                    // Destroy this Player Projectile
-                                    this.destroyActor();
-                                    return;
-                                }
-                            // if this actor is Player Ship
-                            } else if(this.idClass === 'ship') {
-                                // if enemy is Projectile:
-                                if(enemy.idClass === 'projectile') {
-                                    // Destroy Enemy Projectile
-                                    enemy.animDestroyed();
-                                    // Hit Player Ship
-                                    this.hitted(enemy.damage);
-                                    return;
-                                // if enemy is Ship:
-                                } else if(enemy.idClass === 'ship' && !enemy.isInmune) {
-                                    // Hit Enemy
-                                    enemy.hitted(this.damage);
-                                    // Hit Player Ship
-                                    this.hitted(enemy.damage);
-                                    return;
+                    // Check if containers has children
+                    if (containers.children) {
+                        // Iterate through both enemy containers: enemyProjCont AND enemyShipCont
+                        for (const enemy of containers.children) {
+                            const enemyActor = enemy as Actor; // Type assertion
+                            if (!enemyActor.wasDestroyed && this.isAnActorColliding(enemyActor)) {
+                                // if this actor is Player Projectile
+                                if (this.idClass === 'projectile') {
+                                    // if enemy is Projectile:
+                                    if (enemyActor.idClass === 'projectile') {
+                                        // Hit Enemy
+                                        enemyActor.hitted(this.damage);
+                                        // Destroy this Player Projectile
+                                        this.destroyActor();
+                                        return;
+                                    // if enemy is Ship:
+                                    } else if (enemyActor.idClass === 'ship' && !enemyActor.isInmune) {
+                                        // Hit Enemy
+                                        enemyActor.hitted(this.damage);
+                                        // Destroy this Player Projectile
+                                        this.destroyActor();
+                                        return;
+                                    }
+                                // if this actor is Player Ship
+                                } else if (this.idClass === 'ship') {
+                                    // if enemy is Projectile:
+                                    if (enemyActor.idClass === 'projectile') {
+                                        // Destroy Enemy Projectile
+                                        enemyActor.animDestroyed();
+                                        // Hit Player Ship
+                                        this.hitted(enemyActor.damage);
+                                        return;
+                                    // if enemy is Ship:
+                                    } else if (enemyActor.idClass === 'ship' && !enemyActor.isInmune) {
+                                        // Hit Enemy
+                                        enemyActor.hitted(this.damage);
+                                        // Hit Player Ship
+                                        this.hitted(enemyActor.damage);
+                                        return;
+                                    }
                                 }
                             }
                         }
@@ -138,7 +191,6 @@ export class Actor extends Container {
             }
         }
     }
-
     public toggleInmunity(byDamage: boolean = true) {
         this.isInmune = !this.isInmune;
         if(!byDamage) {
@@ -160,8 +212,9 @@ export class Actor extends Container {
 
     private animHurt() {
         if (this.sprite) {
+            const tintColor = this.idTeam === 'enemy' ? 0x00ff00 : 0xff0000;
             gsap.to(this.sprite, {
-                tint: 0xff0000, // Red tint
+                tint: tintColor, // Red tint
                 duration: 0.1,
                 repeat: 3,
                 yoyo: true,
@@ -188,7 +241,7 @@ export class Actor extends Container {
         this.destroy({ children: true, texture: false, baseTexture: false });
     }
 
-    private flipSprite(dirY: number, offsetDir: number = 1) {
+    public flipSprite(dirY: number, offsetDir: number = 1) {
         dirY === 1 ? this.sprite.anchor.set(0, dirY) : this.sprite.anchor.set(0, 0);
         this.sprite.scale.y *= (-dirY * offsetDir);
     }
@@ -221,20 +274,22 @@ export class Actor extends Container {
                 this.removeChild(this.sprite); // Remove existing sprite
             }
             this.sprite = new AnimatedSprite(textures);
-            this.sprite.animationSpeed = 0.1;
-            if (animLabel === 'destroyed') {
-                this.isDestroyed = true;
-                this.sprite.loop = false;
-                // if(this.idClass === 'projectile') this.sprite.x = -this.sprite.width;
-                if(this.idClass === 'ship') {
-                    this.sprite.x = -this.sprite.width;
-                    this.sprite.scale.set(this.scaleRatio);
-                }
+            if (this.sprite instanceof AnimatedSprite) {
                 this.sprite.animationSpeed = 0.1;
-                this.sprite.onComplete = () => this.destroyActor();
+                if (animLabel === 'destroyed') {
+                    this.wasDestroyed = true;
+                    this.sprite.loop = false;
+                    // if(this.idClass === 'projectile') this.sprite.x = -this.sprite.width;
+                    if(this.idClass === 'ship') {
+                        this.sprite.x = -this.sprite.width;
+                        this.sprite.scale.set(this.scaleRatio);
+                    }
+                    this.sprite.animationSpeed = 0.1;
+                    this.sprite.onComplete = () => this.destroyActor();
+                }
+                this.sprite.play();
+                this.addChild(this.sprite);
             }
-            this.sprite.play();
-            this.addChild(this.sprite);
         } else {
             console.error(`Animation ${animationName} not found`);
         }
@@ -323,7 +378,7 @@ export class Actor extends Container {
         // Adjusted scale per axis, normalized by the effective screen size
         const speedRatioX = 0.007;
         // Projectiles different speed by screen vertical direction
-        let speedRatioY;
+        let speedRatioY = 0;
         if(this.idClass === 'projectile') {
             if(axis === 'y' && input > 0) { // Going to the bottom of the screen
                 speedRatioY = 0.0055;
@@ -346,10 +401,11 @@ export class Actor extends Container {
         if (resultingPosition >= limitL && resultingPosition <= limitR) {
             return newPosAcc; // Return the new position accumulator if within limits
         }
-        return this.onLimit();
-    }
 
-    private onLimit() {
+        if(this.idClass !== 'projectile') {
+            return null
+        }
+        this.destroyActor();
         return null;
     }
 

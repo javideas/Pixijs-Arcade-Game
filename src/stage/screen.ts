@@ -28,8 +28,6 @@ export class Screen extends Tab {
             this.addChild(this.spriteA);
             this.spriteB = new Sprite(texture);
             this.addChild(this.spriteB);
-        } else {
-            console.error(`Texture ${texture} not found`);
         }
         this.speedRatio = 2;
         this.loadSprite();

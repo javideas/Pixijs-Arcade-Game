@@ -1,4 +1,3 @@
-import { Container } from 'pixi.js';
 import { Actor } from './actor.ts';
 import { Projectile } from './projectile.ts';
 
@@ -6,6 +5,8 @@ export class Shooter extends Actor {
     private fireRate: number;
     private cooldown: number;
     private hasShot: boolean;
+    protected shotDirY: number;
+    public weaponType: string;
 
     constructor(
         idTeam: string,
@@ -16,7 +17,7 @@ export class Shooter extends Actor {
         initPosAccY?: number,
         fireRate: number = 15,
         spriteName: string = 'ShipPlayer-FullHealth.png',
-        shieldSpriteName: string,
+        shieldSpriteName?: string,
         debugBgColor: string = 'red'
     ) {
         super(
@@ -32,26 +33,30 @@ export class Shooter extends Actor {
             shieldSpriteName,
             debugBgColor
         );
+        this.weaponType = 'none';
+        this.idTeam = idTeam;
         this.fireRate = fireRate;
         this.cooldown = 0;
         this.hasShot = false;
         this.shotDirY = -1;
     }
 
-    public update(delta: number) {
-        super.update(delta);
-        // Increment cooldown by the time since the last frame
-        this.cooldown += delta;
-
-        // Check if the cooldown has elapsed and reset the shot flag
-        if (this.cooldown >= this.fireRate) {
-            this.hasShot = false; // Allow shooting again after cooldown
+    public update(delta?: number) {
+        super.update();
+        if(delta) {
+            // Increment cooldown by the time since the last frame
+            this.cooldown += delta;
+    
+            // Check if the cooldown has elapsed and reset the shot flag
+            if (this.cooldown >= this.fireRate) {
+                this.hasShot = false; // Allow shooting again after cooldown
+            }
         }
     }
 
     public shoot(weaponType: string = 'trinormal') {
         // Check if the player is trying to shoot and hasn't shot yet
-        if (!this.hasShot && !this.isDestroyed) {
+        if (!this.hasShot && !this.wasDestroyed) {
             switch(weaponType) {
                 case 'trinormal':
                     this.spawnProjectile(false, 1, 0.5, this.shotDirY);
@@ -69,7 +74,7 @@ export class Shooter extends Actor {
         }
     }
 
-    private spawnProjectile(trackOpponent: boolean, damage: number, dirX: number, dirY: number, offsetX: number, offsetY: number) {
+    private spawnProjectile(trackOpponent: boolean, damage: number, dirX: number, dirY: number, offsetX?: number, offsetY?: number) {
         const projectile = new Projectile(this, trackOpponent, damage, dirX, dirY, offsetX, offsetY);
         this.idTeam == 'player' ? this.playerProjCont.addChild(projectile) : this.enemyProjCont.addChild(projectile);
     }

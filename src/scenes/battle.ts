@@ -5,8 +5,8 @@ import { Enemy } from '../actors/enemy.ts';
 
 export default class Battle {
     public gameMode: GameMode;
-    private playerContainer: Container;
-    private enemyContainer: Container;
+    public playerContainer: Container;
+    public enemyContainer: Container;
     public player: Player | null = null;
     public enemyProjCont: Container;
     public enemyShipCont: Container;

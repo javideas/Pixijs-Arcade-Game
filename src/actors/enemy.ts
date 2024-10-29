@@ -1,5 +1,4 @@
 import { gsap } from 'gsap';
-import { Container } from 'pixi.js';
 import { Shooter } from "./shooter.ts";
 
 function getEnemyProps(enemyType: string = 'malko') {
@@ -36,10 +35,26 @@ function getEnemyProps(enemyType: string = 'malko') {
             colHeightRatio: 0.2,
             weaponType: 'none'
         };
+    } else {
+        // Default properties for unknown enemy types
+        return {
+            spriteName: 'Asteroid 01 - Base.png',
+            scaleRatio: 1,
+            health: 1,
+            damage: 1,
+            fireRate: 0,
+            colWidthRatio: 0.5,
+            colHeightRatio: 0.5,
+            weaponType: 'none'
+        };
     }
 }
 
 export class Enemy extends Shooter {
+    public tl: gsap.core.Timeline;
+    private autoShoot: boolean;
+    public enemyType: string;
+
     constructor(
         enemyType: string = 'malko',
         initPosAccX?: number,
@@ -59,6 +74,7 @@ export class Enemy extends Shooter {
             'none', // TODO: each enemy with a custom Shield
             debugBgColor
         );
+        this.tl = gsap.timeline({});
         this.enemyType = enemyType;
         this.weaponType = enemyProps.weaponType;
         this.colWidthRatio = enemyProps.colWidthRatio;
@@ -70,9 +86,9 @@ export class Enemy extends Shooter {
         this.aibehaviour();
     }
 
-    public update(delta: number) {
+    public update(delta?: number) {
         super.update(delta);
-        if(!this.isDestroyed){
+        if(!this.wasDestroyed){
             // Trigger the autoshoot by a flag in aiBehaviour
             if(this.autoShoot) this.shoot(this.weaponType);
         } else {
@@ -81,15 +97,15 @@ export class Enemy extends Shooter {
         }
     }
 
-    public shoot(weaponType: string = 'trinormal', dirY: number = 1, dirX: number = 0) {
-        super.shoot(weaponType, dirY, dirX);
+    public shoot(weaponType: string = 'trinormal') {
+        super.shoot(weaponType);
     }
 
     private aibehaviour() {
         this.tl = gsap.timeline({
             onUpdate: () => {
                 this.setResponsive();
-                if (this.isDestroyed) {
+                if (this.wasDestroyed) {
                     this.tl.kill();
                 }  
             }
@@ -103,7 +119,7 @@ export class Enemy extends Shooter {
         }
     }
 
-    private aiMoveEightShape(tl: gsap.timeline) {
+    private aiMoveEightShape(tl: gsap.core.Timeline) {
         // Simultaneous initial animations for posAccX and posAccY
         tl.to(this, {
             posAccX: 0,
@@ -172,7 +188,7 @@ export class Enemy extends Shooter {
         }, '-=1.5');
     }
 
-    private aiMoveTopDown(tl: gsap.timeline) {
+    private aiMoveTopDown(tl: gsap.core.Timeline) {
         // Simultaneous initial animations for posAccX and posAccY
         tl.to(this, {
             posAccY: -0.5,
@@ -190,7 +206,7 @@ export class Enemy extends Shooter {
         }, '+=0');
     }
 
-    private aiMoveDownRotating(tl: gsap.timeline) {
+    private aiMoveDownRotating(tl: gsap.core.Timeline) {
         // Simultaneous initial animations for posAccX and posAccY
         tl.to(this, {
             posAccY: 2,

@@ -1,14 +1,13 @@
 import { gsap } from 'gsap';
 import Ui from '../stage/ui.ts';
 import Battle from '../scenes/battle.ts'
-import { Application, Assets, Container, Sprite } from 'pixi.js';
+import { Application, Assets, Container, Texture } from 'pixi.js';
 import TextureManager from './textureManager.ts';
 
 export default class GameMode {
     private app: Application;
-    public ui: UI;
+    public ui: Ui;
     public stageContainer: Container;
-    private ticker: Ticker;
     public battle: Battle;
     public static instance: GameMode;
     public crtFilterContainer: Container;
@@ -18,17 +17,19 @@ export default class GameMode {
     private randomInterval: number = 0;
     private lastInmuneKeyPressed: number = -600;
     private lastShowColKeyPressed: number = -600;
+    private lightYears: number;
     
     constructor(app: Application, stageContainer: Container){
         this.app = app;
         this.stageContainer = stageContainer;
         this.crtFilterContainer = app.stage.getChildByName('crtFilterContainer') as Container;
         this.randomInterval = 2000;
-        
+        this.battle = new Battle();
         this.currentMode = 'none';
         this.lightYears = 0;
         this.currentTime = 0;
         GameMode.instance = this;
+        this.ui = new Ui(this.app);
     }
 
     private async loadScene(scene: string = 'battle') {
@@ -58,7 +59,7 @@ export default class GameMode {
         window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
     }
 
-    private async init() {
+    public async init() {
         await this.loadAssets();
         await this.loadUi();
         await this.loadScene();
@@ -86,31 +87,48 @@ export default class GameMode {
         }
     }
  
-    private update(time: number, deltaTime: number) {
+    private update() {
         const delta = gsap.ticker.deltaRatio(60); // Normalize to 60 FPS
         this.elapsedDelta += delta; // Accumulate delta time
-        this.crtFilterContainer.filters[ 0 ].time -= delta / 5;
-        this.crtFilterContainer.filters[2].brightness = Math.sin(delta * 3) * -2 + 6;
+
+        if (this.crtFilterContainer && this.crtFilterContainer.filters) {
+            const filters = this.crtFilterContainer.filters;
+    
+            // Check if the filter at index 0 has a 'time' property
+            if (filters[0] && 'time' in filters[0]) {
+                (filters[0] as any).time -= delta / 5; // Use 'any' or a specific type if known
+            }
+    
+            // Check if the filter at index 2 has a 'brightness' property
+            if (filters[2] && 'brightness' in filters[2]) {
+                (filters[2] as any).brightness = Math.sin(delta * 3) * -2 + 6; // Use 'any' or a specific type if known
+            }
+        }
+
         this.logElapsedTime();
-        
         this.gameProgress();
         this.ui.screen.moveSpaceBackground();
-
-
+    
         this.battle.enemyContainer.children.forEach((containers) => {
-            containers.children.forEach((child) => {
-                if (typeof child.draw == 'function') {
-                    child.update(delta);
-                }
-            })
-        })
-
+            if (containers.children) { // Check if children is defined
+                containers.children.forEach((child) => {
+                    const actor = child as unknown as { update: (delta?: number) => void; draw: () => void };
+                    if (typeof actor.draw === 'function') {
+                        actor.update(delta);
+                    }
+                });
+            }
+        });
+    
         this.battle.playerContainer.children.forEach((containers) => {
-            containers.children.forEach((child) => {
-                if (typeof child.draw == 'function') {
-                    child.update(delta);
-                }
-            });
+            if (containers.children) { // Check if children is defined
+                containers.children.forEach((child) => {
+                    const actor = child as unknown as { update: (delta?: number) => void; draw: () => void };
+                    if (typeof actor.draw === 'function') {
+                        actor.update(delta);
+                    }
+                });
+            }
         });
     }
 
@@ -131,7 +149,7 @@ export default class GameMode {
             const animations = Object.fromEntries(
                 Object.entries(spritesheet.animations).map(([key, frames]) => [
                     key,
-                    frames.map(frame => frame.textureCacheIds[0]) // As textureCacheIds contains the frame names
+                    (frames as { textureCacheIds: string[] }[]).map(frame => frame.textureCacheIds[0]) // Explicitly type frames
                 ])
             );
     
