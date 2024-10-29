@@ -1,6 +1,6 @@
 import { gsap } from 'gsap';
 import { Container } from 'pixi.js';
-import { Shooter } from "./shooter";
+import { Shooter } from "./shooter.ts";
 
 function getEnemyProps(enemyType: string = 'malko') {
     if (enemyType === 'malko') {

@@ -1,21 +1,17 @@
-import { Tab } from "./tab";
+import { Tab } from "./tab.ts";
 
 export class Deck extends Tab {
     constructor(
         bgShapeColor: string,
-        pivotMode: number,
-        width: number,
-        length: number,
-        posX: number,
-        posY: number
+        pivotMode?: number,
+        width?: number,
+        length?: number
     ) {
         super(
             bgShapeColor,
             pivotMode,
             width,
-            length,
-            posX,
-            posY
+            length
         );
     }
 }

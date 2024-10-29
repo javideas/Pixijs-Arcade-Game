@@ -1,5 +1,5 @@
 import { Container } from 'pixi.js';
-import { Actor } from "./actor";
+import { Actor } from "./actor.ts";
 
 export class Projectile extends Actor {
     constructor(

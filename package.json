@@ -16,6 +16,7 @@
     "transpile:electron": "tsc --project src/electron/tsconfig.json",
     "restart": "npm run transpile:electron && npm run build && electron .",
     "start": "electron .",
+    "deploy": "gh-pages -d dist",
     "dist:mac": "npm run transpile:electron && npm run build && electron-builder --mac --arm64",
     "dist:win": "npm run transpile:electron && npm run build && electron-builder --win --x64",
     "dist:linux": "npm run transpile:electron && npm run build && electron-builder --linux --x64"
@@ -23,6 +24,7 @@
   "devDependencies": {
     "electron": "^33.0.1",
     "electron-builder": "^24.13.3",
+    "gh-pages": "^6.2.0",
     "rollup-plugin-copy": "^3.5.0",
     "typescript": "^5.5.3",
     "vite": "^5.4.8"
@@ -44,9 +46,9 @@
     "pixi.js": "^7.4.2"
   },
   "build": {
-    "appId": "com.javideas.easy-pixi-engine",
-    "productName": "EasyPixiEngine",
-    "icon": "./Arcade_Logo.png",
+    "appId": "com.javideas.arcade-pixijs",
+    "productName": "ArcadePixiJS",
+    "icon": "./Arcade_Logo.ico",
     "files": [
       "dist",
       "dist-js"

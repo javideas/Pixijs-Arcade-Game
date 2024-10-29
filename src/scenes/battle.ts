@@ -1,23 +1,25 @@
-import { Application, Container } from 'pixi.js';
-import GameMode from '../managers/gameMode';
-import { Screen } from '../stage/screen';
-import { Deck } from '../stage/deck';
-import { Player } from '../actors/player';
-import { Enemy } from '../actors/enemy';
-import { Projectile } from '../actors/projectile';
-import { Obstacle } from '../actors/obstacle';
-export default class Battle {
-    private app: Application;
+import { Container } from 'pixi.js';
+import GameMode from '../managers/gameMode.ts';
+import { Player } from '../actors/player.ts';
+import { Enemy } from '../actors/enemy.ts';
 
-    private screen: Screen;
-    private deckR: Deck;
-    private deckL: Deck;
+export default class Battle {
+    public gameMode: GameMode;
     private playerContainer: Container;
     private enemyContainer: Container;
-    private player: Player;
+    public player: Player | null = null;
+    public enemyProjCont: Container;
+    public enemyShipCont: Container;
+    public playerProjCont: Container;
+    public playerShipCont: Container;
 
-    constructor(app: Application) {
-        this.app = app;
+    constructor() {
+        this.playerContainer = new Container();
+        this.enemyContainer = new Container();
+        this.enemyProjCont = new Container();
+        this.enemyShipCont = new Container();
+        this.playerProjCont = new Container();
+        this.playerShipCont = new Container();
         this.gameMode = GameMode.instance;
     }
 
@@ -75,21 +77,27 @@ export default class Battle {
     /** Drawing actors on resize */
     public responsive() {
         this.enemyContainer.children.forEach((containers) => {
-            containers.children.forEach((child) => {
-                if(typeof child.setResponsive === 'function' && typeof child.draw === 'function') {
-                    child.setResponsive();
-                    child.draw();
-                }
-            })
-        })
-
+            if (containers.children) { // Check if children is defined
+                containers.children.forEach((child) => {
+                    const actor = child as unknown as { setResponsive: () => void; draw: () => void };
+                    if (typeof actor.setResponsive === 'function' && typeof actor.draw === 'function') {
+                        actor.setResponsive();
+                        actor.draw();
+                    }
+                });
+            }
+        });
+    
         this.playerContainer.children.forEach((containers) => {
-            containers.children.forEach((child) => {
-                if(typeof child.setResponsive === 'function' && typeof child.draw === 'function') {
-                    child.setResponsive();
-                    child.draw();
-                }
-            });
+            if (containers.children) { // Check if children is defined
+                containers.children.forEach((child) => {
+                    const actor = child as unknown as { setResponsive: () => void; draw: () => void };
+                    if (typeof actor.setResponsive === 'function' && typeof actor.draw === 'function') {
+                        actor.setResponsive();
+                        actor.draw();
+                    }
+                });
+            }
         });
     }
 
@@ -101,9 +109,9 @@ export default class Battle {
         this.playerProjCont.removeChildren();
         this.playerShipCont.removeChildren();
         this.playerContainer.removeChildren();
-        // Nullify references to help with garbage collection
-        this.player = null;
-        this.enemyContainer = null;
-        this.playerContainer = null;
+        // Reset references to help with garbage collection
+        this.player = new Player();
+        this.enemyContainer = new Container();
+        this.playerContainer = new Container();
     }
 }

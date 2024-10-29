@@ -1,26 +1,26 @@
 import { Tab } from "./tab";
-import { Application, Sprite, Texture } from 'pixi.js';
-import GameMode from '../managers/gameMode';
+import { Sprite } from 'pixi.js';
+import GameMode from '../managers/gameMode.ts';
 
 export class Screen extends Tab {
-    private sprite: Sprite;
+    public spriteA: Sprite;
+    public spriteB: Sprite;
+    public speedRatio: number;
 
     constructor(
         bgShapeColor: string,
-        pivotMode: number,
-        width: number,
-        length: number,
-        posX: number,
-        posY: number
+        pivotMode?: number,
+        width?: number,
+        length?: number
     ) {
         super(
             bgShapeColor,
             pivotMode,
             width,
-            length,
-            posX,
-            posY
+            length
         );
+        this.spriteA = new Sprite();
+        this.spriteB = new Sprite();
         const gameMode = GameMode.instance;
         const texture = gameMode.getTexture('Blue_Nebula_02-512x512.png');
         if (texture) {
@@ -29,7 +29,7 @@ export class Screen extends Tab {
             this.spriteB = new Sprite(texture);
             this.addChild(this.spriteB);
         } else {
-            console.error(`Texture ${spriteName} not found`);
+            console.error(`Texture ${texture} not found`);
         }
         this.speedRatio = 2;
         this.loadSprite();
@@ -43,12 +43,12 @@ export class Screen extends Tab {
         this.spriteA.x = -this.spriteA.width/2;
         this.spriteA.y = -this.spriteA.height/2;
 
-            // Set the size of the sprite
-            this.spriteB.width = this.spriteA.width;
-            this.spriteB.height = this.spriteA.height;
-            // Set the position of the sprite
-            this.spriteB.x = -this.spriteB.width/2;
-            this.spriteB.y = -this.spriteB.height * 1.5;
+        // Set the size of the sprite
+        this.spriteB.width = this.spriteA.width;
+        this.spriteB.height = this.spriteA.height;
+        // Set the position of the sprite
+        this.spriteB.x = -this.spriteB.width/2;
+        this.spriteB.y = -this.spriteB.height * 1.5;
     }
 
     public moveSpaceBackground() {

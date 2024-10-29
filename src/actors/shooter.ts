@@ -1,6 +1,6 @@
 import { Container } from 'pixi.js';
-import { Actor } from './actor';
-import { Projectile } from './projectile';
+import { Actor } from './actor.ts';
+import { Projectile } from './projectile.ts';
 
 export class Shooter extends Actor {
     private fireRate: number;

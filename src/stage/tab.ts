@@ -4,9 +4,16 @@ export class Tab extends Container {
     private bgShape: Graphics;
     public ratioX: number = 0;
     public ratioWidth: number = 0;
+    public frameL: number;
+    public frameT: number;
+    public frameR: number;
+    public frameB: number;
+    public posX: number;
+    public posY: number;
+    private bgShapeColor: string;
 
     constructor(
-        bgShapeColor: string= 'none',
+        bgShapeColor: string = 'none',
         pivotMode: number = 0,
         trackRefPosX: number = 0,
         trackRefWidth: number = 0
@@ -14,6 +21,12 @@ export class Tab extends Container {
         super();
         this.bgShapeColor = bgShapeColor;
         this.bgShape = new Graphics();
+        this.posX = 0;
+        this.posY = 0;
+        this.frameL = 0;
+        this.frameT = 0;
+        this.frameR = 0;
+        this.frameB = 0;
         this.addChild(this.bgShape);
         
         this.respRelative(pivotMode, trackRefPosX, trackRefWidth);
@@ -34,8 +47,7 @@ export class Tab extends Container {
         heightValue: number,
         offsetPosY: number = 0,
         pivotX: number = 0.5,
-        customWidth: number = (heightValue * 9) / 16,
-        bgShapeColor: string
+        customWidth: number = (heightValue * 9) / 16
     ) {
         this.x = window.innerWidth / 2;
         this.y = window.innerHeight / 2;
@@ -68,8 +80,7 @@ export class Tab extends Container {
         trackRefPosX: number = 0,
         trackRefWidth: number = 0,
         frameT: number = -window.innerHeight / 2,
-        frameB: number = window.innerHeight,
-        bgShapeColor: string
+        frameB: number = window.innerHeight
     ) {
         this.x = window.innerWidth / 2;
         this.y = window.innerHeight / 2;

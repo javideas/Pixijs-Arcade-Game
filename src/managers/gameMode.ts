@@ -1,18 +1,20 @@
 import { gsap } from 'gsap';
-import Ui from '../stage/ui';
-import Battle from '../scenes/battle'
-import { ContainerBounded } from '../stage/containerBounded'
+import Ui from '../stage/ui.ts';
+import Battle from '../scenes/battle.ts'
 import { Application, Assets, Container, Sprite } from 'pixi.js';
-import TextureManager from './textureManager';
+import TextureManager from './textureManager.ts';
 
 export default class GameMode {
     private app: Application;
-    private stageContainer: Container;
+    public ui: UI;
+    public stageContainer: Container;
     private ticker: Ticker;
-    private battle: Battle;
+    public battle: Battle;
     public static instance: GameMode;
+    public crtFilterContainer: Container;
     private elapsedDelta: number = 0;
-    private currentTime: number = 0;
+    private currentTime: number;
+    private currentMode: string;
     private randomInterval: number = 0;
     private lastInmuneKeyPressed: number = -600;
     private lastShowColKeyPressed: number = -600;
@@ -25,13 +27,26 @@ export default class GameMode {
         
         this.currentMode = 'none';
         this.lightYears = 0;
+        this.currentTime = 0;
         GameMode.instance = this;
+    }
+
+    private async loadScene(scene: string = 'battle') {
+        this.currentMode = scene;
+        // TODO: adding a Main Menu
+        switch(scene){
+            case 'battle':
+                this.battle = new Battle();
+                await this.battle.init();
+                return;
+        }
     }
 
     public async gameOver() {
         console.log('---Game Over---');
         await this.cleanupBattle();
-
+        this.lastInmuneKeyPressed = -600;
+        this.lastShowColKeyPressed = -600;
         // Reset lightYears and time-related variables
         this.lightYears = 0;
         this.elapsedDelta = 0; // Reset elapsedDelta
@@ -130,17 +145,6 @@ export default class GameMode {
         }
     }
 
-    private async loadScene(scene: string = 'battle') {
-        this.currentMode = scene;
-        // TODO: adding a Main Menu
-        switch(scene){
-            case 'battle':
-                this.battle = new Battle(this.app);
-                await this.battle.init();
-                return;
-        }
-    }
-
     public getTexture(spriteName: string): Texture | undefined {
         const textureManager = TextureManager.getInstance();
         return textureManager.getTexture(spriteName);
@@ -193,59 +197,61 @@ export default class GameMode {
     }
 
     private inputSystBattle(action: string = 'none') {
-        switch(action) {
-            case 'left':
-                this.battle.player.moveX(-1); // Move player left
-                break;
-            case 'right':
-                this.battle.player.moveX(1); // Move player right
-                break;
-            case 'up':
-                this.battle.player.moveY(-1); // Move player up
-                break;
-            case 'down':
-                this.battle.player.moveY(1); // Move player down
-                break;
-            case 'up-left':
-                this.battle.player.moveX(-1); // Move player left
-                this.battle.player.moveY(-1); // Move player up
-                break;
-            case 'up-right':
-                this.battle.player.moveX(1); // Move player right
-                this.battle.player.moveY(-1); // Move player up
-                break;
-            case 'down-left':
-                this.battle.player.moveX(-1); // Move player left
-                this.battle.player.moveY(1); // Move player down
-                break;
-            case 'down-right':
-                this.battle.player.moveX(1); // Move player right
-                this.battle.player.moveY(1); // Move player down
-                break;
-            case 'shoot':
-                this.battle.player.shoot(); // Shoot
-                break;
-            case 'inmunity': // lastInmuneKeyPressed
-                // Allow the action if more than 500ms have passed since the last execution
-                if (this.currentTime - this.lastInmuneKeyPressed > 500 ) {
-                    this.battle.player.toggleInmunity(false); // Inmunity: here not triggered by Damage, but by input
-                    // if showCollisions was true, reactivate it (as actors were redraw)
-                    if(this.isColVisible) this.battle.player.showCollisions();
-                    this.lastInmuneKeyPressed = this.currentTime;
-                }
-                break;
-            case 'pause':
-                this.battle.pause(); // Cancel/pause
-                break;
-            case 'showCollisions':
-                // Allow the action if more than 500ms have passed since the last execution
-                if (this.currentTime - this.lastShowColKeyPressed > 500 ) {
-                    this.battle.player.showCollisions();
-                    this.lastShowColKeyPressed = this.currentTime;
-                }
-                break;
-            default:
-                break;
+        if(this.battle.player) {
+            switch(action) {
+                case 'left':
+                    this.battle.player.moveX(-1); // Move player left
+                    break;
+                case 'right':
+                    this.battle.player.moveX(1); // Move player right
+                    break;
+                case 'up':
+                    this.battle.player.moveY(-1); // Move player up
+                    break;
+                case 'down':
+                    this.battle.player.moveY(1); // Move player down
+                    break;
+                case 'up-left':
+                    this.battle.player.moveX(-1); // Move player left
+                    this.battle.player.moveY(-1); // Move player up
+                    break;
+                case 'up-right':
+                    this.battle.player.moveX(1); // Move player right
+                    this.battle.player.moveY(-1); // Move player up
+                    break;
+                case 'down-left':
+                    this.battle.player.moveX(-1); // Move player left
+                    this.battle.player.moveY(1); // Move player down
+                    break;
+                case 'down-right':
+                    this.battle.player.moveX(1); // Move player right
+                    this.battle.player.moveY(1); // Move player down
+                    break;
+                case 'shoot':
+                    this.battle.player.shoot(); // Shoot
+                    break;
+                case 'inmunity': // lastInmuneKeyPressed
+                    // Allow the action if more than 500ms have passed since the last execution
+                    if (this.currentTime - this.lastInmuneKeyPressed > 500 ) {
+                        this.battle.player.toggleInmunity(false); // Inmunity: here not triggered by Damage, but by input
+                        // if showCollisions was true, reactivate it (as actors were redraw)
+                        if(this.battle.player.isColVisible) this.battle.player.showCollisions();
+                        this.lastInmuneKeyPressed = this.currentTime;
+                    }
+                    break;
+                // case 'pause': // TODO
+                //     this.battle.pause(); // Cancel/pause
+                //     break;
+                case 'showCollisions':
+                    // Allow the action if more than 500ms have passed since the last execution
+                    if (this.currentTime - this.lastShowColKeyPressed > 500 ) {
+                        this.battle.player.showCollisions();
+                        this.lastShowColKeyPressed = this.currentTime;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -256,7 +262,6 @@ export default class GameMode {
     private async cleanupBattle() {
         if (this.battle) {
             this.battle.destroy();
-            this.battle = null;
         }
     }
 }

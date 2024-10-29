@@ -11,7 +11,7 @@ app.on('ready', () => {
   const mainWindow = new BrowserWindow({
     fullscreen: false,  // Start in normal mode
     show: false,
-    icon: path.join(app.getAppPath() + '/Arcade_Logo.png'),
+    icon: path.join(app.getAppPath() + '/Arcade_Logo.ico'),
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,

@@ -1,20 +1,35 @@
-import { Application, BLEND_MODES, Container, Filter, Graphics, RenderTexture, Sprite, SpriteMaskFilter, Text, TextStyle } from 'pixi.js';
-import { CRTFilter, AdjustmentFilter, AdvancedBloomFilter, RGBSplitFilter, ShockwaveFilter, TwistFilter } from 'pixi-filters';
+import { Application, BLEND_MODES, Graphics, RenderTexture, Sprite, SpriteMaskFilter, Text, TextStyle } from 'pixi.js';
+import { CRTFilter, AdjustmentFilter, AdvancedBloomFilter, RGBSplitFilter } from 'pixi-filters';
 import { AlphaFilter } from '@pixi/filter-alpha';
-import GameMode from '../managers/gameMode';
-import { Screen } from '../stage/screen';
-import { Deck } from '../stage/deck';
+import GameMode from '../managers/gameMode.ts';
+import { Screen } from '../stage/screen.ts';
+import { Deck } from '../stage/deck.ts';
 
 export default class Ui {
     private app: Application;
-
+    private gameMode: GameMode;
     private screen: Screen;
     private deckR: Deck;
     private deckL: Deck;
+    private maskFilter: SpriteMaskFilter;
+    private stageMaskShape: Graphics;
+    private crtMaskShape: Graphics;
+    private renderTexture: RenderTexture;
+    private maskSprite: Sprite;
+    public pixelatedText: Text;
 
     constructor(app: Application) {
         this.app = app;
         this.gameMode = GameMode.instance;
+        this.screen = new Screen('black');
+        this.deckR = new Deck('black');
+        this.deckL = new Deck('black');
+        this.maskFilter = new SpriteMaskFilter(new Graphics());
+        this.stageMaskShape = new Graphics();
+        this.crtMaskShape = new Graphics();
+        this.renderTexture = RenderTexture.create({ width: 800, height: 600 });
+        this.maskSprite = new Sprite();
+        this.pixelatedText = new Text('Default Text');
     }
 
     /** load the User Interface */
@@ -46,8 +61,7 @@ export default class Ui {
             fontFamily: 'Pixelify Sans', // Use the imported font
             fontSize: 30, // Adjust size as needed
             fill: 'white', // Text color
-            align: 'right',
-            resolution: 1, // Set resolution to 1 for pixelated effect
+            align: 'right'
         });
 
         // Create the text element
@@ -89,10 +103,7 @@ export default class Ui {
             brightness: 0.5,
             blur: 4,
             quality: 4,
-            pixelSize: 0.5,
-            strength: 0.5,
-            strengthX: 2,
-            strengthY: 2  // Vertical strength of the bloom
+            pixelSize: 0.5
         });
 
         const rgbSplitFilter = new RGBSplitFilter(
@@ -149,10 +160,7 @@ export default class Ui {
             brightness: 5,
             blur: 1,
             quality: 4,
-            pixelSize: 0.5,
-            strength: 1,
-            strengthX: 2,
-            strengthY: 2
+            pixelSize: 0.5
         });
         
         this.crtMaskShape = new Graphics();
@@ -231,7 +239,8 @@ export default class Ui {
             0,
             0,
             offsetScreenY,
-            lengthScreenY
+            lengthScreenY,
+            lengthDeskY
         );
 
         this.deckR.respRelative(
@@ -253,21 +262,24 @@ export default class Ui {
 
     /** Responsiveness Absolute to the window */
     uiRespAbsolute() {
-        this.screen.respAbsolute(window.innerHeight * 0.8);
+        this.screen.respAbsolute(
+            window.innerHeight * 0.8,
+            0,
+            0.5,
+            (window.innerHeight * 0.8) * 9 / 16
+        );
 
         this.deckR.respAbsolute(
             window.innerHeight - this.screen.frameB,
             this.screen.frameB,
             0,
-            this.screen.frameR / 2,
-            'blue'
+            this.screen.frameR / 2
         );
         this.deckL.respAbsolute(
             window.innerHeight - this.screen.frameB,
             this.screen.frameB,
             1,
-            this.screen.frameR / 2,
-            'red'
+            this.screen.frameR / 2
         );
     }
 }

@@ -1,7 +1,7 @@
 import { Application, BaseTexture, SCALE_MODES, Container } from 'pixi.js';
 import { CRTFilter } from '@pixi/filter-crt';
 import { DotFilter } from '@pixi/filter-dot';
-import GameMode from './managers/gameMode';
+import GameMode from './managers/gameMode.ts';
 
 const bgColor = "#020305";
 document.body.style.backgroundColor = bgColor;

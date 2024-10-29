@@ -22,15 +22,15 @@ class TextureManager {
         return this.textures[name];
     }
 
-    public setAnimations(animations: { [key: string]: string[] }) {
-        // Ensure animations are stored as arrays of string names
-        this.animations = Object.fromEntries(
-            Object.entries(animations).map(([key, frames]) => [
-                key,
-                frames.map(frame => typeof frame === 'string' ? frame : frame.toString())
-            ])
-        );
-    }
+public setAnimations(animations: { [key: string]: string[] }) {
+    // Ensure animations are stored as arrays of string names
+    this.animations = Object.fromEntries(
+        Object.entries(animations).map(([key, frames]) => [
+            key,
+            frames.map((frame: string) => frame)
+        ])
+    );
+}
 
     public getAnimationFrames(animationName: string): string[] | undefined {
         return this.animations[animationName];

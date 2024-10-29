@@ -1,7 +1,9 @@
 import { Container } from 'pixi.js';
-import { Shooter } from "./shooter";
+import { Shooter } from "./shooter.ts";
 
 export class Player extends Shooter {
+    public isColVisible: boolean;
+    
     constructor(
         initPosAccX?: number,
         initPosAccY?: number,
