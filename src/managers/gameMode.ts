@@ -29,18 +29,27 @@ export default class GameMode {
     public async gameOver() {
         console.log('---Game Over---');
         await this.cleanupBattle();
-        await this.loadScene('battle'); // Reload the battle scene
-        window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
+
+        // Reset lightYears and time-related variables
         this.lightYears = 0;
+        this.elapsedDelta = 0; // Reset elapsedDelta
+        this.currentTime = 0; // Reset currentTime
+
+        await this.loadScene('battle'); // Reload the battle scene
+        this.ui.screen.speedRatio = 2;
+        this.ui.updateLightYears();
+        window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
     }
 
     private async init() {
         await this.loadAssets();
         await this.loadUi();
         await this.loadScene();
+
         this.ui.textLightYears();
         window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
         gsap.ticker.add(this.update.bind(this));
+        // console.log(this.ui.screen.speedRatio)
     }
 
     private async loadUi() {
@@ -226,7 +235,6 @@ export default class GameMode {
     }
 
     private async cleanupBattle() {
-        // Assuming you have a method to destroy or cleanup the battle instance
         if (this.battle) {
             this.battle.destroy();
             this.battle = null;

@@ -62,6 +62,7 @@ export default class Ui {
 
     public updateLightYears(value: number = 0) {
         this.pixelatedText.text = `Light Years: ${value}`;
+
         // Position/Scale the text on the stage
         this.pixelatedText.x = this.screen.x - (this.screen.frameR * 0.4);
         this.pixelatedText.y = this.screen.frameB * 0.03;

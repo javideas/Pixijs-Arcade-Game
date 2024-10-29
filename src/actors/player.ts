@@ -9,7 +9,7 @@ export class Player extends Shooter {
     ) {
         super(
             'player',
-            10, // Health
+            4, // Health
             1, // Damage On Collision
             1, // Scale
             initPosAccX,
@@ -18,8 +18,9 @@ export class Player extends Shooter {
             'ShipPlayer-FullHealth.png',
             debugBgColor
         );
+        this.isInmune = false; // TODO: just Debug now, use SHIELD texture and add Shield()
+        
         this.spriteName = 'ShipPlayer-FullHealth.png';
-        this.isInmune = true; // TODO: just Debug now, use SHIELD texture and add Shield()
         this.speedGlobalRatio = 2;
         this.colWidthRatio = 0.4;
         this.colHeightRatio = 0.6;
@@ -28,5 +29,17 @@ export class Player extends Shooter {
 
     public shoot() {
         super.shoot('doubleFwd');
+    }
+
+    public moveX(value: number) {
+        if(!this.isDestroyed){
+            super.moveX(value);
+        }
+    }
+
+    public moveY(value: number) {
+        if(!this.isDestroyed){
+            super.moveY(value);
+        }
     }
 }
