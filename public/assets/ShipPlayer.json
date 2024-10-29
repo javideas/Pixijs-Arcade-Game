@@ -8,6 +8,70 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":512},
 	"sourceSize": {"w":512,"h":512}
 },
+"Enemy - Battlecruiser - Base.png":
+{
+	"frame": {"x":515,"y":105,"w":74,"h":90},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":12,"w":74,"h":90},
+	"sourceSize": {"w":128,"h":128}
+},
+"Enemy - Bomber - Base.png":
+{
+	"frame": {"x":515,"y":419,"w":32,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":19,"w":32,"h":29},
+	"sourceSize": {"w":64,"h":64}
+},
+"Enemy - Dreadnought - Base.png":
+{
+	"frame": {"x":515,"y":1,"w":74,"h":102},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":12,"w":74,"h":102},
+	"sourceSize": {"w":128,"h":128}
+},
+"Enemy - Fighter - Base.png":
+{
+	"frame": {"x":587,"y":350,"w":26,"h":24},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":19,"y":20,"w":26,"h":24},
+	"sourceSize": {"w":64,"h":64}
+},
+"Enemy - Frigate - Base.png":
+{
+	"frame": {"x":575,"y":217,"w":38,"h":41},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":10,"w":38,"h":41},
+	"sourceSize": {"w":64,"h":64}
+},
+"Enemy - Scout - Base.png":
+{
+	"frame": {"x":591,"y":1,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":22,"w":24,"h":24},
+	"sourceSize": {"w":64,"h":64}
+},
+"Enemy - Support ship - Base.png":
+{
+	"frame": {"x":515,"y":480,"w":30,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":14,"w":30,"h":30},
+	"sourceSize": {"w":64,"h":64}
+},
+"Enemy - Torpedo Ship - Base.png":
+{
+	"frame": {"x":515,"y":197,"w":58,"h":24},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":20,"w":58,"h":24},
+	"sourceSize": {"w":64,"h":64}
+},
 "EngineFire-0.png":
 {
 	"frame": {"x":560,"y":233,"w":7,"h":7},
@@ -264,70 +328,6 @@
 	"spriteSourceSize": {"x":15,"y":17,"w":34,"h":30},
 	"sourceSize": {"w":64,"h":64}
 },
-"Kla'ed - Battlecruiser - Base.png":
-{
-	"frame": {"x":515,"y":105,"w":74,"h":90},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":27,"y":12,"w":74,"h":90},
-	"sourceSize": {"w":128,"h":128}
-},
-"Kla'ed - Bomber - Base.png":
-{
-	"frame": {"x":515,"y":419,"w":32,"h":29},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":16,"y":19,"w":32,"h":29},
-	"sourceSize": {"w":64,"h":64}
-},
-"Kla'ed - Dreadnought - Base.png":
-{
-	"frame": {"x":515,"y":1,"w":74,"h":102},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":27,"y":12,"w":74,"h":102},
-	"sourceSize": {"w":128,"h":128}
-},
-"Kla'ed - Fighter - Base.png":
-{
-	"frame": {"x":587,"y":350,"w":26,"h":24},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":19,"y":20,"w":26,"h":24},
-	"sourceSize": {"w":64,"h":64}
-},
-"Kla'ed - Frigate - Base.png":
-{
-	"frame": {"x":575,"y":217,"w":38,"h":41},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":13,"y":10,"w":38,"h":41},
-	"sourceSize": {"w":64,"h":64}
-},
-"Kla'ed - Scout - Base.png":
-{
-	"frame": {"x":591,"y":1,"w":24,"h":24},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":20,"y":22,"w":24,"h":24},
-	"sourceSize": {"w":64,"h":64}
-},
-"Kla'ed - Support ship - Base.png":
-{
-	"frame": {"x":515,"y":480,"w":30,"h":30},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":17,"y":14,"w":30,"h":30},
-	"sourceSize": {"w":64,"h":64}
-},
-"Kla'ed - Torpedo Ship - Base.png":
-{
-	"frame": {"x":515,"y":197,"w":58,"h":24},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":3,"y":20,"w":58,"h":24},
-	"sourceSize": {"w":64,"h":64}
-},
 "Projectile-0.png":
 {
 	"frame": {"x":600,"y":198,"w":7,"h":17},
@@ -510,6 +510,6 @@
 	"format": "RGBA8888",
 	"size": {"w":616,"h":514},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:69eb4714fe170d2fd8030aa7664154d9:326522f296a26d2358bcda97085f45ea:ec5eb3ea4e0061a9c74ffbf3d4beab7e$"
+	"smartupdate": "$TexturePacker:SmartUpdate:ba83142e32cf941b7b26d7cbce79d190:e4a58751615655fe2b9c2d31ab7d8adc:ec5eb3ea4e0061a9c74ffbf3d4beab7e$"
 }
 }

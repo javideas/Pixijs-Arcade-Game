@@ -25,6 +25,7 @@ export class Projectile extends Actor {
             true, // isAnimated?
             debugBgColor
         );
+        this.spriteName = 'Projectile';
         this.trackOpponent = trackOpponent;
         this.colWidthRatio = 0.15;
         this.colHeightRatio = 0.35;

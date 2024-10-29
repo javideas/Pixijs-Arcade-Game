@@ -2,56 +2,71 @@ import { gsap } from 'gsap';
 import { Container } from 'pixi.js';
 import { Shooter } from "./shooter";
 
+function getEnemyProps(enemyType: string = 'malko') {
+    if (enemyType === 'malko') {
+        return {
+            spriteName: 'Enemy - Battlecruiser - Base.png',
+            scaleRatio: 0.7,
+            health: 5,
+            damage: 1,
+            fireRate: 15,
+            weaponType: 'doubleFwd'
+        };
+    } else if (enemyType === 'guliamo') {
+        return {
+            spriteName: 'Enemy - Dreadnought - Base.png',
+            scaleRatio: 2,
+            health: 10,
+            damage: 1,
+            fireRate: 15,
+            weaponType: 'trinormal'
+        };
+    }
+}
+
 export class Enemy extends Shooter {
     constructor(
-        scaleRatio: number = 1,
-        health: number = 5,
-        damage: number = 1,
+        enemyType: string = 'malko',
         initPosAccX?: number,
         initPosAccY?: number,
-        fireRate: number = 15,
-        spriteName: string = 'ShipPlayer-FullHealth.png',
         debugBgColor: string = 'green'
     ) {
+        const enemyProps = getEnemyProps(enemyType);
         super(
             'enemy',
-            health,
-            damage, // Damage On Collision
-            scaleRatio,
+            enemyProps.health,
+            enemyProps.damage, // Damage On Collision
+            enemyProps.scaleRatio,
             initPosAccX,
             initPosAccY,
-            fireRate,
-            spriteName,
+            enemyProps.fireRate,
+            enemyProps.spriteName,
             debugBgColor
         );
+        this.enemyType = enemyType;
+        this.weaponType = enemyProps.weaponType;
         this.colWidthRatio = 0.4;
         this.colHeightRatio = 0.6;
 
         this.shotDirY = 1;
         this.autoShoot = false;
         this.flipSprite(this.shotDirY);
-    }
-
-    public enemyType() {
-        
+        this.aibehaviour();
     }
 
     public update(delta: number) {
         super.update(delta);
         if(!this.isDestroyed){
-            if(this.autoShoot) this.shoot('trinormal', 1);
+            // Trigger the autoshoot by a flag in aiBehaviour
+            if(this.autoShoot) this.shoot(this.weaponType);
         } else {
-            this.y += this.screenRef.speedRatio;
+            // Destroyed enemy moves with the screen
+            this.y += (this.screenRef.speedRatio / 2);
         }
     }
 
-    public shoot(weaponType: string = 'trinormal', dirY: number = -1, dirX: number = 0) {
+    public shoot(weaponType: string = 'trinormal', dirY: number = 1, dirX: number = 0) {
         super.shoot(weaponType, dirY, dirX);
-    }
-
-    private init() {
-        super.init();
-        this.aibehaviour();
     }
 
     private aibehaviour() {
@@ -64,8 +79,11 @@ export class Enemy extends Shooter {
                 }  
             }
         });
-
-        this.aiMoveEightShape(tl);
+        if(this.enemyType === 'malko') {
+            this.aiMoveEightShape(tl);
+        } else if(this.enemyType === 'guliamo') {
+            this.aiMoveTopDown(tl);
+        }
     }
 
     private aiMoveEightShape(tl: gsap.timeline) {
@@ -135,5 +153,23 @@ export class Enemy extends Shooter {
                 this.destroyActor();
             }
         }, '-=1.5');
+    }
+
+    private aiMoveTopDown(tl: gsap.timeline) {
+        // Simultaneous initial animations for posAccX and posAccY
+        tl.to(this, {
+            posAccY: -0.5,
+            duration: 2,
+            ease: 'power1.out'
+        }, 0)
+
+        .to(this, {
+            posAccY: 2,
+            duration: 10,
+            ease: 'sine.inOut',
+            onStart: () => {
+                this.autoShoot = true;
+            }
+        }, '+=0');
     }
 }

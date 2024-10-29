@@ -18,6 +18,7 @@ export class Player extends Shooter {
             'ShipPlayer-FullHealth.png',
             debugBgColor
         );
+        this.spriteName = 'ShipPlayer-FullHealth.png';
         this.isInmune = true; // TODO: just Debug now, use SHIELD texture and add Shield()
         this.speedGlobalRatio = 2;
         this.colWidthRatio = 0.4;

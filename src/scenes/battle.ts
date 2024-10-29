@@ -27,17 +27,27 @@ export default class Battle {
 
         this.player = new Player();
         this.playerShipCont.addChild(this.player);
-        this.spawnEnemy();
+        this.spawnEnemy('malko', 1.3, -0.8);
     }
 
-    public spawnEnemy() {
+    public spawnRandEnemy() {
+        const enemyNames = ['malko', 'guliamo'];
+        const randomIndex = Math.floor(Math.random() * enemyNames.length);
+    
+        if(enemyNames[randomIndex] === 'malko') {
+            this.spawnEnemy(enemyNames[randomIndex], Math.random() * 2.5 - 1, -0.8);
+        } else {
+            this.spawnEnemy(enemyNames[randomIndex], Math.random() * 1 - 1, -1.6);
+        }
+        console.log(`Random Index: ${randomIndex}, Selected Enemy: ${enemyNames[randomIndex]}`);
+
+    }
+
+    public spawnEnemy(enemyType: string = 'guliamo', posAccX: number = 0, posAccY: number = -1) {
         const enemy = new Enemy(
-            0.7, // ScaleRatio
-            5, // Health
-            1, // Damage
-            2, //initPosAccX
-            -0.8, //initPosAccY
-            15 // fireRate
+            enemyType,
+            posAccX, //initPosAccX
+            posAccY, //initPosAccY
         );
         this.enemyShipCont.addChild(enemy);
         enemy.setResponsive();

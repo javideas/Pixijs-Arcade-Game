@@ -169,7 +169,7 @@ export class Actor extends Container {
 
     private animDestroyed() {
         this.loadAnimation('Explosion', 'destroyed');
-        // TODO: player get points when enemy destroyed
+        // TODO: player get points when enemy destroyed?
         // TODO: more features... other enemies react?
     }
 
@@ -208,7 +208,12 @@ export class Actor extends Container {
             if (animLabel === 'destroyed') {
                 this.isDestroyed = true;
                 this.sprite.loop = false;
-                this.sprite.x = -this.sprite.width;
+                // if(this.idClass === 'projectile') this.sprite.x = -this.sprite.width;
+                if(this.idClass === 'ship') {
+                    this.sprite.x = -this.sprite.width;
+                    this.sprite.scale.set(this.scaleRatio);
+                }
+                this.sprite.animationSpeed = 0.1;
                 this.sprite.onComplete = () => this.destroyActor();
             }
             this.sprite.play();
