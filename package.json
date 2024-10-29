@@ -6,7 +6,7 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "main": "dist/main.js",
+  "main": "src/main.ts",
   "scripts": {
     "clean": "rm -rf dist && rm -rf dist-js",
     "dev": "vite",
