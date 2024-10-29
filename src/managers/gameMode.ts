@@ -51,23 +51,58 @@ export default class GameMode {
         this.ui.textLightYears();
         window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
         gsap.ticker.add(this.update.bind(this));
-        // console.log(this.ui.screen.speedRatio)
+    }
+
+    /** Tracking Light Years passed and Random spawning of Enemies by time */
+    private gameProgress(){
+        // if check every 5 seconds, checking this.currentTime
+        if(this.currentTime !== 0) {
+            if (this.currentTime > this.randomInterval) {
+                // Spawn every random seconds
+                this.battle.spawnRandEnemy();
+                this.randomInterval = this.randomInterval + this.getRandomNumber(3000, 5000);
+            } else if (this.currentTime > 1000 * this.lightYears) {
+                const speedUp = 1;
+                if(this.lightYears < 7) this.ui.screen.speedRatio += (speedUp * 0.5);
+                this.lightYears++;
+                // console.log('Light Years: ', this.lightYears);
+                this.ui.updateLightYears(this.lightYears)
+            }
+        }
+    }
+ 
+    private update(time: number, deltaTime: number) {
+        const delta = gsap.ticker.deltaRatio(60); // Normalize to 60 FPS
+        this.elapsedDelta += delta; // Accumulate delta time
+        this.crtFilterContainer.filters[ 0 ].time -= delta / 5;
+        this.crtFilterContainer.filters[2].brightness = Math.sin(delta * 3) * -2 + 6;
+        this.logElapsedTime();
+        
+        this.gameProgress();
+        this.ui.screen.moveSpaceBackground();
+
+
+        this.battle.enemyContainer.children.forEach((containers) => {
+            containers.children.forEach((child) => {
+                if (typeof child.draw == 'function') {
+                    child.update(delta);
+                }
+            })
+        })
+
+        this.battle.playerContainer.children.forEach((containers) => {
+            containers.children.forEach((child) => {
+                if (typeof child.draw == 'function') {
+                    child.update(delta);
+                }
+            });
+        });
     }
 
     private async loadUi() {
         this.ui = new Ui(this.app);
         await this.ui.init();
         return;
-    }
-
-    private async loadScene(scene: string = 'battle') {
-        this.currentMode = scene;
-        switch(scene){
-            case 'battle':
-                this.battle = new Battle(this.app);
-                await this.battle.init();
-                return;
-        }
     }
 
     private async loadAssets() {
@@ -92,6 +127,17 @@ export default class GameMode {
             }
         } catch (error) {
             console.error('Error loading spritesheet:', error);
+        }
+    }
+
+    private async loadScene(scene: string = 'battle') {
+        this.currentMode = scene;
+        // TODO: adding a Main Menu
+        switch(scene){
+            case 'battle':
+                this.battle = new Battle(this.app);
+                await this.battle.init();
+                return;
         }
     }
 
@@ -121,51 +167,6 @@ export default class GameMode {
             return texture;
         }).filter(texture => texture !== undefined);
         return textures;
-    }
-
-    private update(time: number, deltaTime: number) {
-        const delta = gsap.ticker.deltaRatio(60); // Normalize to 60 FPS
-        this.elapsedDelta += delta; // Accumulate delta time
-        this.crtFilterContainer.filters[ 0 ].time -= delta / 5;
-        this.crtFilterContainer.filters[2].brightness = Math.sin(delta * 3) * -2 + 6;
-        this.logElapsedTime();
-        
-        this.spawnEnemies();
-        this.ui.screen.moveSpaceBackground();
-
-
-        this.battle.enemyContainer.children.forEach((containers) => {
-            containers.children.forEach((child) => {
-                if (typeof child.draw == 'function') {
-                    child.update(delta);
-                }
-            })
-        })
-
-        this.battle.playerContainer.children.forEach((containers) => {
-            containers.children.forEach((child) => {
-                if (typeof child.draw == 'function') {
-                    child.update(delta);
-                }
-            });
-        });
-    }
-
-    private spawnEnemies(){
-        // if check every 5 seconds, checking this.currentTime
-        if(this.currentTime !== 0) {
-            if (this.currentTime > this.randomInterval) {
-                // Spawn every random seconds
-                this.battle.spawnRandEnemy();
-                this.randomInterval = this.randomInterval + this.getRandomNumber(3000, 5000);
-            } else if (this.currentTime > 1000 * this.lightYears) {
-                const speedUp = 1;
-                if(this.lightYears < 7) this.ui.screen.speedRatio += (speedUp * 0.5);
-                this.lightYears++;
-                // console.log('Light Years: ', this.lightYears);
-                this.ui.updateLightYears(this.lightYears)
-            }
-        }
     }
 
     private getRandomNumber(min: number, max: number): number {

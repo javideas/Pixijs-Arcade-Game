@@ -86,21 +86,20 @@ export class Enemy extends Shooter {
     }
 
     private aibehaviour() {
-        // Create a timeline for the animations this.screenRef.speedRatio
-        const tl = gsap.timeline({
+        this.tl = gsap.timeline({
             onUpdate: () => {
                 this.setResponsive();
                 if (this.isDestroyed) {
-                    tl.kill();
+                    this.tl.kill();
                 }  
             }
         });
         if(this.enemyType === 'malko') {
-            this.aiMoveEightShape(tl);
+            this.aiMoveEightShape(this.tl);
         } else if(this.enemyType === 'guliamo') {
-            this.aiMoveTopDown(tl);
+            this.aiMoveTopDown(this.tl);
         } else if(this.enemyType === 'asteroid') {
-            this.aiMoveDownRotating(tl);
+            this.aiMoveDownRotating(this.tl);
         }
     }
 
@@ -205,5 +204,17 @@ export class Enemy extends Shooter {
             ease: 'linear', // Use linear for constant rotation speed
             repeat: -1
         }, 0);
+    }
+
+    public pauseTimeline() {
+        if (this.tl) {
+            this.tl.pause();
+        }
+    }
+
+    public resumeTimeline() {
+        if (this.tl) {
+            this.tl.resume();
+        }
     }
 }
