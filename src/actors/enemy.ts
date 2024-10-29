@@ -56,6 +56,7 @@ export class Enemy extends Shooter {
             initPosAccY,
             enemyProps.fireRate,
             enemyProps.spriteName,
+            'none', // TODO: each enemy with a custom Shield
             debugBgColor
         );
         this.enemyType = enemyType;

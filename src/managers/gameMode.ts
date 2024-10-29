@@ -14,6 +14,8 @@ export default class GameMode {
     private elapsedDelta: number = 0;
     private currentTime: number = 0;
     private randomInterval: number = 0;
+    private lastInmuneKeyPressed: number = -600;
+    private lastShowColKeyPressed: number = -600;
     
     constructor(app: Application, stageContainer: Container){
         this.app = app;
@@ -219,12 +221,28 @@ export default class GameMode {
                 this.battle.player.moveX(1); // Move player right
                 this.battle.player.moveY(1); // Move player down
                 break;
-            case 'confirm':
+            case 'shoot':
                 this.battle.player.shoot(); // Shoot
                 break;
-            // case 'back':
-            //     this.battle.pause(); // Cancel/pause
-            //     break;
+            case 'inmunity': // lastInmuneKeyPressed
+                // Allow the action if more than 500ms have passed since the last execution
+                if (this.currentTime - this.lastInmuneKeyPressed > 500 ) {
+                    this.battle.player.toggleInmunity(false); // Inmunity: here not triggered by Damage, but by input
+                    // if showCollisions was true, reactivate it (as actors were redraw)
+                    if(this.isColVisible) this.battle.player.showCollisions();
+                    this.lastInmuneKeyPressed = this.currentTime;
+                }
+                break;
+            case 'pause':
+                this.battle.pause(); // Cancel/pause
+                break;
+            case 'showCollisions':
+                // Allow the action if more than 500ms have passed since the last execution
+                if (this.currentTime - this.lastShowColKeyPressed > 500 ) {
+                    this.battle.player.showCollisions();
+                    this.lastShowColKeyPressed = this.currentTime;
+                }
+                break;
             default:
                 break;
         }

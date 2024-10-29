@@ -3,7 +3,7 @@ import { CRTFilter } from '@pixi/filter-crt';
 import { DotFilter } from '@pixi/filter-dot';
 import GameMode from './managers/gameMode';
 
-const bgColor = "#142332";
+const bgColor = "#020305";
 document.body.style.backgroundColor = bgColor;
 
 /** The PixiJS app Application instance, shared across the project */
@@ -63,7 +63,7 @@ function addEventListeners(gameMode: GameMode) {
 
     window.addEventListener('keydown', (event) => {
         // Add action to the set
-        if (['ArrowLeft', 'a', 'ArrowRight', 'd', 'ArrowUp', 'w', 'ArrowDown', 's', ' ', 'Enter', 'Backspace'].includes(event.key)) {
+        if (['ArrowLeft', 'a', 'ArrowRight', 'd', 'ArrowUp', 'w', 'ArrowDown', 's', ' ', 'Enter', 'Backspace', 'i', 'p', 'b'].includes(event.key)) {
             event.preventDefault(); // Prevent default action for these keys
             activeActions.add(event.key);
         }
@@ -89,9 +89,24 @@ function addEventListeners(gameMode: GameMode) {
             gameMode.playerInput('down');
         }
 
-        // Check for shooting action
+        // Check for inmunity action
+        if (activeActions.has('i')) {
+            gameMode.playerInput('inmunity');
+        }
+
+        // Check for shoot/confirm action
         if (activeActions.has(' ') || activeActions.has('Enter')) {
-            gameMode.playerInput('confirm'); // Call the shoot action
+            gameMode.playerInput('shoot');
+        }
+
+        // Check for pause action
+        if (activeActions.has('p') || activeActions.has('Backspace')) {
+            gameMode.playerInput('pause');
+        }
+
+        // Check for showCollisionBoxes action
+        if (activeActions.has('b')) {
+            gameMode.playerInput('showCollisions');
         }
     }
 

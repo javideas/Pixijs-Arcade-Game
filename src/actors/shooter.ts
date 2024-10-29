@@ -16,6 +16,7 @@ export class Shooter extends Actor {
         initPosAccY?: number,
         fireRate: number = 15,
         spriteName: string = 'ShipPlayer-FullHealth.png',
+        shieldSpriteName: string,
         debugBgColor: string = 'red'
     ) {
         super(
@@ -28,6 +29,7 @@ export class Shooter extends Actor {
             initPosAccY,
             spriteName,
             false, // animated
+            shieldSpriteName,
             debugBgColor
         );
         this.fireRate = fireRate;

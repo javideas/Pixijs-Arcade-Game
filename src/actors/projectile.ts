@@ -23,6 +23,7 @@ export class Projectile extends Actor {
             shooterRef.posAccY - offsetY,
             'Projectile', // Sprite/Animation name
             true, // isAnimated?
+            'none',
             debugBgColor
         );
         this.spriteName = 'Projectile';

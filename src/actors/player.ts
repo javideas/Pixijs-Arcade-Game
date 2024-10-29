@@ -16,15 +16,20 @@ export class Player extends Shooter {
             initPosAccY,
             8, // fireRate
             'ShipPlayer-FullHealth.png',
+            'Invincibility-9.png',
             debugBgColor
         );
-        this.isColVisible = true; // TODO: either to be Global in GameMode or per Class
+        this.isColVisible = false; // TODO: either to be Global in GameMode or per Class
         this.isInmune = false; // TODO: just Debug now, use SHIELD texture and add Shield()
         
         this.spriteName = 'ShipPlayer-FullHealth.png';
         this.speedGlobalRatio = 2;
         this.colWidthRatio = 0.4;
         this.colHeightRatio = 0.6;
+    }
+
+    public showCollisions(){
+        this.isColVisible = !this.isColVisible;
     }
 
     public shoot() {

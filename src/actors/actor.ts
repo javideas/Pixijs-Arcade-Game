@@ -33,8 +33,9 @@ export class Actor extends Container {
         scaleRatio: number = 1,
         initPosAccX: number = 0,
         initPosAccY: number = 0.8,
-        spriteName: string = 'ShipPlayer-FullHealth.png',
+        baseSpriteName: string = 'ShipPlayer-FullHealth.png',
         animated: boolean = false,
+        shieldSpriteName: string,
         debugBgColor?: string = 'yellow'
     ) {
         super();
@@ -67,10 +68,12 @@ export class Actor extends Container {
         this.addChild(this.debugGraphics);
 
         if (animated) {
-            this.loadAnimation(spriteName);
+            this.loadBaseAnim(baseSpriteName);
         } else {
-            this.loadSprite(spriteName);
+            this.loadBaseSprite(baseSpriteName);
         }
+
+        if(shieldSpriteName !== 'none') this.loadShieldSprite(shieldSpriteName);
         
         this.spriteScaleRatio = 1.6;
 
@@ -136,8 +139,11 @@ export class Actor extends Container {
         }
     }
 
-    private toggleInmunity() {
+    public toggleInmunity(byDamage: boolean = true) {
         this.isInmune = !this.isInmune;
+        if(!byDamage) {
+            this.shieldSprite.alpha = this.shieldSprite.alpha === 0 ? 1 : 0;
+        }
     }
 
     public hitted(damage: number = 1) {
@@ -161,14 +167,14 @@ export class Actor extends Container {
                 yoyo: true,
                 onComplete: () => {
                     this.sprite.tint = 0xFFFFFF; // Restore original tint
-                    if(this.isInmune) this.toggleInmunity(); // Deactivate Inmunity
+                    if(this.isInmune) this.toggleInmunity(true); // Deactivate Inmunity
                 }
             });
         }
     }
 
     private animDestroyed() {
-        this.loadAnimation('Explosion', 'destroyed');
+        this.loadBaseAnim('Explosion', 'destroyed');
         // TODO: player get points when enemy destroyed?
         // TODO: more features... other enemies react?
     }
@@ -187,7 +193,18 @@ export class Actor extends Container {
         this.sprite.scale.y *= (-dirY * offsetDir);
     }
 
-    private loadSprite(spriteName: string) {
+    private loadShieldSprite(spriteName: string) {
+        const texture = this.gameMode.getTexture(spriteName);
+        if (texture) {
+            this.shieldSprite = new Sprite(texture);
+            this.addChild(this.shieldSprite);
+            this.shieldSprite.alpha = 0;
+        } else {
+            console.error(`Texture ${spriteName} not found`);
+        }
+    }
+
+    private loadBaseSprite(spriteName: string) {
         const texture = this.gameMode.getTexture(spriteName);
         if (texture) {
             this.sprite = new Sprite(texture);
@@ -197,7 +214,7 @@ export class Actor extends Container {
         }
     }
 
-    private loadAnimation(animationName: string, animLabel: string = 'none') {
+    private loadBaseAnim(animationName: string, animLabel: string = 'none') {
         const textures = this.gameMode.getAnimationTextures(animationName);
         if (textures && textures.length > 0) {
             if (this.sprite) {
@@ -236,6 +253,9 @@ export class Actor extends Container {
         if(this.isColVisible) {
             this.drawDebugBoundingBox(this.colX, this.colY, this.colWidth, this.colHeight, 0x00FF00); // Green for this actor
             other.drawDebugBoundingBox(other.colX, other.colY, other.colWidth, other.colHeight, 0xFF0000); // Red for the other actor
+        } else {
+            this.debugGraphics.clear();
+            other.debugGraphics.clear();
         }
 
         return this.colX < other.colX + other.colWidth &&
@@ -262,6 +282,14 @@ export class Actor extends Container {
         // Set the position of the sprite
         this.sprite.x = -this.sprite.width/2;
         this.sprite.y = -this.sprite.height/2;
+        if(this.shieldSprite) {
+        // Set the size of the sprite
+            this.shieldSprite.width = this.contWidth * this.spriteScaleRatio * 1.5;
+            this.shieldSprite.height = this.contHeight * this.spriteScaleRatio * 1.5;
+            // Set the position of the sprite
+            this.shieldSprite.x = -this.shieldSprite.width/2;
+            this.shieldSprite.y = -this.shieldSprite.height/2;
+        }
     }
 
     private setCollisionBox() {
