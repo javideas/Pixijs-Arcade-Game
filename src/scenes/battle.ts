@@ -5,7 +5,7 @@ import { Deck } from '../stage/deck';
 import { Player } from '../actors/player';
 import { Enemy } from '../actors/enemy';
 import { Projectile } from '../actors/projectile';
-
+import { Obstacle } from '../actors/obstacle';
 export default class Battle {
     private app: Application;
 
@@ -27,20 +27,20 @@ export default class Battle {
 
         this.player = new Player();
         this.playerShipCont.addChild(this.player);
+
         this.spawnEnemy('malko', 1.3, -0.8);
+        this.spawnEnemy('asteroid', -0.7, -0.8);
     }
 
     public spawnRandEnemy() {
-        const enemyNames = ['malko', 'guliamo'];
+        const enemyNames = ['malko', 'guliamo', 'asteroid'];
         const randomIndex = Math.floor(Math.random() * enemyNames.length);
     
         if(enemyNames[randomIndex] === 'malko') {
-            this.spawnEnemy(enemyNames[randomIndex], Math.random() * 2.5 - 1, -0.8);
+            this.spawnEnemy(enemyNames[randomIndex], Math.random() * 2 - 1, -0.8);
         } else {
-            this.spawnEnemy(enemyNames[randomIndex], Math.random() * 1 - 1, -1.6);
+            this.spawnEnemy(enemyNames[randomIndex], Math.random() * 2 - 1, -1.6);
         }
-        console.log(`Random Index: ${randomIndex}, Selected Enemy: ${enemyNames[randomIndex]}`);
-
     }
 
     public spawnEnemy(enemyType: string = 'guliamo', posAccX: number = 0, posAccY: number = -1) {

@@ -144,9 +144,9 @@ export default class GameMode {
         // if check every 5 seconds, checking this.currentTime
         if(this.currentTime !== 0) {
             if (this.currentTime > this.randomInterval) {
-                // Check every 5 seconds
-                this.battle.spawnRandEnemy()
-                this.randomInterval = this.randomInterval + this.getRandomNumber(9000, 13000);
+                // Spawn every random seconds
+                this.battle.spawnRandEnemy();
+                this.randomInterval = this.randomInterval + this.getRandomNumber(3000, 5000);
             } else if (this.currentTime > 1000 * this.lightYears) {
                 const speedUp = 1;
                 if(this.lightYears < 7) this.ui.screen.speedRatio += (speedUp * 0.5);

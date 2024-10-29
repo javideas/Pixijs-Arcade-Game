@@ -38,7 +38,9 @@
     "@pixi/filter-old-film": "^5.1.1",
     "@pixi/filter-pixelate": "^5.1.1",
     "@pixi/filter-rgb-split": "^5.1.1",
+    "@pixi/filter-twist": "^5.1.1",
     "gsap": "^3.12.5",
+    "pixi-filters": "^5.1.0",
     "pixi.js": "^7.4.2"
   },
   "build": {

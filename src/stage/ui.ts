@@ -1,9 +1,6 @@
 import { Application, BLEND_MODES, Container, Filter, Graphics, RenderTexture, Sprite, SpriteMaskFilter, Text, TextStyle } from 'pixi.js';
+import { CRTFilter, AdjustmentFilter, AdvancedBloomFilter, RGBSplitFilter, ShockwaveFilter, TwistFilter } from 'pixi-filters';
 import { AlphaFilter } from '@pixi/filter-alpha';
-import { CRTFilter } from '@pixi/filter-crt';
-import { AdjustmentFilter } from '@pixi/filter-adjustment';
-import { AdvancedBloomFilter } from '@pixi/filter-advanced-bloom';
-import { RGBSplitFilter } from '@pixi/filter-rgb-split';
 import GameMode from '../managers/gameMode';
 import { Screen } from '../stage/screen';
 import { Deck } from '../stage/deck';

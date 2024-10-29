@@ -19,7 +19,7 @@ A classic arcade-style vertical scrolling game built with PixiJS and TypeScript 
 - **Endless Vertical Scrolling**: The game world scrolls continuously from top to bottom, giving the illusion that the player is moving upward through a dynamic environment.
 - **Player Movement**: The hero can move in all four directions using keyboard arrows, with fluid control that allows dodging obstacles and navigating through enemies.
 - **Projectiles & Combat**: The player can shoot projectiles to destroy enemies and obstacles. The game features multiple types of enemies with varying behaviors.
-- **Enemy AI**: Randomly generated enemies that move downward, shoot projectiles, and attempt to collide with the player.
+- **Enemy AI**: Randomly generated enemies that move downward, shoot projectiles. (TODO: attempt to collide with the player).
 - **Obstacle System**: Randomly generated obstacles that move downwards. These can either be dodged or destroyed using the player’s projectiles.
 - **Health & Lives**: The player has a health system, losing health when hit by enemies or obstacles. The game ends when the player's health reaches zero.
 - **Score Tracking**: Players earn points by destroying enemies and surviving longer. The score is displayed on the game screen.
