@@ -52,6 +52,17 @@ A classic arcade-style vertical scrolling game built with PixiJS and TypeScript 
 - **Vite**: For fast bundling and local development.
 - **Electron**: TODO: For building the game into a desktop application.
 
+## Task managment in Trello
+  ![image](https://github.com/user-attachments/assets/cbe8a9a2-c160-4304-bc2a-53c7413794ae)
+
+## Adapting sprite assets for better fitting
+These explosions sprites, in the last frame, are so scattered that TexturePackerGUI understands each piece like a different sprite, so I had to fix it in photopea.com (a free alternative to photoshop) to give some background with very little opacity.
+![image](https://github.com/user-attachments/assets/83c2d35e-03dc-416b-bea4-522f1d71d43e)
+![image](https://github.com/user-attachments/assets/aa161a00-f943-42dd-9d59-0a20ea5b67c7)
+![image](https://github.com/user-attachments/assets/c3f3592e-5ecf-4b2f-ad0f-73629e6d8977)
+
+Sprites authors will be clarified in this area soon.
+
 ## How to Install
 
 To get started with this project, follow these steps:
