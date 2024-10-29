@@ -1,4 +1,4 @@
-![PixiJs Arcade Logo](./Arcade_Logo.png)
+[![image](https://github.com/user-attachments/assets/9a3139e8-5266-4741-bb3e-2575e1494796)](https://youtu.be/auieghY2ihg)
 
 ## Index
 
@@ -31,6 +31,10 @@ A classic arcade-style vertical scrolling game built with PixiJS and TypeScript 
 - **Shield**: An energy shield protect the player. For now, it can be unlocked using "i" key. TODO: is triggered by collecting pickups on the way and it deactivates after some time.
 - **Menu System**: TODO: A basic home screen with options to start the game, view high scores, and access settings.
 - **Live Demo**: TODO: work in progress.
+- **Responsiveness**: game is responsive. TODO: red and blue tabs will have info regarding high scores, settings or a input guide. In phone will be touchable.
+
+  ![image](https://github.com/user-attachments/assets/0bff56b6-73c5-4e11-ba61-5cc8a0d7346f)
+
 
 ## How to Play:
 1. **Movement**: Use the arrow keys or WASD to move the hero in any direction.
@@ -51,6 +55,17 @@ A classic arcade-style vertical scrolling game built with PixiJS and TypeScript 
 - **HTML5 & CSS3**: For structuring the game’s interface.
 - **Vite**: For fast bundling and local development.
 - **Electron**: TODO: For building the game into a desktop application.
+
+## Task management in Trello
+  ![image](https://github.com/user-attachments/assets/cbe8a9a2-c160-4304-bc2a-53c7413794ae)
+
+## Adapting sprite assets for better fitting
+These explosions sprites, in the last frame, are so scattered that TexturePackerGUI understands each piece like a different sprite, so I had to fix it in photopea.com (a free alternative to photoshop) to give some background with very little opacity.
+![image](https://github.com/user-attachments/assets/83c2d35e-03dc-416b-bea4-522f1d71d43e)
+![image](https://github.com/user-attachments/assets/aa161a00-f943-42dd-9d59-0a20ea5b67c7)
+![image](https://github.com/user-attachments/assets/c3f3592e-5ecf-4b2f-ad0f-73629e6d8977)
+
+Sprites authors will be clarified in this area soon.
 
 ## How to Install
 
