@@ -1,6 +1,6 @@
 import { Tab } from "./tab";
 import { Sprite } from 'pixi.js';
-import GameMode from '../managers/gameMode.ts';
+import GameMode from '../managers/gameMode';
 
 export class Screen extends Tab {
     public spriteA: Sprite;

@@ -1,4 +1,4 @@
-import { Tab } from "./tab.ts";
+import { Tab } from "./tab";
 
 export class Deck extends Tab {
     constructor(

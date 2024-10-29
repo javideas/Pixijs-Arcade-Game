@@ -1,5 +1,5 @@
-import { Actor } from "./actor.ts";
-import { Shooter } from "./shooter.ts";
+import { Actor } from "./actor";
+import { Shooter } from "./shooter";
 
 export class Projectile extends Actor {
     constructor(

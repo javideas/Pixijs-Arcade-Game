@@ -1,5 +1,5 @@
-import { Actor } from './actor.ts';
-import { Projectile } from './projectile.ts';
+import { Actor } from './actor';
+import { Projectile } from './projectile';
 
 export class Shooter extends Actor {
     private fireRate: number;

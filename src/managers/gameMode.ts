@@ -1,8 +1,8 @@
 import { gsap } from 'gsap';
-import Ui from '../stage/ui.ts';
-import Battle from '../scenes/battle.ts'
+import Ui from '../stage/ui';
+import Battle from '../scenes/battle'
 import { Application, Assets, Container, Texture } from 'pixi.js';
-import TextureManager from './textureManager.ts';
+import TextureManager from './textureManager';
 
 export default class GameMode {
     private app: Application;

@@ -1,5 +1,5 @@
 import { Application, BaseTexture, SCALE_MODES, Container } from 'pixi.js';
-import GameMode from './managers/gameMode.ts';
+import GameMode from './managers/gameMode';
 
 const bgColor = "#020305";
 document.body.style.backgroundColor = bgColor;

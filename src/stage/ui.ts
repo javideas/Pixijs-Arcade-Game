@@ -1,9 +1,9 @@
 import { Application, BLEND_MODES, Container, Graphics, RenderTexture, Sprite, SpriteMaskFilter, Text, TextStyle } from 'pixi.js';
 import { CRTFilter, AdjustmentFilter, AdvancedBloomFilter, RGBSplitFilter } from 'pixi-filters';
 import { AlphaFilter } from '@pixi/filter-alpha';
-import GameMode from '../managers/gameMode.ts';
-import { Screen } from '../stage/screen.ts';
-import { Deck } from '../stage/deck.ts';
+import GameMode from '../managers/gameMode';
+import { Screen } from '../stage/screen';
+import { Deck } from '../stage/deck';
 
 export default class Ui {
     private app: Application;

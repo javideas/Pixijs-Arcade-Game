@@ -1,5 +1,5 @@
 import { gsap } from 'gsap';
-import { Shooter } from "./shooter.ts";
+import { Shooter } from "./shooter";
 
 function getEnemyProps(enemyType: string = 'malko') {
     if (enemyType === 'malko') {

@@ -6,7 +6,7 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "main": "src/main.ts",
+  "main": "./dist/main.js",
   "scripts": {
     "clean": "rm -rf dist && rm -rf dist-js",
     "dev": "vite",
@@ -22,6 +22,14 @@
     "dist:win": "npm run transpile:electron && npm run build && electron-builder --win --x64",
     "dist:linux": "npm run transpile:electron && npm run build && electron-builder --linux --x64"
   },
+  "keywords": [
+    "arcade",
+    "PixiJS",
+    "TypeScript",
+    "GSAP",
+    "interactive",
+    "animations"
+  ],
   "devDependencies": {
     "electron": "^33.0.1",
     "electron-builder": "^24.13.3",

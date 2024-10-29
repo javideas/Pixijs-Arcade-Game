@@ -1,7 +1,7 @@
 import { Container } from 'pixi.js';
-import GameMode from '../managers/gameMode.ts';
-import { Player } from '../actors/player.ts';
-import { Enemy } from '../actors/enemy.ts';
+import GameMode from '../managers/gameMode';
+import { Player } from '../actors/player';
+import { Enemy } from '../actors/enemy';
 
 export default class Battle {
     public gameMode: GameMode;

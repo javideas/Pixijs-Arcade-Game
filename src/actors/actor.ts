@@ -1,6 +1,6 @@
 import { AnimatedSprite, Container, Graphics, Sprite } from 'pixi.js';
-import GameMode from '../managers/gameMode.ts';
-import { Screen } from '../stage/screen.ts';
+import GameMode from '../managers/gameMode';
+import { Screen } from '../stage/screen';
 import { gsap } from 'gsap';
 
 export class Actor extends Container {

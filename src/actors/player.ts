@@ -1,4 +1,4 @@
-import { Shooter } from "./shooter.ts";
+import { Shooter } from "./shooter";
 
 export class Player extends Shooter {
     public isColVisible: boolean;
