@@ -13,41 +13,44 @@
 # PixiJs Arcade Game
 
 ## Project Description:
-A classic arcade-style vertical scrolling game built with PixiJS and TypeScript inspired by [1943: The Battle of Midway](https://www.youtube.com/watch?v=FbUN5ITWQQo). In my version, the player controls a hero character, a spaceship, moving upwards through an endless scrolling space, dodging or destroying enemies and obstacles. The objective is to survive as long as possible while accumulating points by defeating enemies and avoiding crashes.
+A classic arcade-style vertical scrolling game built with PixiJS and TypeScript inspired by [1943: The Battle of Midway](https://www.youtube.com/watch?v=FbUN5ITWQQo). In my version, the player controls a spaceship, the hero character, moving upwards through an endless scrolling space, dodging or destroying enemies and obstacles. The objective is to survive as long as possible while accumulating points by defeating enemies and avoiding crashes.
 
 ## Key Features:
 - **Endless Vertical Scrolling**: The game world scrolls continuously from top to bottom, giving the illusion that the player is moving upward through a dynamic environment.
-- **Player Movement**: The hero can move in all four directions using keyboard arrows, with fluid control that allows dodging obstacles and navigating through enemies.
-- **Projectiles & Combat**: The player can shoot projectiles to destroy enemies and obstacles. The game features multiple types of enemies with varying behaviors.
-- **Enemy AI**: Randomly generated enemies that move downward, shoot projectiles. (TODO: attempt to collide with the player).
-- **Obstacle System**: Randomly generated obstacles that move downwards. These can either be dodged or destroyed using the player’s projectiles.
+- **Player Movement**: The hero can move in all four directions using keyboard arrows (and WASD), with fluid control that allows dodging obstacles and navigating through enemies.
+- **Projectiles & Combat**: The player can shoot projectiles (using SPACE key) to destroy enemies and obstacles. The game features multiple types of enemies with varying behaviors.
+- **Enemy AI**: Randomly generated enemies that move downward, shoot projectiles. (TODO: ai to attempt to collide with the player).
+- **Obstacle System**: Randomly generated obstacles that move downwards (an Asteroid). These can either be dodged or destroyed using the player’s projectiles.
 - **Health & Lives**: The player has a health system, losing health when hit by enemies or obstacles. The game ends when the player's health reaches zero.
-- **Score Tracking**: Players earn points by destroying enemies and surviving longer. The score is displayed on the game screen.
-- **Game Over & High Score**: A high score system stores the player’s best performance locally and updates when beaten.
+- **Score Tracking**: Players score is displayed on the game screen as "Light years" traveled.
+- **Game Over & High Score**: TODO: A high score system stores the player’s best performance locally and updates when beaten.
 
 ## Bonus Features:
-- **Multiple Weapons**: The hero can switch between different types of weapons, such as rapid-fire projectiles and bombs.
-- **Parallax Scrolling Backgrounds**: Multiple layers of backgrounds move at different speeds to create a sense of depth and immersion.
+- **Multiple Weapons**: Currently there are 2 types of weapons: shooting 2 or 3 projectiles.
 - **Explosions and Visual Effects**: When enemies or obstacles are destroyed, explosion animations and particle effects enhance the gameplay experience.
-- **Menu System**: A basic home screen with options to start the game, view high scores, and access settings.
+- **Shield**: An energy shield protect the player. For now, it can be unlocked using "i" key. TODO: is triggered by collecting pickups on the way and it deactivates after some time.
+- **Menu System**: TODO: A basic home screen with options to start the game, view high scores, and access settings.
+- **Live Demo**: TODO: work in progress.
 
 ## How to Play:
-1. **Movement**: Use the arrow keys to move the hero in any direction.
+1. **Movement**: Use the arrow keys or WASD to move the hero in any direction.
 2. **Shooting**: Press the space bar to fire projectiles at enemies and obstacles.
 3. **Objective**: Survive as long as possible by dodging obstacles and defeating enemies.
-4. **Scoring**: Points are awarded for every enemy destroyed and for surviving longer.
+4. **Scoring**: "Light years" are "awarded" for surviving longer.
 
 ## Game Controls:
 - **Arrow Keys**: Move the player character.
 - **Space Bar**: Fire projectiles.
-- **Esc**: Pause the game or return to the main menu.
+- **i**: Trigger energy shield for protection/debugging.
+- **b**: Debug Collision Boxes.
 
 ## Technologies Used:
-- **PixiJS**: For rendering the 2D game world.
+- **PixiJS**: For rendering the 2D game world. I made used of several effects to achieve the old retro arcade vibe.
+- **GSAP**: To simulate ai behaviour dynamically.
 - **TypeScript**: For writing clean, maintainable code.
 - **HTML5 & CSS3**: For structuring the game’s interface.
 - **Vite**: For fast bundling and local development.
-- **Electron**: For building the game into a desktop application.
+- **Electron**: TODO: For building the game into a desktop application.
 
 ## How to Install
 
@@ -73,7 +76,7 @@ To get started with this project, follow these steps:
 3. **Run the Project**:  
    You can run the project in different modes depending on your needs:
 
-   - **Development Mode**:  
+   - **Development Mode**:  <----------------What you need "to play the game".
      To start the development server, use:
 
      ```bash
