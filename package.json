@@ -13,14 +13,14 @@
     "dev:electron": "electron .",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "build:electron": "electron-builder",
+    "build:electron": "npm run transpile:electron && electron-builder",
     "transpile:electron": "tsc --project src/electron/tsconfig.json",
-    "restart": "npm run transpile:electron && npm run build && electron .",
+    "restart": "npm run clean && npm run transpile:electron && npm run build && electron .",
     "start": "electron .",
     "deploy": "gh-pages -d dist",
-    "dist:mac": "npm run transpile:electron && npm run build && electron-builder --mac --arm64",
-    "dist:win": "npm run transpile:electron && npm run build && electron-builder --win --x64",
-    "dist:linux": "npm run transpile:electron && npm run build && electron-builder --linux --x64"
+    "dist:mac": "npm run clean && npm run transpile:electron && npm run build && electron-builder --mac --arm64",
+    "dist:win": "npm run clean && npm run transpile:electron && npm run build && electron-builder --win --x64",
+    "dist:linux": "npm run clean && npm run transpile:electron && npm run build && electron-builder --linux --x64"
   },
   "keywords": [
     "arcade",

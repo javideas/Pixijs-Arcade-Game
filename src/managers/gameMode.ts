@@ -140,8 +140,8 @@ export default class GameMode {
 
     private async loadAssets() {
         const textureManager = TextureManager.getInstance();
-        const spritePath = '../assets/ShipPlayer.json';
-    
+        const spritePath = './assets/ShipPlayer.json';
+
         try {
             const spritesheet = await Assets.load(spritePath);
             
