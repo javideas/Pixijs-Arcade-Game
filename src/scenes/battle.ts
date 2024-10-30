@@ -12,6 +12,7 @@ export default class Battle {
     public enemyShipCont: Container;
     public playerProjCont: Container;
     public playerShipCont: Container;
+    private activeActors: WeakSet<Enemy | Player>;
 
     constructor() {
         this.playerContainer = new Container();
@@ -21,6 +22,7 @@ export default class Battle {
         this.playerProjCont = new Container();
         this.playerShipCont = new Container();
         this.gameMode = GameMode.instance;
+        this.activeActors = new WeakSet();
     }
 
     /** Initialize the screen and decks */
@@ -29,6 +31,7 @@ export default class Battle {
 
         this.player = new Player();
         this.playerShipCont.addChild(this.player);
+        this.activeActors.add(this.player);
 
         this.spawnEnemy('malko', 1.3, -0.8);
         this.spawnEnemy('asteroid', -0.7, -2);
@@ -52,6 +55,7 @@ export default class Battle {
             posAccY, //initPosAccY
         );
         this.enemyShipCont.addChild(enemy);
+        this.activeActors.add(enemy);
         enemy.setResponsive();
     }
     
@@ -111,8 +115,8 @@ export default class Battle {
         this.playerContainer.removeChildren();
 
         // Reset references to help with garbage collection
-        this.player = null; // Set to null if not reused immediately
-        this.enemyContainer = null; // Set to null if not reused
-        this.playerContainer = null; // Set to null if not reused
+        this.player = new Player();
+        this.enemyContainer = new Container();
+        this.playerContainer = new Container();
     }
 }
