@@ -109,9 +109,10 @@ export default class Battle {
         this.playerProjCont.removeChildren();
         this.playerShipCont.removeChildren();
         this.playerContainer.removeChildren();
+
         // Reset references to help with garbage collection
-        this.player = new Player();
-        this.enemyContainer = new Container();
-        this.playerContainer = new Container();
+        this.player = null; // Set to null if not reused immediately
+        this.enemyContainer = null; // Set to null if not reused
+        this.playerContainer = null; // Set to null if not reused
     }
 }

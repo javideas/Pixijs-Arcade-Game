@@ -18,6 +18,7 @@ export default class GameMode {
     private lastInmuneKeyPressed: number = -600;
     private lastShowColKeyPressed: number = -600;
     private lightYears: number;
+    public delta: number = 0;
     
     constructor(app: Application, stageContainer: Container){
         this.app = app;
@@ -88,20 +89,20 @@ export default class GameMode {
     }
  
     private update() {
-        const delta = gsap.ticker.deltaRatio(60); // Normalize to 60 FPS
-        this.elapsedDelta += delta; // Accumulate delta time
+        this.delta = gsap.ticker.deltaRatio(60); // Normalize to 60 FPS
+        this.elapsedDelta += this.delta; // Accumulate delta time
 
         if (this.crtFilterContainer && this.crtFilterContainer.filters) {
             const filters = this.crtFilterContainer.filters;
     
             // Check if the filter at index 0 has a 'time' property
             if (filters[0] && 'time' in filters[0]) {
-                (filters[0] as any).time -= delta / 5; // Use 'any' or a specific type if known
+                (filters[0] as any).time -= this.delta / 5; // Use 'any' or a specific type if known
             }
     
             // Check if the filter at index 2 has a 'brightness' property
             if (filters[2] && 'brightness' in filters[2]) {
-                (filters[2] as any).brightness = Math.sin(delta * 3) * -2 + 6; // Use 'any' or a specific type if known
+                (filters[2] as any).brightness = Math.sin(this.delta * 3) * -2 + 6; // Use 'any' or a specific type if known
             }
         }
 
@@ -114,7 +115,7 @@ export default class GameMode {
                 containers.children.forEach((child) => {
                     const actor = child as unknown as { update: (delta?: number) => void; draw: () => void };
                     if (typeof actor.draw === 'function') {
-                        actor.update(delta);
+                        actor.update(this.delta);
                     }
                 });
             }
@@ -125,7 +126,7 @@ export default class GameMode {
                 containers.children.forEach((child) => {
                     const actor = child as unknown as { update: (delta?: number) => void; draw: () => void };
                     if (typeof actor.draw === 'function') {
-                        actor.update(delta);
+                        actor.update(this.delta);
                     }
                 });
             }
@@ -216,6 +217,7 @@ export default class GameMode {
 
     private inputSystBattle(action: string = 'none') {
         if(this.battle.player) {
+            if (this.delta < 0.016) return;
             switch(action) {
                 case 'left':
                     this.battle.player.moveX(-1); // Move player left

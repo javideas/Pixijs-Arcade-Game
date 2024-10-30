@@ -73,8 +73,16 @@ function addEventListeners(gameMode: GameMode) {
         activeActions.delete(event.key);
     });
 
+    let lastInputTime = 0;
+    const inputInterval = 1000 / 60;
+
     // Update the player's position based on active actions
     function updateInput() {
+        const currentTime = performance.now();
+        if (currentTime - lastInputTime < inputInterval) {
+            return; // Skip processing if interval hasn't passed
+        }
+        lastInputTime = currentTime;
         if (activeActions.has('ArrowLeft') || activeActions.has('a')) {
             gameMode.playerInput('left');
         }
