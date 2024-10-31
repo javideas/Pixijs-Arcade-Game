@@ -56,7 +56,7 @@ export class Enemy extends Shooter {
     public enemyType: string;
 
     constructor(
-        enemyType: string = 'malko',
+        enemyType: string = 'asteroid',
         initPosAccX?: number,
         initPosAccY?: number,
         debugBgColor: string = 'green'
@@ -82,6 +82,12 @@ export class Enemy extends Shooter {
 
         this.shotDirY = 1;
         this.autoShoot = false;
+        this.flipSprite(this.shotDirY);
+        this.aibehaviour();
+    }
+
+    public initialize() {
+        this.tl.kill();
         this.flipSprite(this.shotDirY);
         this.aibehaviour();
     }

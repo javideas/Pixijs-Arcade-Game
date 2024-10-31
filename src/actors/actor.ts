@@ -237,7 +237,13 @@ export class Actor extends Container {
         if (this.parent) {
             this.parent.removeChild(this);
         }
+        // Check if the actor is an enemy and release it back to the pool
+        if (this.idTeam === 'enemy' && this.idClass === 'ship') {
+            this.gameMode.battle.enemyPool.release(this as Enemy);
+            return;
+        }
         if(this.idTeam === 'player' && this.idClass === 'ship') this.gameMode.battle.gameOver();
+        // TODO: when projectiles are destroyed, check if they are in the pool and release them
         this.destroy({ children: true, texture: false, baseTexture: false });
     }
 

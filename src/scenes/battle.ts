@@ -2,6 +2,9 @@ import { Container } from 'pixi.js';
 import GameMode from '../managers/gameMode';
 import { Player } from '../actors/player';
 import { Enemy } from '../actors/enemy';
+import { Projectile } from '../actors/projectile';
+import { addAndFindChildByName } from '../utils/utils';
+import { ObjectPool } from '../utils/objectPool';
 
 export default class Battle {
     public gameMode: GameMode;
@@ -17,8 +20,11 @@ export default class Battle {
     private currentTime: number = 0;
     private randomInterval: number = 2000;
     private lightYears: number = 0;
+    private enemyPool: ObjectPool<Enemy>;
+    private projectilePool: ObjectPool<Projectile>;
 
     constructor() {
+        // GameMode instance
         this.gameMode = GameMode.instance;
         // Enemy Containers
         this.enemyContainer = new Container();
@@ -30,7 +36,11 @@ export default class Battle {
         this.playerContainer = new Container();
         // Battle UI Container: Light Years travelled
         this.battleUiCont = new Container();
-        // GameMode instance
+        // Initialize the object pools
+        this.enemyPool = new ObjectPool<Enemy>((enemyType: string, posAccX: number, posAccY: number) => {
+            return new Enemy(enemyType, posAccX, posAccY);
+        });
+        this.projectilePool = new ObjectPool<Projectile>(() => new Projectile());
     }
 
     /** Initialize the screen and decks */
@@ -129,12 +139,13 @@ export default class Battle {
     }
 
     public spawnEnemy(enemyType: string = 'guliamo', posAccX: number = 0, posAccY: number = -1) {
-        const enemy = new Enemy(
-            enemyType,
-            posAccX, //initPosAccX
-            posAccY, //initPosAccY
-        );
+        // Obtain an enemy from the pool, passing necessary parameters
+        const enemy = this.enemyPool.obtain(enemyType, posAccX, posAccY);
+        
+        // Add the enemy to the container
         this.enemyShipCont.addChild(enemy);
+        
+        // Set the enemy to be responsive
         enemy.setResponsive();
     }
     
@@ -142,32 +153,20 @@ export default class Battle {
     private async loadContainers() {
         // Enemy container is behind Player Container
         // AND Projectiles Container are behind Ships containers
-        this.enemyContainer = new Container();
-        this.enemyContainer.name = 'enemyContainer';
-        this.gameMode.stageContainer.addChild(this.enemyContainer);
-    
-        this.enemyProjCont = new Container();
-        this.enemyProjCont.name = 'enemyProjCont';
-        this.enemyContainer.addChild(this.enemyProjCont);
-        this.enemyShipCont = new Container();
-        this.enemyShipCont.name = 'enemyShipCont';
-        this.enemyContainer.addChild(this.enemyShipCont);
-
-        this.playerContainer = new Container();
-        this.playerContainer.name = 'playerContainer';
-        this.gameMode.stageContainer.addChild(this.playerContainer);
-
-        this.playerProjCont = new Container();
-        this.playerProjCont.name = 'playerProjCont';
-        this.playerContainer.addChild(this.playerProjCont);
-        this.playerShipCont = new Container();
-        this.playerShipCont.name = 'playerShipCont';
-        this.playerContainer.addChild(this.playerShipCont);
-
-        this.battleUiCont = new Container();
-        this.battleUiCont.name = 'battleUiCont';
-        this.gameMode.stageContainer.addChild(this.battleUiCont);
-        console.log('battleUiCont', this.battleUiCont);
+        // Enemy Container:
+        this.enemyContainer = addAndFindChildByName(this.gameMode.stageContainer, 'enemyContainer');
+        // Enemy Projectiles Container:
+        this.enemyProjCont = addAndFindChildByName(this.enemyContainer, 'enemyProjCont');
+        // Enemy Ship Container:
+        this.enemyShipCont = addAndFindChildByName(this.enemyContainer, 'enemyShipCont');
+        // Player Container:
+        this.playerContainer = addAndFindChildByName(this.gameMode.stageContainer, 'playerContainer');
+        // Player Projectiles Container:
+        this.playerProjCont = addAndFindChildByName(this.playerContainer, 'playerProjCont');
+        // Player Ship Container:
+        this.playerShipCont = addAndFindChildByName(this.playerContainer, 'playerShipCont');
+        // Battle UI Container:
+        this.battleUiCont = addAndFindChildByName(this.gameMode.stageContainer, 'battleUiCont');
     }
 
     /** Drawing actors on resize */

@@ -86,9 +86,8 @@ export default class Ui {
         this.updateLightYears();
 
         // Add the text to the stage
-        const stageContainer = this.gameMode.stageContainer;
-        const children = stageContainer.children;
-        console.log('children', children);
+        const battleUiCont = this.gameMode.stageContainer.children.find(child => child.name === 'battleUiCont');
+        battleUiCont.addChild(this.pixelatedText);
     }
 
     public updateLightYears(value: number = 0) {
