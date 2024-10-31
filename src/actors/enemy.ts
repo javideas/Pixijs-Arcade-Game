@@ -65,13 +65,13 @@ export class Enemy extends Shooter {
         super(
             'enemy',
             enemyProps.health,
-            enemyProps.damage, // Damage On Collision
+            enemyProps.damage,
             enemyProps.scaleRatio,
             initPosAccX,
             initPosAccY,
             enemyProps.fireRate,
             enemyProps.spriteName,
-            'none', // TODO: each enemy with a custom Shield
+            'none',
             debugBgColor
         );
         this.tl = gsap.timeline({});
