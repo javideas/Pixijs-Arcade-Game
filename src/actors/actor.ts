@@ -6,56 +6,53 @@ import { gsap } from 'gsap';
 export class Actor extends Container {
     public gameMode: GameMode;
     protected sprite: Sprite | AnimatedSprite;
-    protected hasAi: boolean;
-    public posAccX: number;
-    public posAccY: number;
-    protected colX: number;
-    protected colY: number;
-    protected colWidth: number;
-    protected colHeight: number;
-    public idTeam: string;
-    public isInmune: boolean;
-    public isColVisible: boolean;
+    protected hasAi: boolean = false;
+    public posAccX: number = 0;
+    public posAccY: number = 0;
+    protected colX: number = 0;
+    protected colY: number = 0;
+    protected colWidth: number = 0;
+    protected colHeight: number = 0;
+    public idTeam: string = 'player';
+    public isInmune: boolean = false;
+    public isColVisible: boolean = false;
     public screenRef: Screen;
 
-    public debugBgColor: string;
     private debugGraphics: Graphics;
-    private bgShape: Graphics;
-    private contWidth: number;
-    private contHeight: number;
-    public contPosX: number;
-    public contPosY: number;
-    private globalLimitR: number;
-    private globalLimitL: number;
-    private globalLimitT: number;
-    private globalLimitB: number;
-    public wasDestroyed: boolean;
+    public contWidth: number = 0;
+    public contHeight: number = 0;
+    public contPosX: number = 0;
+    public contPosY: number = 0;
+    private globalLimitR: number = 0;
+    private globalLimitL: number = 0;
+    private globalLimitT: number = 0;
+    private globalLimitB: number = 0;
+    public wasDestroyed: boolean = false;
 
-    public spriteName: string;
-    public trackOpponent: boolean;
-    public colWidthRatio: number;
-    public colHeightRatio: number;
-    public speedGlobalRatio: number;
-    public dirX: number;
-    public dirY: number;
-    public offsetX: number;
-    public offsetY: number;
-    public scaleRatio: number;
-    public idClass: string;
+    public spriteName: string = 'none';
+    public trackOpponent: boolean = false;
+    public colWidthRatio: number = 1;
+    public colHeightRatio: number = 1;
+    public speedGlobalRatio: number = 1;
+    public dirX: number = 0;
+    public dirY: number = 0;
+    public offsetX: number = 0;
+    public offsetY: number = 0;
+    public scaleRatio: number = 1;
+    public idClass: string = 'ship';
     public shieldSprite: Sprite;
-    public spriteScaleRatio: number;
-    public currentHealth: number;
-    public damage: number;
+    public spriteScaleRatio: number = 1.6;
+    public currentHealth: number = 1;
+    public damage: number = 1;
     public enemyContainer: Container;
     public enemyProjCont: Container;
     public playerContainer: Container;
     public playerProjCont: Container;
-    public maxHealth: number;
-
+    public maxHealth: number = 1;
 
     constructor(
-        idTeam: string,
-        idClass: string,
+        idTeam: string = 'player',
+        idClass: string = 'ship',
         maxHealth: number = 1,
         damage: number = 1,
         scaleRatio: number = 1,
@@ -63,8 +60,7 @@ export class Actor extends Container {
         initPosAccY: number = 0.8,
         baseSpriteName: string = 'ShipPlayer-FullHealth.png',
         animated: boolean = false,
-        shieldSpriteName?: string,
-        debugBgColor?: string
+        shieldSpriteName: string = 'none'
     ) {
         super();
         this.gameMode = GameMode.instance;
@@ -73,8 +69,38 @@ export class Actor extends Container {
         this.enemyProjCont = this.gameMode.battle.enemyProjCont;
         this.playerContainer = this.gameMode.battle.playerContainer;
         this.playerProjCont = this.gameMode.battle.playerProjCont;
-        this.idTeam = idTeam; // either 'player' or 'enemy', for proyectile damage case
-        this.idClass = idClass; // either 'ship' or 'projectile', projectiles should go a little faster down
+        this.sprite = new Sprite();
+        this.debugGraphics = new Graphics();
+        this.addChild(this.debugGraphics);
+        this.shieldSprite = new Sprite();
+
+        this.reset(idTeam,
+            idClass,
+            maxHealth,
+            damage,
+            scaleRatio,
+            initPosAccX,
+            initPosAccY,
+            baseSpriteName,
+            animated,
+            shieldSpriteName
+        );
+    }
+
+    public async reset(
+        idTeam: string = 'player',
+        idClass: string = 'ship',
+        maxHealth: number = 1,
+        damage: number = 1,
+        scaleRatio: number = 1,
+        initPosAccX: number = 0,
+        initPosAccY: number = 0.8,
+        baseSpriteName: string = 'ShipPlayer-FullHealth.png',
+        animated: boolean = false,
+        shieldSpriteName: string = 'none'
+    ) {
+        this.idTeam = idTeam;
+        this.idClass = idClass;
         this.damage = damage;
         this.scaleRatio = scaleRatio;
         this.maxHealth = maxHealth;
@@ -105,24 +131,15 @@ export class Actor extends Container {
         this.colY = 0;
         this.colX = 0;
         this.hasAi = false;
-        this.sprite = new Sprite();
-        this.debugBgColor = 'none';
         this.isInmune = false;
+        if(shieldSpriteName && shieldSpriteName !== 'none') this.loadShieldSprite(shieldSpriteName);
         
-        if(debugBgColor) this.debugBgColor = debugBgColor;
-        this.bgShape = new Graphics();
-        this.addChild(this.bgShape);
-
-        this.debugGraphics = new Graphics();
-        this.addChild(this.debugGraphics);
 
         if (animated) {
             this.loadBaseAnim(baseSpriteName);
         } else {
-            this.loadBaseSprite(baseSpriteName);
+            await this.loadBaseSprite(baseSpriteName);
         }
-        this.shieldSprite = new Sprite;
-        if(shieldSpriteName && shieldSpriteName !== 'none') this.loadShieldSprite(shieldSpriteName);
         
         this.spriteScaleRatio = 1.6;
 
@@ -233,11 +250,18 @@ export class Actor extends Container {
     }
 
     public destroyActor() {
+        
+        // // Check if the actor is a projectile and release it back to the pool
+        // if (this.idClass === 'projectile') {
+        //     this.gameMode.battle.projectilePool.release(this as Projectile);
+        //     return;
+        // }
+        
+        if(this.idTeam === 'player' && this.idClass === 'ship') this.gameMode.battle.gameOver();
         // Remove from parent container and Destroy
         if (this.parent) {
             this.parent.removeChild(this);
         }
-        if(this.idTeam === 'player' && this.idClass === 'ship') this.gameMode.gameOver();
         this.destroy({ children: true, texture: false, baseTexture: false });
     }
 
@@ -257,7 +281,7 @@ export class Actor extends Container {
         }
     }
 
-    private loadBaseSprite(spriteName: string) {
+    private async loadBaseSprite(spriteName: string) {
         const texture = this.gameMode.getTexture(spriteName);
         if (texture) {
             this.sprite = new Sprite(texture);
@@ -279,12 +303,10 @@ export class Actor extends Container {
                 if (animLabel === 'destroyed') {
                     this.wasDestroyed = true;
                     this.sprite.loop = false;
-                    // if(this.idClass === 'projectile') this.sprite.x = -this.sprite.width;
                     if(this.idClass === 'ship') {
                         this.sprite.x = -this.sprite.width;
                         this.sprite.scale.set(this.scaleRatio);
                     }
-                    this.sprite.animationSpeed = 0.1;
                     this.sprite.onComplete = () => this.destroyActor();
                 }
                 this.sprite.play();
@@ -370,25 +392,40 @@ export class Actor extends Container {
             this.setResponsive();
         }
     }
+
+    // private isWithinLimits(posAcc: number, limitL: number, limitR: number): boolean {
+    //     // Convert the position accumulator to the global space
+    //     const globalPosition = (posAcc + 1) / 2 * (limitR - limitL) + limitL;
+        
+    //     // Check if the global position is within the specified limits
+    //     return globalPosition >= limitL && globalPosition <= limitR;
+    // }
     
     private calcMove(axis: string, currentPosAcc: number, input: number, limitL: number, limitR: number): number | null {
         // Calculate the effective screen size based on global limits
         const effectiveScreenSize = limitR - limitL;
-        
-        // Adjusted scale per axis, normalized by the effective screen size
-        const speedRatioX = 0.007;
-        // Projectiles different speed by screen vertical direction
+        let speedRatioX = 0;
         let speedRatioY = 0;
-        if(this.idClass === 'projectile') {
-            if(axis === 'y' && input > 0) { // Going to the bottom of the screen
-                speedRatioY = 0.0055;
-            } else if (axis === 'y' && input < 0){ // Going to the top of the screen
+        if(this.idClass === 'ship' && this.idTeam === 'player') {
+            if(axis === 'x') {
+                speedRatioX = 0.017;
+            } else if (axis === 'y'){
                 speedRatioY = 0.005;
             }
         } else {
-            speedRatioY = 0.0015;
+                // Adjusted scale per axis, normalized by the effective screen size
+                speedRatioX = 0.007;
+                // Projectiles different speed by screen vertical direction
+                if(this.idClass === 'projectile') {
+                if(axis === 'y' && input > 0) { // Going to the bottom of the screen
+                    speedRatioY = 0.015;
+                } else if (axis === 'y' && input < 0){ // Going to the top of the screen
+                    speedRatioY = 0.02;
+                }
+            } else {
+                speedRatioY = 0.0015;
+            }
         }
-
         const baseMovementScale = axis === 'x' ? speedRatioX : speedRatioY;
         const normalizedMovementScale = baseMovementScale * this.speedGlobalRatio * (effectiveScreenSize / (this.globalLimitR - this.globalLimitL));
         
@@ -424,7 +461,7 @@ export class Actor extends Container {
         this.trackPos();
     }
 
-    private calcRespScale() {
+    public calcRespScale() {
         this.contWidth = (0.07 * this.scaleRatio) * this.screenRef.frameB;
         this.contPosX = -this.contWidth / 2;
         this.contPosY = -this.contWidth / 2;
@@ -440,11 +477,4 @@ export class Actor extends Container {
         this.globalLimitT = this.contHeight / 2;
         this.globalLimitB = this.screenRef.frameB - this.contHeight / 2;
     }
-
-    // private debugShape() {
-    //     this.bgShape.clear();
-    //     this.bgShape.beginFill(this.debugBgColor);
-    //     this.bgShape.drawRect(this.contPosX, this.contPosY, this.contWidth, this.contHeight);
-    //     this.bgShape.endFill();
-    // }
 }
