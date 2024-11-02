@@ -2,6 +2,8 @@ import { Actor } from "./actor";
 import { Shooter } from "./shooter";
 
 export class Projectile extends Actor {
+    public isActive: boolean = false;
+
     constructor(
         shooterRef: Shooter,
         trackOpponent: boolean,
@@ -46,5 +48,10 @@ export class Projectile extends Actor {
             this.moveX(this.dirX);
             this.moveY(this.dirY);
         }
+    }
+
+    public destroyActor() {
+        this.isActive = false;
+        super.destroyActor();
     }
 }

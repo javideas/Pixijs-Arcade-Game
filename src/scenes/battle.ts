@@ -37,10 +37,10 @@ export default class Battle {
         // Battle UI Container: Light Years travelled
         this.battleUiCont = new Container();
 
-        // Initialize the object pool for projectiles
-        this.projectilePool = new ObjectPool<Projectile>((shooter: Shooter, trackOpponent: boolean, damage: number, dirX: number, dirY: number, offsetX?: number, offsetY?: number) => {
-            return new Projectile(shooter, trackOpponent, damage, dirX, dirY, offsetX, offsetY);
-        }, 20); // Pre-fill with 20 projectiles, adjust as needed
+        // // Initialize the object pool for projectiles
+        // this.projectilePool = new ObjectPool<Projectile>((shooter: Shooter, trackOpponent: boolean, damage: number, dirX: number, dirY: number, offsetX?: number, offsetY?: number) => {
+        //     return new Projectile(shooter, trackOpponent, damage, dirX, dirY, offsetX, offsetY);
+        // }, 20);
     }
 
     /** Initialize the screen and decks */
@@ -51,7 +51,7 @@ export default class Battle {
         this.playerShipCont.addChild(this.player);
 
         this.spawnEnemy('malko', 1.3, -0.8);
-        this.spawnEnemy('asteroid', -0.7, -2);
+        // this.spawnEnemy('asteroid', -0.7, -2);
     }
 
     public async gameOver() {
@@ -70,6 +70,9 @@ export default class Battle {
         this.logElapsedTime();
         this.gameProgress();
         this.gameMode.ui.screen.moveSpaceBackground();
+
+        const totalProjectiles = this.playerProjCont.children.length + this.enemyProjCont.children.length;
+        console.log('Total Projectiles: ', totalProjectiles);
 
         this.enemyContainer.children.forEach((containers) => {
             if (containers.children) { // Check if children is defined
@@ -111,7 +114,7 @@ export default class Battle {
         if(this.currentTime !== 0) {
             if (this.currentTime > this.randomInterval) {
                 // Spawn every random seconds
-                this.spawnRandEnemy();
+                // this.spawnRandEnemy();
                 this.randomInterval = this.randomInterval + this.getRandomNumber(3000, 5000);
             } else if (this.currentTime > 1000 * this.lightYears) {
                 const speedUp = 1;

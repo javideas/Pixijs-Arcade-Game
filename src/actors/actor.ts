@@ -52,7 +52,6 @@ export class Actor extends Container {
     public playerProjCont: Container;
     public maxHealth: number;
 
-
     constructor(
         idTeam: string,
         idClass: string,
@@ -73,8 +72,39 @@ export class Actor extends Container {
         this.enemyProjCont = this.gameMode.battle.enemyProjCont;
         this.playerContainer = this.gameMode.battle.playerContainer;
         this.playerProjCont = this.gameMode.battle.playerProjCont;
-        this.idTeam = idTeam; // either 'player' or 'enemy', for proyectile damage case
-        this.idClass = idClass; // either 'ship' or 'projectile', projectiles should go a little faster down
+        this.sprite = new Sprite();
+        this.debugGraphics = new Graphics();
+        this.addChild(this.debugGraphics);
+        this.shieldSprite = new Sprite();
+        if(shieldSpriteName && shieldSpriteName !== 'none') this.loadShieldSprite(shieldSpriteName);
+
+        this.reset(idTeam,
+            idClass,
+            maxHealth,
+            damage,
+            scaleRatio,
+            initPosAccX,
+            initPosAccY,
+            baseSpriteName,
+            animated,
+            shieldSpriteName
+        );
+    }
+
+    public reset(
+        idTeam: string,
+        idClass: string,
+        maxHealth: number = 1,
+        damage: number = 1,
+        scaleRatio: number,
+        initPosAccX: number,
+        initPosAccY: number,
+        baseSpriteName: string = 'ShipPlayer-FullHealth.png',
+        animated: boolean = false,
+        shieldSpriteName?: string
+    ) {
+        this.idTeam = idTeam;
+        this.idClass = idClass;
         this.damage = damage;
         this.scaleRatio = scaleRatio;
         this.maxHealth = maxHealth;
@@ -105,24 +135,14 @@ export class Actor extends Container {
         this.colY = 0;
         this.colX = 0;
         this.hasAi = false;
-        this.sprite = new Sprite();
-        this.debugBgColor = 'none';
         this.isInmune = false;
         
-        if(debugBgColor) this.debugBgColor = debugBgColor;
-        this.bgShape = new Graphics();
-        this.addChild(this.bgShape);
-
-        this.debugGraphics = new Graphics();
-        this.addChild(this.debugGraphics);
 
         if (animated) {
             this.loadBaseAnim(baseSpriteName);
         } else {
             this.loadBaseSprite(baseSpriteName);
         }
-        this.shieldSprite = new Sprite;
-        if(shieldSpriteName && shieldSpriteName !== 'none') this.loadShieldSprite(shieldSpriteName);
         
         this.spriteScaleRatio = 1.6;
 
@@ -233,11 +253,18 @@ export class Actor extends Container {
     }
 
     public destroyActor() {
+        
+        // // Check if the actor is a projectile and release it back to the pool
+        // if (this.idClass === 'projectile') {
+        //     this.gameMode.battle.projectilePool.release(this as Projectile);
+        //     return;
+        // }
+        
+        if(this.idTeam === 'player' && this.idClass === 'ship') this.gameMode.battle.gameOver();
         // Remove from parent container and Destroy
         if (this.parent) {
             this.parent.removeChild(this);
         }
-        if(this.idTeam === 'player' && this.idClass === 'ship') this.gameMode.battle.gameOver();
         this.destroy({ children: true, texture: false, baseTexture: false });
     }
 
@@ -279,12 +306,10 @@ export class Actor extends Container {
                 if (animLabel === 'destroyed') {
                     this.wasDestroyed = true;
                     this.sprite.loop = false;
-                    // if(this.idClass === 'projectile') this.sprite.x = -this.sprite.width;
                     if(this.idClass === 'ship') {
                         this.sprite.x = -this.sprite.width;
                         this.sprite.scale.set(this.scaleRatio);
                     }
-                    this.sprite.animationSpeed = 0.1;
                     this.sprite.onComplete = () => this.destroyActor();
                 }
                 this.sprite.play();
@@ -370,25 +395,40 @@ export class Actor extends Container {
             this.setResponsive();
         }
     }
+
+    private isWithinLimits(posAcc: number, limitL: number, limitR: number): boolean {
+        // Convert the position accumulator to the global space
+        const globalPosition = (posAcc + 1) / 2 * (limitR - limitL) + limitL;
+        
+        // Check if the global position is within the specified limits
+        return globalPosition >= limitL && globalPosition <= limitR;
+    }
     
     private calcMove(axis: string, currentPosAcc: number, input: number, limitL: number, limitR: number): number | null {
         // Calculate the effective screen size based on global limits
         const effectiveScreenSize = limitR - limitL;
-        
-        // Adjusted scale per axis, normalized by the effective screen size
-        const speedRatioX = 0.007;
-        // Projectiles different speed by screen vertical direction
+        let speedRatioX = 0;
         let speedRatioY = 0;
-        if(this.idClass === 'projectile') {
-            if(axis === 'y' && input > 0) { // Going to the bottom of the screen
-                speedRatioY = 0.0055;
-            } else if (axis === 'y' && input < 0){ // Going to the top of the screen
+        if(this.idClass === 'ship' && this.idTeam === 'player') {
+            if(axis === 'x') {
+                speedRatioX = 0.017;
+            } else if (axis === 'y'){
                 speedRatioY = 0.005;
             }
         } else {
-            speedRatioY = 0.0015;
+                // Adjusted scale per axis, normalized by the effective screen size
+                speedRatioX = 0.007;
+                // Projectiles different speed by screen vertical direction
+                if(this.idClass === 'projectile') {
+                if(axis === 'y' && input > 0) { // Going to the bottom of the screen
+                    speedRatioY = 0.015;
+                } else if (axis === 'y' && input < 0){ // Going to the top of the screen
+                    speedRatioY = 0.02;
+                }
+            } else {
+                speedRatioY = 0.0015;
+            }
         }
-
         const baseMovementScale = axis === 'x' ? speedRatioX : speedRatioY;
         const normalizedMovementScale = baseMovementScale * this.speedGlobalRatio * (effectiveScreenSize / (this.globalLimitR - this.globalLimitL));
         
@@ -440,11 +480,4 @@ export class Actor extends Container {
         this.globalLimitT = this.contHeight / 2;
         this.globalLimitB = this.screenRef.frameB - this.contHeight / 2;
     }
-
-    // private debugShape() {
-    //     this.bgShape.clear();
-    //     this.bgShape.beginFill(this.debugBgColor);
-    //     this.bgShape.drawRect(this.contPosX, this.contPosY, this.contWidth, this.contHeight);
-    //     this.bgShape.endFill();
-    // }
 }
