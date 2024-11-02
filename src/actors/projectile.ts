@@ -2,6 +2,8 @@ import { Actor } from "./actor";
 import { Shooter } from "./shooter";
 
 export class Projectile extends Actor {
+    public isActive: boolean = false;
+
     constructor(
         shooterRef: Shooter,
         trackOpponent: boolean,
@@ -20,7 +22,7 @@ export class Projectile extends Actor {
             damage,
             scaleRatio,
             shooterRef.posAccX + offsetX,
-            shooterRef.posAccY - offsetY,
+            shooterRef.posAccY + offsetY,
             'Projectile', // Sprite/Animation name
             true, // isAnimated?
             'none',
@@ -46,5 +48,43 @@ export class Projectile extends Actor {
             this.moveX(this.dirX);
             this.moveY(this.dirY);
         }
+    }
+
+    public reset(
+        shooterRef: Shooter,
+        trackOpponent: boolean,
+        damage: number = 1,
+        dirX: number = 0,
+        dirY: number = -1,
+        offsetX: number = 0,
+        offsetY: number = 0,
+        scaleRatio: number = 1,
+        debugBgColor: string = 'red'
+    ) {
+        super.reset(
+            shooterRef.idTeam,
+            'projectile',
+            1,
+            damage,
+            scaleRatio,
+            shooterRef.posAccX + offsetX,
+            shooterRef.posAccY + offsetY,
+            'Projectile',
+            true,
+            'none',
+            debugBgColor
+        );
+        this.isActive = true;
+        this.trackOpponent = trackOpponent;
+        this.dirX = dirX;
+        this.dirY = dirY;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+        this.flipSprite(dirY);
+    }
+
+    public destroyActor() {
+        this.isActive = false;
+        super.destroyActor();
     }
 }

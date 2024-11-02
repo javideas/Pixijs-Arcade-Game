@@ -38,13 +38,13 @@ export class Player extends Shooter {
     }
 
     public moveX(value: number) {
-        if(!this.wasDestroyed){
+        if(!this.wasDestroyed && this.isWithinLimits(this.posAccX, this.globalLimitL, this.globalLimitR)){
             super.moveX(value);
         }
     }
 
     public moveY(value: number) {
-        if(!this.wasDestroyed){
+        if(!this.wasDestroyed && this.isWithinLimits(this.posAccY, this.globalLimitT, this.globalLimitB)){
             super.moveY(value);
         }
     }

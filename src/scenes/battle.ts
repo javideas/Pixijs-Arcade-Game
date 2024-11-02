@@ -40,7 +40,10 @@ export default class Battle {
         this.enemyPool = new ObjectPool<Enemy>((enemyType: string, posAccX: number, posAccY: number) => {
             return new Enemy(enemyType, posAccX, posAccY);
         });
-        this.projectilePool = new ObjectPool<Projectile>(() => new Projectile());
+        // Initialize the object pool for projectiles
+        this.projectilePool = new ObjectPool<Projectile>((shooter: Shooter, trackOpponent: boolean, damage: number, dirX: number, dirY: number, offsetX?: number, offsetY?: number) => {
+            return new Projectile(shooter, trackOpponent, damage, dirX, dirY, offsetX, offsetY);
+        }, 20); // Pre-fill with 20 projectiles, adjust as needed
     }
 
     /** Initialize the screen and decks */
@@ -152,7 +155,7 @@ export default class Battle {
     /** Load Container for player and enemys, AND container for projectiles */
     private async loadContainers() {
         // Enemy container is behind Player Container
-        // AND Projectiles Container are behind Ships containers
+        // AND Projectiles Container are behind Ships containersd
         // Enemy Container:
         this.enemyContainer = addAndFindChildByName(this.gameMode.stageContainer, 'enemyContainer');
         // Enemy Projectiles Container:

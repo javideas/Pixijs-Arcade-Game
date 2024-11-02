@@ -75,7 +75,11 @@ export class Shooter extends Actor {
     }
 
     private spawnProjectile(trackOpponent: boolean, damage: number, dirX: number, dirY: number, offsetX?: number, offsetY?: number) {
-        const projectile = new Projectile(this, trackOpponent, damage, dirX, dirY, offsetX, offsetY);
+        // Obtain a projectile from the pool
+        const projectile = this.gameMode.battle.projectilePool.obtain(this, trackOpponent, damage, dirX, dirY, offsetX, offsetY);
+        
+        // Add the projectile to the appropriate container
         this.idTeam == 'player' ? this.playerProjCont.addChild(projectile) : this.enemyProjCont.addChild(projectile);
+        console.log(this.playerProjCont.children.length);
     }
 }

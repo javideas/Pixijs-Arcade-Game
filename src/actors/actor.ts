@@ -73,8 +73,39 @@ export class Actor extends Container {
         this.enemyProjCont = this.gameMode.battle.enemyProjCont;
         this.playerContainer = this.gameMode.battle.playerContainer;
         this.playerProjCont = this.gameMode.battle.playerProjCont;
-        this.idTeam = idTeam; // either 'player' or 'enemy', for proyectile damage case
-        this.idClass = idClass; // either 'ship' or 'projectile', projectiles should go a little faster down
+        this.sprite = new Sprite();
+        this.debugGraphics = new Graphics();
+        this.addChild(this.debugGraphics);
+        this.shieldSprite = new Sprite();
+        if(shieldSpriteName && shieldSpriteName !== 'none') this.loadShieldSprite(shieldSpriteName);
+
+        this.reset(idTeam,
+            idClass,
+            maxHealth,
+            damage,
+            scaleRatio,
+            initPosAccX,
+            initPosAccY,
+            baseSpriteName,
+            animated,
+            shieldSpriteName
+        );
+    }
+
+    public reset(
+        idTeam: string,
+        idClass: string,
+        maxHealth: number = 1,
+        damage: number = 1,
+        scaleRatio: number,
+        initPosAccX: number,
+        initPosAccY: number,
+        baseSpriteName: string = 'ShipPlayer-FullHealth.png',
+        animated: boolean = false,
+        shieldSpriteName?: string
+    ) {
+        this.idTeam = idTeam;
+        this.idClass = idClass;
         this.damage = damage;
         this.scaleRatio = scaleRatio;
         this.maxHealth = maxHealth;
@@ -105,25 +136,15 @@ export class Actor extends Container {
         this.colY = 0;
         this.colX = 0;
         this.hasAi = false;
-        this.sprite = new Sprite();
-        this.debugBgColor = 'none';
         this.isInmune = false;
-        
-        if(debugBgColor) this.debugBgColor = debugBgColor;
-        this.bgShape = new Graphics();
-        this.addChild(this.bgShape);
 
-        this.debugGraphics = new Graphics();
-        this.addChild(this.debugGraphics);
 
         if (animated) {
             this.loadBaseAnim(baseSpriteName);
         } else {
             this.loadBaseSprite(baseSpriteName);
         }
-        this.shieldSprite = new Sprite;
-        if(shieldSpriteName && shieldSpriteName !== 'none') this.loadShieldSprite(shieldSpriteName);
-        
+
         this.spriteScaleRatio = 1.6;
 
         this.init();
@@ -233,18 +254,23 @@ export class Actor extends Container {
     }
 
     public destroyActor() {
-        // Remove from parent container and Destroy
-        if (this.parent) {
-            this.parent.removeChild(this);
+        
+        // Check if the actor is a projectile and release it back to the pool
+        if (this.idClass === 'projectile') {
+            this.gameMode.battle.projectilePool.release(this as Projectile);
+            return;
         }
+        
         // Check if the actor is an enemy and release it back to the pool
         if (this.idTeam === 'enemy' && this.idClass === 'ship') {
             this.gameMode.battle.enemyPool.release(this as Enemy);
             return;
         }
         if(this.idTeam === 'player' && this.idClass === 'ship') this.gameMode.battle.gameOver();
-        // TODO: when projectiles are destroyed, check if they are in the pool and release them
-        this.destroy({ children: true, texture: false, baseTexture: false });
+        // Remove from parent container and Destroy
+        if (this.parent) {
+            this.parent.removeChild(this);
+        }
     }
 
     public flipSprite(dirY: number, offsetDir: number = 1) {
@@ -285,12 +311,10 @@ export class Actor extends Container {
                 if (animLabel === 'destroyed') {
                     this.wasDestroyed = true;
                     this.sprite.loop = false;
-                    // if(this.idClass === 'projectile') this.sprite.x = -this.sprite.width;
                     if(this.idClass === 'ship') {
                         this.sprite.x = -this.sprite.width;
                         this.sprite.scale.set(this.scaleRatio);
                     }
-                    this.sprite.animationSpeed = 0.1;
                     this.sprite.onComplete = () => this.destroyActor();
                 }
                 this.sprite.play();
@@ -376,6 +400,14 @@ export class Actor extends Container {
             this.setResponsive();
         }
     }
+
+    private isWithinLimits(posAcc: number, limitL: number, limitR: number): boolean {
+        // Convert the position accumulator to the global space
+        const globalPosition = (posAcc + 1) / 2 * (limitR - limitL) + limitL;
+        
+        // Check if the global position is within the specified limits
+        return globalPosition >= limitL && globalPosition <= limitR;
+    }
     
     private calcMove(axis: string, currentPosAcc: number, input: number, limitL: number, limitR: number): number | null {
         // Calculate the effective screen size based on global limits
@@ -403,16 +435,16 @@ export class Actor extends Container {
         // Calculate the resulting position
         const resultingPosition = (newPosAcc + 1) / 2 * (limitR - limitL) + limitL;
 
-        // Check if the resulting position is within the limits
-        if (resultingPosition >= limitL && resultingPosition <= limitR) {
-            return newPosAcc; // Return the new position accumulator if within limits
-        }
-
-        if(this.idClass !== 'projectile') {
-            return null
-        }
-        this.destroyActor();
-        return null;
+        // // Check if the resulting position is within the limits
+        // if (resultingPosition >= limitL && resultingPosition <= limitR) {
+        //     return newPosAcc; // Return the new position accumulator if within limits
+        // }
+        // if(this.idClass !== 'projectile') {
+        //     return null
+        // }
+        // this.destroyActor();
+        // return null;
+        return newPosAcc;
     }
 
     private trackPos() {
@@ -446,11 +478,4 @@ export class Actor extends Container {
         this.globalLimitT = this.contHeight / 2;
         this.globalLimitB = this.screenRef.frameB - this.contHeight / 2;
     }
-
-    // private debugShape() {
-    //     this.bgShape.clear();
-    //     this.bgShape.beginFill(this.debugBgColor);
-    //     this.bgShape.drawRect(this.contPosX, this.contPosY, this.contWidth, this.contHeight);
-    //     this.bgShape.endFill();
-    // }
 }
