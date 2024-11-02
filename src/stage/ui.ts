@@ -19,6 +19,7 @@ export default class Ui {
     public pixelatedText: Text;
     protected playerProjCont: Container;
     protected enemyProjCont: Container;
+    protected battleUiCont: Container;
 
     constructor(app: Application) {
         this.app = app;
@@ -28,12 +29,13 @@ export default class Ui {
         this.deckL = new Deck('black');
         this.playerProjCont = new Container();
         this.enemyProjCont = new Container();
+        this.battleUiCont = new Container();
         this.maskFilter = new SpriteMaskFilter(new Graphics());
         this.stageMaskShape = new Graphics();
         this.crtMaskShape = new Graphics();
         this.renderTexture = RenderTexture.create({ width: 800, height: 600 });
         this.maskSprite = new Sprite();
-        this.pixelatedText = new Text('Default Text');
+        this.pixelatedText = new Text('no init');
     }
 
     /** load the User Interface */
@@ -59,7 +61,16 @@ export default class Ui {
         this.applyFilters();
     }
 
-    public textLightYears() {
+    public async toggleLightYears() {
+        if(this.pixelatedText.text === 'no init') {
+            await this.textLightYears();
+        } else {
+            this.updateLightYears(this.gameMode.battle.lightYears);
+            this.pixelatedText.visible = !this.pixelatedText.visible;
+        }
+    }
+
+    public async textLightYears() {
         // Create a text style for pixelated effect
         const textStyle = new TextStyle({
             fontFamily: 'Pixelify Sans', // Use the imported font
@@ -75,7 +86,8 @@ export default class Ui {
         this.updateLightYears();
 
         // Add the text to the stage
-        this.gameMode.stageContainer.addChild(this.pixelatedText);
+        const battleUiCont = this.gameMode.stageContainer.children.find(child => child.name === 'battleUiCont');
+        battleUiCont.addChild(this.pixelatedText);
     }
 
     public updateLightYears(value: number = 0) {
@@ -183,7 +195,7 @@ export default class Ui {
     
     /** Resize responsive */
     resize(mode: string = 'landscape') {
-        this.updateLightYears();
+        if(this.pixelatedText.text !== 'no init') this.updateLightYears();
         if (mode === 'landscape') {
             this.deckR.ratioWidth = 0.3;
             this.deckL.ratioWidth = 0.3;

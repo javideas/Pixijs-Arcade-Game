@@ -1,97 +1,70 @@
 import { gsap } from 'gsap';
+import { Application, Assets, Container, Texture, Sprite, AnimatedSprite } from 'pixi.js';
+import { ObjectPool } from '../utils/objectPool';
 import Ui from '../stage/ui';
-import Battle from '../scenes/battle'
-import { Application, Assets, Container, Texture } from 'pixi.js';
+import MainMenu from '../scenes/mainMenu';
+import Battle from '../scenes/battle';
 import TextureManager from './textureManager';
 
 export default class GameMode {
     private app: Application;
     public ui: Ui;
     public stageContainer: Container;
+    public mainMenu: MainMenu;
     public battle: Battle;
     public static instance: GameMode;
     public crtFilterContainer: Container;
-    private elapsedDelta: number = 0;
-    private currentTime: number;
     private currentMode: string;
-    private randomInterval: number = 0;
     private lastInmuneKeyPressed: number = -600;
     private lastShowColKeyPressed: number = -600;
-    private lightYears: number;
     public delta: number = 0;
     
     constructor(app: Application, stageContainer: Container){
         this.app = app;
         this.stageContainer = stageContainer;
         this.crtFilterContainer = app.stage.getChildByName('crtFilterContainer') as Container;
-        this.randomInterval = 2000;
+        this.mainMenu = new MainMenu();
         this.battle = new Battle();
         this.currentMode = 'none';
-        this.lightYears = 0;
-        this.currentTime = 0;
         GameMode.instance = this;
         this.ui = new Ui(this.app);
     }
 
-    private async loadScene(scene: string = 'battle') {
-        this.currentMode = scene;
-        // TODO: adding a Main Menu
-        switch(scene){
-            case 'battle':
-                this.battle = new Battle();
-                await this.battle.init();
-                return;
-        }
-    }
-
-    public async gameOver() {
-        console.log('---Game Over---');
-        await this.cleanupBattle();
+    private async loadScene(scene: string = 'mainMenu') {
         this.lastInmuneKeyPressed = -600;
         this.lastShowColKeyPressed = -600;
-        // Reset lightYears and time-related variables
-        this.lightYears = 0;
-        this.elapsedDelta = 0; // Reset elapsedDelta
-        this.currentTime = 0; // Reset currentTime
-
-        await this.loadScene('battle'); // Reload the battle scene
-        this.ui.screen.speedRatio = 2;
-        this.ui.updateLightYears();
+        this.currentMode = scene;
+        switch(scene){
+            case 'mainMenu':
+                this.mainMenu = new MainMenu();
+                await this.mainMenu.init();
+                return;
+                case 'battle':
+                    this.battle = new Battle();
+                    await this.battle.init();
+                return;
+        }
         window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
     }
 
     public async init() {
         await this.loadAssets();
         await this.loadUi();
-        await this.loadScene();
+        await this.loadScene('mainMenu');
 
-        this.ui.textLightYears();
         window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
         gsap.ticker.add(this.update.bind(this));
-    }
-
-    /** Tracking Light Years passed and Random spawning of Enemies by time */
-    private gameProgress(){
-        // if check every 5 seconds, checking this.currentTime
-        if(this.currentTime !== 0) {
-            if (this.currentTime > this.randomInterval) {
-                // Spawn every random seconds
-                this.battle.spawnRandEnemy();
-                this.randomInterval = this.randomInterval + this.getRandomNumber(3000, 5000);
-            } else if (this.currentTime > 1000 * this.lightYears) {
-                const speedUp = 1;
-                if(this.lightYears < 7) this.ui.screen.speedRatio += (speedUp * 0.5);
-                this.lightYears++;
-                // console.log('Light Years: ', this.lightYears);
-                this.ui.updateLightYears(this.lightYears)
-            }
-        }
     }
  
     private update() {
         this.delta = gsap.ticker.deltaRatio(60); // Normalize to 60 FPS
-        this.elapsedDelta += this.delta; // Accumulate delta time
 
+        this.filtersUpdate();
+
+        if (this.currentMode === 'battle') this.battle.update(this.delta);
+    }
+
+    private filtersUpdate() {
         if (this.crtFilterContainer && this.crtFilterContainer.filters) {
             const filters = this.crtFilterContainer.filters;
     
@@ -105,32 +78,6 @@ export default class GameMode {
                 (filters[2] as any).brightness = Math.sin(this.delta * 3) * -2 + 6; // Use 'any' or a specific type if known
             }
         }
-
-        this.logElapsedTime();
-        this.gameProgress();
-        this.ui.screen.moveSpaceBackground();
-    
-        this.battle.enemyContainer.children.forEach((containers) => {
-            if (containers.children) { // Check if children is defined
-                containers.children.forEach((child) => {
-                    const actor = child as unknown as { update: (delta?: number) => void; draw: () => void };
-                    if (typeof actor.draw === 'function') {
-                        actor.update(this.delta);
-                    }
-                });
-            }
-        });
-    
-        this.battle.playerContainer.children.forEach((containers) => {
-            if (containers.children) { // Check if children is defined
-                containers.children.forEach((child) => {
-                    const actor = child as unknown as { update: (delta?: number) => void; draw: () => void };
-                    if (typeof actor.draw === 'function') {
-                        actor.update(this.delta);
-                    }
-                });
-            }
-        });
     }
 
     private async loadUi() {
@@ -192,31 +139,8 @@ export default class GameMode {
         return textures;
     }
 
-    private getRandomNumber(min: number, max: number): number {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-    
-    private logElapsedTime() {
-        // Log every second without resetting elapsedTime
-        const elapsedTime = Math.floor(this.elapsedDelta / 60) * 1000;
-    
-        // Only log if a new second has been reached
-        if (elapsedTime > this.currentTime) {
-            this.currentTime = elapsedTime;
-            // console.log(`Elapsed time: ${this.currentTime / 1000} seconds`);
-        }
-    }
-
     public playerInput(action: string = 'none') {
-        switch(this.currentMode) {
-            case 'battle':
-                this.inputSystBattle(action);
-            return;
-        }
-    }
-
-    private inputSystBattle(action: string = 'none') {
-        if(this.battle.player) {
+        if(this.battle.player && this.currentMode === 'battle') {
             if (this.delta < 0.016) return;
             switch(action) {
                 case 'left':
@@ -252,11 +176,11 @@ export default class GameMode {
                     break;
                 case 'inmunity': // lastInmuneKeyPressed
                     // Allow the action if more than 500ms have passed since the last execution
-                    if (this.currentTime - this.lastInmuneKeyPressed > 500 ) {
+                    if (this.battle.currentTime - this.lastInmuneKeyPressed > 500 ) {
                         this.battle.player.toggleInmunity(false); // Inmunity: here not triggered by Damage, but by input
                         // if showCollisions was true, reactivate it (as actors were redraw)
                         if(this.battle.player.isColVisible) this.battle.player.showCollisions();
-                        this.lastInmuneKeyPressed = this.currentTime;
+                        this.lastInmuneKeyPressed = this.battle.currentTime;
                     }
                     break;
                 // case 'pause': // TODO
@@ -264,24 +188,20 @@ export default class GameMode {
                 //     break;
                 case 'showCollisions':
                     // Allow the action if more than 500ms have passed since the last execution
-                    if (this.currentTime - this.lastShowColKeyPressed > 500 ) {
+                    if (this.battle.currentTime - this.lastShowColKeyPressed > 500 ) {
                         this.battle.player.showCollisions();
-                        this.lastShowColKeyPressed = this.currentTime;
+                        this.lastShowColKeyPressed = this.battle.currentTime;
                     }
                     break;
                 default:
                     break;
             }
+        } else if (this.currentMode === 'mainMenu') {
+            this.mainMenu.playerInput(action);
         }
     }
 
     public resize(responsiveMode: string  = 'landscape') {
         this.ui.resize(responsiveMode);
-    }
-
-    private async cleanupBattle() {
-        if (this.battle) {
-            this.battle.destroy();
-        }
     }
 }

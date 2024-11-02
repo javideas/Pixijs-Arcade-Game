@@ -237,7 +237,7 @@ export class Actor extends Container {
         if (this.parent) {
             this.parent.removeChild(this);
         }
-        if(this.idTeam === 'player' && this.idClass === 'ship') this.gameMode.gameOver();
+        if(this.idTeam === 'player' && this.idClass === 'ship') this.gameMode.battle.gameOver();
         this.destroy({ children: true, texture: false, baseTexture: false });
     }
 
