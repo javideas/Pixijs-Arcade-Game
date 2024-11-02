@@ -4,6 +4,8 @@ import { Shooter } from "./shooter";
 export class Projectile extends Actor {
     public isActive: boolean = false;
 
+    public readonly shooterRef: Shooter;
+
     constructor(
         shooterRef: Shooter,
         trackOpponent: boolean,
@@ -12,22 +14,22 @@ export class Projectile extends Actor {
         dirY: number = -1,
         offsetX: number = 0,
         offsetY: number = 0,
-        scaleRatio: number = 1,
-        debugBgColor: string = 'red'
+        scaleRatio: number = 0.3
     ) {
+
         super(
             shooterRef.idTeam,
             'projectile', // idClass
             1, // max Health
             damage,
-            scaleRatio,
+            shooterRef.idTeam === 'player' ? scaleRatio : 1,
             shooterRef.posAccX + offsetX,
             shooterRef.posAccY - offsetY,
-            'Projectile', // Sprite/Animation name
-            true, // isAnimated?
-            'none',
-            debugBgColor
+            shooterRef.idTeam === 'player' ? 'VfxGreen' : 'Projectile', // Sprite/Animation name
+            true // isAnimated?
         );
+
+        this.shooterRef = shooterRef;
         this.spriteName = 'Projectile';
         this.trackOpponent = trackOpponent;
         this.colWidthRatio = 0.15;
@@ -41,6 +43,7 @@ export class Projectile extends Actor {
         
         this.flipSprite(dirY);
     }
+
 
     public update() {
         super.update();

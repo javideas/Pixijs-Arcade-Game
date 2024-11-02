@@ -54,12 +54,14 @@ export class Enemy extends Shooter {
     public tl: gsap.core.Timeline;
     private autoShoot: boolean;
     public enemyType: string;
-
+    public contWidth: number = 0;
+    public contHeight: number = 0;
+    public contPosX: number = 0;
+    public contPosY: number = 0;
     constructor(
         enemyType: string = 'malko',
         initPosAccX?: number,
-        initPosAccY?: number,
-        debugBgColor: string = 'green'
+        initPosAccY?: number
     ) {
         const enemyProps = getEnemyProps(enemyType);
         super(
@@ -71,8 +73,7 @@ export class Enemy extends Shooter {
             initPosAccY,
             enemyProps.fireRate,
             enemyProps.spriteName,
-            'none', // TODO: each enemy with a custom Shield
-            debugBgColor
+            'none' // TODO: each enemy with a custom Shield
         );
         this.tl = gsap.timeline({});
         this.enemyType = enemyType;

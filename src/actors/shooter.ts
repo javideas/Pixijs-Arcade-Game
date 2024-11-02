@@ -7,18 +7,21 @@ export class Shooter extends Actor {
     private hasShot: boolean;
     protected shotDirY: number;
     public weaponType: string;
+    public contWidth: number = 0;
+    public contHeight: number = 0;
+    public contPosX: number = 0;
+    public contPosY: number = 0;
 
     constructor(
         idTeam: string,
         health: number,
         damage: number = 1,
         scaleRatio: number = 1,
-        initPosAccX?: number,
-        initPosAccY?: number,
+        initPosAccX: number = 0,
+        initPosAccY: number = 0.8,
         fireRate: number = 15,
         spriteName: string = 'ShipPlayer-FullHealth.png',
-        shieldSpriteName?: string,
-        debugBgColor: string = 'red'
+        shieldSpriteName?: string
     ) {
         super(
             idTeam,
@@ -30,8 +33,7 @@ export class Shooter extends Actor {
             initPosAccY,
             spriteName,
             false, // animated
-            shieldSpriteName,
-            debugBgColor
+            shieldSpriteName
         );
         this.weaponType = 'none';
         this.idTeam = idTeam;

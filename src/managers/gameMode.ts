@@ -1,6 +1,5 @@
 import { gsap } from 'gsap';
-import { Application, Assets, Container, Texture, Sprite, AnimatedSprite } from 'pixi.js';
-import { ObjectPool } from '../utils/objectPool';
+import { Application, Assets, Container, Texture } from 'pixi.js';
 import Ui from '../stage/ui';
 import MainMenu from '../scenes/mainMenu';
 import Battle from '../scenes/battle';
@@ -30,19 +29,21 @@ export default class GameMode {
         this.ui = new Ui(this.app);
     }
 
-    private async loadScene(scene: string = 'mainMenu') {
+    public async loadScene(scene: string = 'mainMenu') {
         this.lastInmuneKeyPressed = -600;
         this.lastShowColKeyPressed = -600;
         this.currentMode = scene;
         switch(scene){
             case 'mainMenu':
+                if (this.ui.startText) this.ui.startText.visible = true;
                 this.mainMenu = new MainMenu();
                 await this.mainMenu.init();
                 return;
-                case 'battle':
-                    this.battle = new Battle();
-                    await this.battle.init();
-                return;
+            case 'battle':
+                if (this.ui.startText) this.ui.startText.visible = false;
+                this.battle = new Battle();
+                await this.battle.init();
+            return;
         }
         window.innerWidth > window.innerHeight ? this.resize('landscape') : this.resize('portrait');
     }
@@ -61,7 +62,7 @@ export default class GameMode {
 
         this.filtersUpdate();
 
-        if (this.currentMode === 'battle') this.battle.update(this.delta);
+        if (this.currentMode === 'battle') return this.battle.update(this.delta);
     }
 
     private filtersUpdate() {

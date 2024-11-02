@@ -2,11 +2,14 @@ import { Shooter } from "./shooter";
 
 export class Player extends Shooter {
     public isColVisible: boolean;
+    public contWidth: number = 0;
+    public contHeight: number = 0;
+    public contPosX: number = 0;
+    public contPosY: number = 0;
 
     constructor(
-        initPosAccX?: number,
-        initPosAccY?: number,
-        debugBgColor: string = 'yellow'
+        initPosAccX: number = 0,
+        initPosAccY: number = 0.8
     ) {
         super(
             'player',
@@ -17,8 +20,7 @@ export class Player extends Shooter {
             initPosAccY,
             8, // fireRate
             'ShipPlayer-FullHealth.png',
-            'Invincibility-9.png',
-            debugBgColor
+            'Invincibility-9.png'
         );
         this.isColVisible = false; // TODO: either to be Global in GameMode or per Class
         this.isInmune = false; // TODO: just Debug now, use SHIELD texture and add Shield()
@@ -27,6 +29,9 @@ export class Player extends Shooter {
         this.speedGlobalRatio = 2;
         this.colWidthRatio = 0.4;
         this.colHeightRatio = 0.6;
+
+        this.moveX(0);
+        this.moveY(0);
     }
 
     public showCollisions(){

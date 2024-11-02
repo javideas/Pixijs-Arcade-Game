@@ -6,55 +6,53 @@ import { gsap } from 'gsap';
 export class Actor extends Container {
     public gameMode: GameMode;
     protected sprite: Sprite | AnimatedSprite;
-    protected hasAi: boolean;
-    public posAccX: number;
-    public posAccY: number;
-    protected colX: number;
-    protected colY: number;
-    protected colWidth: number;
-    protected colHeight: number;
-    public idTeam: string;
-    public isInmune: boolean;
-    public isColVisible: boolean;
+    protected hasAi: boolean = false;
+    public posAccX: number = 0;
+    public posAccY: number = 0;
+    protected colX: number = 0;
+    protected colY: number = 0;
+    protected colWidth: number = 0;
+    protected colHeight: number = 0;
+    public idTeam: string = 'player';
+    public isInmune: boolean = false;
+    public isColVisible: boolean = false;
     public screenRef: Screen;
 
-    public debugBgColor: string;
     private debugGraphics: Graphics;
-    private bgShape: Graphics;
-    private contWidth: number;
-    private contHeight: number;
-    public contPosX: number;
-    public contPosY: number;
-    private globalLimitR: number;
-    private globalLimitL: number;
-    private globalLimitT: number;
-    private globalLimitB: number;
-    public wasDestroyed: boolean;
+    public contWidth: number = 0;
+    public contHeight: number = 0;
+    public contPosX: number = 0;
+    public contPosY: number = 0;
+    private globalLimitR: number = 0;
+    private globalLimitL: number = 0;
+    private globalLimitT: number = 0;
+    private globalLimitB: number = 0;
+    public wasDestroyed: boolean = false;
 
-    public spriteName: string;
-    public trackOpponent: boolean;
-    public colWidthRatio: number;
-    public colHeightRatio: number;
-    public speedGlobalRatio: number;
-    public dirX: number;
-    public dirY: number;
-    public offsetX: number;
-    public offsetY: number;
-    public scaleRatio: number;
-    public idClass: string;
+    public spriteName: string = 'none';
+    public trackOpponent: boolean = false;
+    public colWidthRatio: number = 1;
+    public colHeightRatio: number = 1;
+    public speedGlobalRatio: number = 1;
+    public dirX: number = 0;
+    public dirY: number = 0;
+    public offsetX: number = 0;
+    public offsetY: number = 0;
+    public scaleRatio: number = 1;
+    public idClass: string = 'ship';
     public shieldSprite: Sprite;
-    public spriteScaleRatio: number;
-    public currentHealth: number;
-    public damage: number;
+    public spriteScaleRatio: number = 1.6;
+    public currentHealth: number = 1;
+    public damage: number = 1;
     public enemyContainer: Container;
     public enemyProjCont: Container;
     public playerContainer: Container;
     public playerProjCont: Container;
-    public maxHealth: number;
+    public maxHealth: number = 1;
 
     constructor(
-        idTeam: string,
-        idClass: string,
+        idTeam: string = 'player',
+        idClass: string = 'ship',
         maxHealth: number = 1,
         damage: number = 1,
         scaleRatio: number = 1,
@@ -62,8 +60,7 @@ export class Actor extends Container {
         initPosAccY: number = 0.8,
         baseSpriteName: string = 'ShipPlayer-FullHealth.png',
         animated: boolean = false,
-        shieldSpriteName?: string,
-        debugBgColor?: string
+        shieldSpriteName: string = 'none'
     ) {
         super();
         this.gameMode = GameMode.instance;
@@ -76,7 +73,6 @@ export class Actor extends Container {
         this.debugGraphics = new Graphics();
         this.addChild(this.debugGraphics);
         this.shieldSprite = new Sprite();
-        if(shieldSpriteName && shieldSpriteName !== 'none') this.loadShieldSprite(shieldSpriteName);
 
         this.reset(idTeam,
             idClass,
@@ -91,17 +87,17 @@ export class Actor extends Container {
         );
     }
 
-    public reset(
-        idTeam: string,
-        idClass: string,
+    public async reset(
+        idTeam: string = 'player',
+        idClass: string = 'ship',
         maxHealth: number = 1,
         damage: number = 1,
-        scaleRatio: number,
-        initPosAccX: number,
-        initPosAccY: number,
+        scaleRatio: number = 1,
+        initPosAccX: number = 0,
+        initPosAccY: number = 0.8,
         baseSpriteName: string = 'ShipPlayer-FullHealth.png',
         animated: boolean = false,
-        shieldSpriteName?: string
+        shieldSpriteName: string = 'none'
     ) {
         this.idTeam = idTeam;
         this.idClass = idClass;
@@ -136,12 +132,13 @@ export class Actor extends Container {
         this.colX = 0;
         this.hasAi = false;
         this.isInmune = false;
+        if(shieldSpriteName && shieldSpriteName !== 'none') this.loadShieldSprite(shieldSpriteName);
         
 
         if (animated) {
             this.loadBaseAnim(baseSpriteName);
         } else {
-            this.loadBaseSprite(baseSpriteName);
+            await this.loadBaseSprite(baseSpriteName);
         }
         
         this.spriteScaleRatio = 1.6;
@@ -284,7 +281,7 @@ export class Actor extends Container {
         }
     }
 
-    private loadBaseSprite(spriteName: string) {
+    private async loadBaseSprite(spriteName: string) {
         const texture = this.gameMode.getTexture(spriteName);
         if (texture) {
             this.sprite = new Sprite(texture);
@@ -396,13 +393,13 @@ export class Actor extends Container {
         }
     }
 
-    private isWithinLimits(posAcc: number, limitL: number, limitR: number): boolean {
-        // Convert the position accumulator to the global space
-        const globalPosition = (posAcc + 1) / 2 * (limitR - limitL) + limitL;
+    // private isWithinLimits(posAcc: number, limitL: number, limitR: number): boolean {
+    //     // Convert the position accumulator to the global space
+    //     const globalPosition = (posAcc + 1) / 2 * (limitR - limitL) + limitL;
         
-        // Check if the global position is within the specified limits
-        return globalPosition >= limitL && globalPosition <= limitR;
-    }
+    //     // Check if the global position is within the specified limits
+    //     return globalPosition >= limitL && globalPosition <= limitR;
+    // }
     
     private calcMove(axis: string, currentPosAcc: number, input: number, limitL: number, limitR: number): number | null {
         // Calculate the effective screen size based on global limits
@@ -464,7 +461,7 @@ export class Actor extends Container {
         this.trackPos();
     }
 
-    private calcRespScale() {
+    public calcRespScale() {
         this.contWidth = (0.07 * this.scaleRatio) * this.screenRef.frameB;
         this.contPosX = -this.contWidth / 2;
         this.contPosY = -this.contWidth / 2;

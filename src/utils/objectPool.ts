@@ -13,7 +13,7 @@ export class ObjectPool<T> {
             const obj = this.pool[i];
             if (obj instanceof Projectile && !obj.isActive) {
                 this.pool.splice(i, 1);
-                obj.reset(...args);
+                // obj.reset(...args);
                 return obj;
             }
         }

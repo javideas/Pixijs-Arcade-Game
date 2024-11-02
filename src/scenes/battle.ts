@@ -2,9 +2,7 @@ import { Container } from 'pixi.js';
 import GameMode from '../managers/gameMode';
 import { Player } from '../actors/player';
 import { Enemy } from '../actors/enemy';
-import { Projectile } from '../actors/projectile';
 import { addAndFindChildByName } from '../utils/utils';
-import { ObjectPool } from '../utils/objectPool';
 
 export default class Battle {
     public gameMode: GameMode;
@@ -16,12 +14,10 @@ export default class Battle {
     public playerProjCont: Container;
     public playerShipCont: Container;
     public battleUiCont: Container;
-    private elapsedDelta: number = 0;
-    private currentTime: number = 0;
+    public elapsedDelta: number = 0;
+    public currentTime: number = 0;
     private randomInterval: number = 2000;
     private lightYears: number = 0;
-    private enemyPool: ObjectPool<Enemy>;
-    private projectilePool: ObjectPool<Projectile>;
 
     constructor() {
         // GameMode instance
@@ -114,7 +110,7 @@ export default class Battle {
         if(this.currentTime !== 0) {
             if (this.currentTime > this.randomInterval) {
                 // Spawn every random seconds
-                // this.spawnRandEnemy();
+                this.spawnRandEnemy();
                 this.randomInterval = this.randomInterval + this.getRandomNumber(3000, 5000);
             } else if (this.currentTime > 1000 * this.lightYears) {
                 const speedUp = 1;
@@ -206,10 +202,9 @@ export default class Battle {
         this.playerProjCont.removeChildren();
         this.playerShipCont.removeChildren();
         this.playerContainer.removeChildren();
+    }
 
-        // Reset references to help with garbage collection
-        this.player = null; // Set to null if not reused immediately
-        this.enemyContainer = null; // Set to null if not reused
-        this.playerContainer = null; // Set to null if not reused
+    public getLightYears(): number {
+        return this.lightYears;
     }
 }
