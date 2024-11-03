@@ -1,6 +1,5 @@
 import { Application, BLEND_MODES, Container, Graphics, RenderTexture, Sprite, SpriteMaskFilter, Text, TextStyle } from 'pixi.js';
 import { BulgePinchFilter, CRTFilter, AdjustmentFilter, AdvancedBloomFilter, RGBSplitFilter } from 'pixi-filters';
-import TubeFilter from '../utils/tube-filter';
 import { AlphaFilter } from '@pixi/filter-alpha';
 import GameMode from '../managers/gameMode';
 import { Screen } from '../stage/screen';
@@ -21,6 +20,8 @@ export default class Ui {
     protected playerProjCont: Container;
     protected enemyProjCont: Container;
     protected battleUiCont: Container;
+    public lightYearsText: Text;
+    public startText: Text;
 
     constructor(app: Application) {
         this.app = app;
@@ -38,6 +39,7 @@ export default class Ui {
         this.maskSprite = new Sprite();
         this.lightYearsText = new Text('no init');
         this.startText = new Text('no init');
+        this.pixelatedText = new Text('');
     }
 
     /** load the User Interface */
@@ -65,29 +67,30 @@ export default class Ui {
 
     public async textStart() {
         // Create a text style for pixelated effect
-        console.log('textStart');
-        const textStyle = new TextStyle({
-            fontFamily: 'Pixelify Sans', // Use the imported font
-            fontSize: 30, // Adjust size as needed
-            fill: 'white', // Text color
-            align: 'center'
+        document.fonts.load('10pt "Pixelify Sans"').then(() => {
+            const textStyle = new TextStyle({
+                fontFamily: 'Pixelify Sans', // Use the imported font
+                fontSize: 30, // Adjust size as needed
+                fill: 'white', // Text color
+                align: 'center'
+            });
+    
+            // Create the text element
+            this.startText = new Text('PIXI.JS   ARCADE \n \n \n WASD / Arrow Keys \n to MOVE  \n  \n SPACE to SHOOT  \n \n \n by Javideas', textStyle);
+    
+            // Position/Scale the text on the stage
+            this.startText.x = this.screen.x - (this.screen.frameR * 0.4);
+            this.startText.y = this.screen.frameB * 0.3;
+            this.startText.scale.set(this.screen.frameB / 600);
+    
+            // Add the text to the stage
+            const mainUiCont = this.gameMode.stageContainer.children.find(child => child.name === 'mainUiCont') as Container;
+            if (mainUiCont) {
+                mainUiCont.addChild(this.startText);
+            } else {
+                console.error("battleUiCont is not found or is not a Container.");
+            }
         });
-
-        // Create the text element
-        this.startText = new Text('PIXI.JS   ARCADE \n \n \n WASD / Arrow Keys \n to MOVE  \n  \n SPACE to SHOOT  \n \n \n by Javideas', textStyle);
-
-        // Position/Scale the text on the stage
-        this.startText.x = this.screen.x - (this.screen.frameR * 0.4);
-        this.startText.y = this.screen.frameB * 0.3;
-        this.startText.scale.set(this.screen.frameB / 600);
-
-        // Add the text to the stage
-        const mainUiCont = this.gameMode.stageContainer.children.find(child => child.name === 'mainUiCont') as Container;
-        if (mainUiCont) {
-            mainUiCont.addChild(this.startText);
-        } else {
-            console.error("battleUiCont is not found or is not a Container.");
-        }
     }
 
     public async toggleLightYears() {
@@ -141,9 +144,7 @@ export default class Ui {
     private setFiltersToStage() {
         const bulgePinchFilter = new BulgePinchFilter({
             radius: 350,
-            strength: 0.1,
-            pinch: 2,
-            distortion: 2
+            strength: 0.1
         });
 
         const adjustmentFilter = new AdjustmentFilter({
@@ -166,24 +167,6 @@ export default class Ui {
             [-1, 1], [0, 0], [1, 1] // RGB
         );
 
-        // const tubeFilter = new TubeFilter(
-        //     // stage: PIXI.Container,
-        //     // virtualWidth: number,
-        //     // virtualHeight: number,
-        //     // realWidth: number,
-        //     // realHeight: number,
-        //     // curve: number = 20.0,
-        //     // cornerSize: number = 16,
-        //     // mask?: PIXI.Texture
-        //     this.gameMode.stageContainer, // stage
-        //     this.screen.width, // virtualWidth
-        //     this.screen.height, // virtualHeight
-        //     this.screen.width * 1.02, // realWidth
-        //     this.screen.height * 0.9, // realHeight
-        //     5, // curve
-        //     16 // cornerSize
-        // );
-
         this.stageMaskShape = new Graphics();
         this.drawStageMaskShape();
         // Create a sprite from the render texture
@@ -192,10 +175,10 @@ export default class Ui {
         this.maskFilter = new SpriteMaskFilter(this.maskSprite);
 
         this.gameMode.stageContainer.filters = [
+            bulgePinchFilter,
             rgbSplitFilter,
             adjustmentFilter,
             advancedBloomFilter,
-            bulgePinchFilter,
             this.maskFilter
         ];
     }

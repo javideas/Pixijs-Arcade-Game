@@ -67,9 +67,6 @@ export default class Battle {
         this.gameProgress();
         this.gameMode.ui.screen.moveSpaceBackground();
 
-        const totalProjectiles = this.playerProjCont.children.length + this.enemyProjCont.children.length;
-        console.log('Total Projectiles: ', totalProjectiles);
-
         this.enemyContainer.children.forEach((containers) => {
             if (containers.children) { // Check if children is defined
                 containers.children.forEach((child) => {

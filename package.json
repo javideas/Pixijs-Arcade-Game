@@ -15,7 +15,7 @@
     "preview": "vite preview",
     "build:electron": "npm run transpile:electron && electron-builder",
     "transpile:electron": "tsc --project src/electron/tsconfig.json",
-    "restart": "npm run clean && npm run transpile:electron && npm run build && electron .",
+    "restart": "npm run clean && npm run transpile:electron && npm run build && npm run build:electron && electron .",
     "start": "electron .",
     "deploy": "gh-pages -d dist-js",
     "dist:mac": "npm run clean && npm run transpile:electron && npm run build && electron-builder --mac --arm64",

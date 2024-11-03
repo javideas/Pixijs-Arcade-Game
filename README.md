@@ -2,15 +2,19 @@
 
 ## Index
 
-1. [Project Description](#project-description)
-2. [Key Features](#key-features)
-3. [Bonus Features](#bonus-features)
-4. [How to Play](#how-to-play)
-5. [Game Controls](#game-controls)
-6. [Technologies Used](#technologies-used)
-7. [How to Install](#how-to-install)
+1. [Live Demo!](#live-demo)
+2. [Project Description](#project-description)
+3. [Key Features](#key-features)
+4. [Bonus Features](#bonus-features)
+5. [How to Play](#how-to-play)
+6. [Game Controls](#game-controls)
+7. [Technologies Used](#technologies-used)
+8. [How to Install](#how-to-install)
 
 # PixiJs Arcade Game
+
+## Live Demo!
+https://javideas.github.io/Pixijs-Arcade-Game/
 
 ## Project Description:
 A classic arcade-style vertical scrolling game built with PixiJS and TypeScript inspired by [1943: The Battle of Midway](https://www.youtube.com/watch?v=FbUN5ITWQQo). In my version, the player controls a spaceship, the hero character, moving upwards through an endless scrolling space, dodging or destroying enemies and obstacles. The objective is to survive as long as possible while accumulating points by defeating enemies and avoiding crashes.
